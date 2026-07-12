@@ -1,0 +1,58 @@
+{
+  "title": "25 AI Prompts for Total Beginners",
+  "subtitle": "Copy, paste, and adapt. Works with ChatGPT, Gemini, or any chat AI.",
+  "brand": "Let Me Teach You AI",
+  "sections": [
+    {
+      "name": "Everyday writing",
+      "prompts": [
+        "Rewrite this email so it sounds friendly but professional. Keep it under 120 words: [paste your email].",
+        "Help me reply to this message. I want to say no politely without burning the bridge: [paste message].",
+        "Turn these rough notes into a clear, well-structured message: [paste notes].",
+        "Proofread this for spelling, grammar, and clarity. Show me the corrected version, then list what you changed: [paste text].",
+        "Give me three subject lines for an email about [topic]. Make one plain, one curious, and one direct."
+      ]
+    },
+    {
+      "name": "Planning your day and week",
+      "prompts": [
+        "I have these tasks today: [list]. Help me order them from most to least important and suggest a realistic schedule.",
+        "Break this big goal into small, doable steps I can start this week: [goal].",
+        "Act as a planning partner. Ask me 3 questions to understand my week, then build me a simple plan.",
+        "Help me write a short weekly review: what went well, what didn't, and one thing to try next week. Here are my notes: [notes].",
+        "I keep procrastinating on [task]. Suggest 3 small first steps that take under 10 minutes each."
+      ]
+    },
+    {
+      "name": "Learning faster",
+      "prompts": [
+        "Explain [topic] to me like I'm a complete beginner. Use a simple everyday example.",
+        "I read this and didn't fully get it. Explain it more simply and tell me the one key idea: [paste text].",
+        "Quiz me with 5 easy questions on [topic], one at a time, and tell me if I'm right after each answer.",
+        "Give me a 5-day plan to learn the basics of [topic], with one small task per day.",
+        "What are the 3 most common beginner mistakes with [topic], and how do I avoid them?"
+      ]
+    },
+    {
+      "name": "Getting real answers, not vague ones",
+      "prompts": [
+        "Before you answer, ask me any questions you need to give a genuinely useful response. My question is: [question].",
+        "Give me the short answer first in one sentence, then a longer explanation underneath.",
+        "Compare [option A] and [option B] for someone who cares most about [what matters to you]. Use a simple table.",
+        "You gave a general answer. Make it specific to my situation: [describe your situation].",
+        "List the pros and cons of [decision], then tell me which you'd lean toward and why."
+      ]
+    },
+    {
+      "name": "Getting things done",
+      "prompts": [
+        "Help me draft a simple checklist for [task or event] so I don't forget anything.",
+        "Summarize this long text into 5 bullet points a busy person could read in 30 seconds: [paste text].",
+        "I need to make a decision about [topic]. Walk me through it by asking one question at a time.",
+        "Turn this idea into a short, clear plan I could hand to someone else: [describe idea].",
+        "Act as a friendly coach. I want to build the habit of [habit]. Give me a simple starting plan and one way to stay on track."
+      ]
+    }
+  ],
+  "footer": "A note on using AI well: treat these as starting points, not magic. Always read what the AI gives you, check anything important, and make it your own. — Let Me Teach You AI"
+}
