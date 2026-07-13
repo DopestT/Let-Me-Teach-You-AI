@@ -1,6 +1,6 @@
 import { generateText } from "@/lib/openai/client";
 import { aiGenerateSchema } from "@/lib/validation";
-import { rateLimit, clientIp } from "@/lib/rate-limit";
+import { enforceTiers, clientIp } from "@/lib/rate-limit";
 
 /**
  * Secure, server-side OpenAI endpoint.
@@ -21,7 +21,14 @@ export const runtime = "nodejs";
 /** Reject bodies larger than this before parsing (prompt is capped at 4000 chars). */
 const MAX_BODY_BYTES = 16 * 1024;
 
-const RATE_LIMIT = { max: 8, windowMs: 60_000 };
+/** Anonymous session id, combined with IP so limits aren't purely IP-based. */
+function getSession(req: Request): { sess: string; isNew: boolean } {
+  const m = (req.headers.get("cookie") ?? "").match(
+    /(?:^|;\s*)ai_sess=([A-Za-z0-9_-]+)/
+  );
+  if (m) return { sess: m[1]!, isNew: false };
+  return { sess: crypto.randomUUID(), isNew: true };
+}
 
 const TEACHER_VOICE =
   "You are a friendly, honest, beginner-friendly AI teacher. Explain things " +
@@ -90,52 +97,57 @@ function fail(
 export async function POST(req: Request): Promise<Response> {
   const requestId = crypto.randomUUID();
 
+  // Persist an anonymous session so limits combine IP + session, not IP alone.
+  const { sess, isNew } = getSession(req);
+  const cookieHeader = isNew
+    ? {
+        "Set-Cookie": `ai_sess=${sess}; Path=/; Max-Age=31536000; HttpOnly; SameSite=Lax`,
+      }
+    : undefined;
+  const j = (body: Record<string, unknown>, status: number, extra?: Record<string, string>) =>
+    json(body, status, requestId, { ...cookieHeader, ...extra });
+  const f = (code: ErrorCode, message: string, status: number, extra?: Record<string, string>) =>
+    fail(code, message, status, requestId, { ...cookieHeader, ...extra });
+
   // Enforce JSON so we never parse an unexpected content type.
   const contentType = req.headers.get("content-type") ?? "";
   if (!contentType.toLowerCase().includes("application/json")) {
-    return fail(
-      "unsupported_media_type",
-      "Requests must be sent as application/json.",
-      415,
-      requestId
-    );
+    return f("unsupported_media_type", "Requests must be sent as application/json.", 415);
   }
 
   // Reject oversized bodies up front (declared length, then actual).
   const declaredLength = Number(req.headers.get("content-length") ?? "0");
   if (declaredLength > MAX_BODY_BYTES) {
-    return fail("payload_too_large", "Your request is too large.", 413, requestId);
+    return f("payload_too_large", "Your request is too large.", 413);
   }
 
-  const ip = clientIp(req);
-  const limit = rateLimit(`openai:${ip}`, RATE_LIMIT);
+  // Tiered abuse ceilings (per-minute / hour / day), durable when configured.
+  const limit = await enforceTiers(`${clientIp(req)}:${sess}`);
   if (!limit.allowed) {
-    const retryAfterSec = Math.max(1, Math.ceil((limit.resetAt - Date.now()) / 1000));
-    return fail(
+    return f(
       "rate_limited",
       "You're going a bit fast. Please wait a moment and try again.",
       429,
-      requestId,
-      { "Retry-After": String(retryAfterSec) }
+      { "Retry-After": String(limit.retryAfterSec) }
     );
   }
 
   const raw = await req.text();
   if (raw.length > MAX_BODY_BYTES) {
-    return fail("payload_too_large", "Your request is too large.", 413, requestId);
+    return f("payload_too_large", "Your request is too large.", 413);
   }
 
   let body: unknown;
   try {
     body = JSON.parse(raw);
   } catch {
-    return fail("invalid_json", "Invalid JSON in request body.", 400, requestId);
+    return f("invalid_json", "Invalid JSON in request body.", 400);
   }
 
   const parsed = aiGenerateSchema.safeParse(body);
   if (!parsed.success) {
     const message = parsed.error.issues[0]?.message ?? "Invalid request.";
-    return fail("invalid_request", message, 400, requestId);
+    return f("invalid_request", message, 400);
   }
 
   const { prompt, task } = parsed.data;
@@ -151,14 +163,10 @@ export async function POST(req: Request): Promise<Response> {
   });
 
   if (!result.ok) {
-    if (result.status === "unavailable") {
-      return fail("upstream_unavailable", result.message, 503, requestId);
-    }
-    if (result.status === "timeout") {
-      return fail("upstream_timeout", result.message, 504, requestId);
-    }
-    return fail("upstream_error", result.message, 502, requestId);
+    if (result.status === "unavailable") return f("upstream_unavailable", result.message, 503);
+    if (result.status === "timeout") return f("upstream_timeout", result.message, 504);
+    return f("upstream_error", result.message, 502);
   }
 
-  return json({ ok: true, text: result.text, requestId }, 200, requestId);
+  return j({ ok: true, text: result.text, requestId }, 200);
 }
