@@ -1,18 +1,34 @@
 import { generateText } from "@/lib/openai/client";
 import { aiGenerateSchema } from "@/lib/validation";
-import { rateLimit, clientIp } from "@/lib/rate-limit";
+import { enforceTiers, clientIp } from "@/lib/rate-limit";
 
 /**
  * Secure, server-side OpenAI endpoint.
  *
- * This is hardened scaffolding for future interactive tools — there is no chat
- * UI wired to it yet. All secrets stay server-side (the client module enforces
- * `server-only` and reads OPENAI_API_KEY). Prompts are never stored, and we
- * never log or echo the raw prompt beyond the privacy-safe usage logging that
- * `generateText` already performs.
+ * Wired to the /playground AI helper. All secrets stay server-side (the client
+ * module enforces `server-only` and reads OPENAI_API_KEY). Prompts are never
+ * stored, and we never log or echo raw prompt content beyond the privacy-safe
+ * usage logging that `generateText` performs.
+ *
+ * Hardening: requires application/json, caps body size before parsing, strictly
+ * validates + allowlists input, rate-limits per IP, aborts the upstream call on
+ * client disconnect, and returns machine-readable error codes with `no-store`
+ * caching and a correlating request ID on every response.
  */
 
 export const runtime = "nodejs";
+
+/** Reject bodies larger than this before parsing (prompt is capped at 4000 chars). */
+const MAX_BODY_BYTES = 16 * 1024;
+
+/** Anonymous session id, combined with IP so limits aren't purely IP-based. */
+function getSession(req: Request): { sess: string; isNew: boolean } {
+  const m = (req.headers.get("cookie") ?? "").match(
+    /(?:^|;\s*)ai_sess=([A-Za-z0-9_-]+)/
+  );
+  if (m) return { sess: m[1]!, isNew: false };
+  return { sess: crypto.randomUUID(), isNew: true };
+}
 
 const TEACHER_VOICE =
   "You are a friendly, honest, beginner-friendly AI teacher. Explain things " +
@@ -43,35 +59,95 @@ const SYSTEM_PROMPTS: Record<
     "keeping things approachable for a beginner.",
 };
 
+type ErrorCode =
+  | "unsupported_media_type"
+  | "payload_too_large"
+  | "invalid_json"
+  | "invalid_request"
+  | "rate_limited"
+  | "upstream_unavailable"
+  | "upstream_timeout"
+  | "upstream_error";
+
+/** Build a JSON response with no-store caching and a correlating request id. */
+function json(
+  body: Record<string, unknown>,
+  status: number,
+  requestId: string,
+  extraHeaders?: Record<string, string>
+): Response {
+  const headers = new Headers({
+    "Cache-Control": "no-store",
+    "x-request-id": requestId,
+    ...extraHeaders,
+  });
+  return Response.json(body, { status, headers });
+}
+
+function fail(
+  code: ErrorCode,
+  message: string,
+  status: number,
+  requestId: string,
+  extraHeaders?: Record<string, string>
+): Response {
+  return json({ ok: false, code, message, requestId }, status, requestId, extraHeaders);
+}
+
 export async function POST(req: Request): Promise<Response> {
-  const ip = clientIp(req);
-  const limit = rateLimit(`openai:${ip}`, { max: 8, windowMs: 60_000 });
+  const requestId = crypto.randomUUID();
+
+  // Persist an anonymous session so limits combine IP + session, not IP alone.
+  const { sess, isNew } = getSession(req);
+  const cookieHeader = isNew
+    ? {
+        "Set-Cookie": `ai_sess=${sess}; Path=/; Max-Age=31536000; HttpOnly; SameSite=Lax`,
+      }
+    : undefined;
+  const j = (body: Record<string, unknown>, status: number, extra?: Record<string, string>) =>
+    json(body, status, requestId, { ...cookieHeader, ...extra });
+  const f = (code: ErrorCode, message: string, status: number, extra?: Record<string, string>) =>
+    fail(code, message, status, requestId, { ...cookieHeader, ...extra });
+
+  // Enforce JSON so we never parse an unexpected content type.
+  const contentType = req.headers.get("content-type") ?? "";
+  if (!contentType.toLowerCase().includes("application/json")) {
+    return f("unsupported_media_type", "Requests must be sent as application/json.", 415);
+  }
+
+  // Reject oversized bodies up front (declared length, then actual).
+  const declaredLength = Number(req.headers.get("content-length") ?? "0");
+  if (declaredLength > MAX_BODY_BYTES) {
+    return f("payload_too_large", "Your request is too large.", 413);
+  }
+
+  // Tiered abuse ceilings (per-minute / hour / day), durable when configured.
+  const limit = await enforceTiers(`${clientIp(req)}:${sess}`);
   if (!limit.allowed) {
-    return Response.json(
-      {
-        ok: false,
-        message:
-          "You're going a bit fast. Please wait a moment and try again.",
-      },
-      { status: 429 }
+    return f(
+      "rate_limited",
+      "You're going a bit fast. Please wait a moment and try again.",
+      429,
+      { "Retry-After": String(limit.retryAfterSec) }
     );
+  }
+
+  const raw = await req.text();
+  if (raw.length > MAX_BODY_BYTES) {
+    return f("payload_too_large", "Your request is too large.", 413);
   }
 
   let body: unknown;
   try {
-    body = await req.json();
+    body = JSON.parse(raw);
   } catch {
-    return Response.json(
-      { ok: false, message: "Invalid request." },
-      { status: 400 }
-    );
+    return f("invalid_json", "Invalid JSON in request body.", 400);
   }
 
   const parsed = aiGenerateSchema.safeParse(body);
   if (!parsed.success) {
-    const message =
-      parsed.error.issues[0]?.message ?? "Invalid request.";
-    return Response.json({ ok: false, message }, { status: 400 });
+    const message = parsed.error.issues[0]?.message ?? "Invalid request.";
+    return f("invalid_request", message, 400);
   }
 
   const { prompt, task } = parsed.data;
@@ -81,18 +157,16 @@ export async function POST(req: Request): Promise<Response> {
     route: "/api/openai",
     system,
     input: prompt,
+    requestId,
+    // Abort the upstream OpenAI call if the client disconnects.
+    signal: req.signal,
   });
 
   if (!result.ok) {
-    const status =
-      result.status === "unavailable" || result.status === "timeout"
-        ? 503
-        : 502;
-    return Response.json(
-      { ok: false, message: result.message },
-      { status }
-    );
+    if (result.status === "unavailable") return f("upstream_unavailable", result.message, 503);
+    if (result.status === "timeout") return f("upstream_timeout", result.message, 504);
+    return f("upstream_error", result.message, 502);
   }
 
-  return Response.json({ ok: true, text: result.text });
+  return j({ ok: true, text: result.text, requestId }, 200);
 }

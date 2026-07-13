@@ -42,6 +42,7 @@ export function logAiUsage(fields: {
   inputTokens?: number;
   outputTokens?: number;
   latencyMs?: number;
+  requestId?: string;
 }): void {
   logger.info("openai.usage", fields);
 }

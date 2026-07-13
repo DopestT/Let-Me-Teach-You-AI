@@ -28,16 +28,20 @@ export const contactSchema = z.object({
 export type ContactInput = z.infer<typeof contactSchema>;
 
 /** Generic server-side AI generation request (scaffolding for future tools). */
-export const aiGenerateSchema = z.object({
-  prompt: z
-    .string()
-    .trim()
-    .min(1, "Prompt is required.")
-    .max(4000, "Prompt is too long."),
-  // Optional task hint so the server can pick a system prompt / preset.
-  task: z
-    .enum(["prompt-help", "summarize", "lesson", "general"])
-    .optional()
-    .default("general"),
-});
+export const aiGenerateSchema = z
+  .object({
+    prompt: z
+      .string()
+      .trim()
+      .min(1, "Prompt is required.")
+      .max(4000, "Prompt is too long."),
+    // Optional task hint so the server can pick a system prompt / preset.
+    // Strictly allowlisted — anything else is rejected below.
+    task: z
+      .enum(["prompt-help", "summarize", "lesson", "general"])
+      .optional()
+      .default("general"),
+  })
+  // Reject unknown keys so callers can't smuggle in unexpected fields.
+  .strict();
 export type AiGenerateInput = z.infer<typeof aiGenerateSchema>;

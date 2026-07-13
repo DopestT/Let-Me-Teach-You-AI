@@ -55,3 +55,71 @@ export function sweep(): void {
     if (bucket.resetAt <= now) store.delete(key);
   }
 }
+
+/* ---------------------------------------------------------------------------
+   Tiered limiting (per-minute / per-hour / per-day ceiling).
+
+   Uses a durable, shared Upstash store when configured so limits hold across
+   serverless instances; otherwise falls back to the in-memory buckets above.
+--------------------------------------------------------------------------- */
+
+import { isDurableStoreConfigured, pipeline } from "@/lib/upstash";
+
+export type Tier = { label: string; windowMs: number; max: number };
+
+const num = (name: string, fallback: number) =>
+  Number(process.env[name] ?? fallback);
+
+/** Default abuse ceilings for the AI endpoint; each is env-overridable. */
+export const AI_TIERS: Tier[] = [
+  { label: "min", windowMs: 60_000, max: num("AI_RATE_PER_MIN", 8) },
+  { label: "hour", windowMs: 3_600_000, max: num("AI_RATE_PER_HOUR", 60) },
+  { label: "day", windowMs: 86_400_000, max: num("AI_RATE_PER_DAY", 300) },
+];
+
+export type TierResult = { allowed: boolean; retryAfterSec: number };
+
+/** Enforce every tier for an identifier. Blocked by the soonest-resetting tier. */
+export async function enforceTiers(
+  identifier: string,
+  tiers: Tier[] = AI_TIERS
+): Promise<TierResult> {
+  const now = Date.now();
+
+  if (isDurableStoreConfigured()) {
+    const cmds: (string | number)[][] = [];
+    const meta = tiers.map((t) => {
+      const bucket = Math.floor(now / t.windowMs);
+      const key = `airl:${identifier}:${t.label}:${bucket}`;
+      cmds.push(["INCR", key], ["PEXPIRE", key, t.windowMs]);
+      return { t, resetAt: (bucket + 1) * t.windowMs };
+    });
+    try {
+      const res = await pipeline(cmds);
+      let soonestBlockedReset = Infinity;
+      meta.forEach((m, i) => {
+        const count = Number(res[i * 2]);
+        if (count > m.t.max) soonestBlockedReset = Math.min(soonestBlockedReset, m.resetAt);
+      });
+      if (soonestBlockedReset !== Infinity) {
+        return { allowed: false, retryAfterSec: Math.max(1, Math.ceil((soonestBlockedReset - now) / 1000)) };
+      }
+      return { allowed: true, retryAfterSec: 0 };
+    } catch {
+      // Store unreachable — fall back to in-memory rather than fail open/closed.
+      return enforceInMemory(identifier, tiers, now);
+    }
+  }
+
+  return enforceInMemory(identifier, tiers, now);
+}
+
+function enforceInMemory(identifier: string, tiers: Tier[], now: number): TierResult {
+  for (const t of tiers) {
+    const r = rateLimit(`${identifier}:${t.label}`, { max: t.max, windowMs: t.windowMs });
+    if (!r.allowed) {
+      return { allowed: false, retryAfterSec: Math.max(1, Math.ceil((r.resetAt - now) / 1000)) };
+    }
+  }
+  return { allowed: true, retryAfterSec: 0 };
+}

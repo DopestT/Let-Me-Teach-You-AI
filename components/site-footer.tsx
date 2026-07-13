@@ -20,6 +20,9 @@ export function SiteFooter() {
           <Link href="/#join" className="hover:text-[--color-brand]">
             Join
           </Link>
+          <Link href="/playground" className="hover:text-[--color-brand]">
+            AI helper
+          </Link>
           <Link href="/contact" className="hover:text-[--color-brand]">
             Contact
           </Link>

@@ -85,12 +85,19 @@ export default function HomePage() {
               Now I want to teach you what I know.
             </strong>
           </p>
-          <div className="mt-8">
+          <div className="mt-8 flex flex-wrap items-center gap-x-6 gap-y-3">
             <Link
               href="#join"
               className="inline-flex items-center rounded-full bg-[--color-brand] px-6 py-3 font-semibold text-white transition-colors hover:bg-[--color-brand-dark]"
             >
               Get 25 Free AI Prompts
+            </Link>
+            <Link
+              href="/playground"
+              className="inline-flex items-center gap-2 font-semibold text-[--color-brand] hover:text-[--color-brand-dark]"
+            >
+              <Sparkles className="h-4 w-4" aria-hidden />
+              Try the free AI helper
             </Link>
           </div>
         </div>

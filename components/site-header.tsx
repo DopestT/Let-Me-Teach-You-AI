@@ -18,6 +18,9 @@ export function SiteHeader() {
           <Link href="/#lessons" className="hidden sm:inline hover:text-[--color-brand]">
             What you'll learn
           </Link>
+          <Link href="/playground" className="hidden sm:inline hover:text-[--color-brand]">
+            AI helper
+          </Link>
           <Link href="/contact" className="hidden sm:inline hover:text-[--color-brand]">
             Contact
           </Link>
