@@ -47,20 +47,33 @@ export async function generateText(opts: {
   system: string;
   input: string;
   maxOutputTokens?: number;
+  /** Correlates this call with the API request in logs. */
+  requestId?: string;
+  /** Aborts the upstream call when the client disconnects or a timeout fires. */
+  signal?: AbortSignal;
 }): Promise<GenerateResult> {
   if (!isOpenAiConfigured()) {
-    logAiUsage({ route: opts.route, model: openaiConfig.model, status: "unavailable" });
+    logAiUsage({
+      route: opts.route,
+      model: openaiConfig.model,
+      status: "unavailable",
+      requestId: opts.requestId,
+    });
     return { ok: false, status: "unavailable", message: FALLBACK_UNAVAILABLE };
   }
 
   const startedAt = Date.now();
   try {
-    const response = await getClient().responses.create({
-      model: openaiConfig.model,
-      max_output_tokens: opts.maxOutputTokens ?? openaiConfig.maxOutputTokens,
-      instructions: opts.system,
-      input: opts.input,
-    });
+    const response = await getClient().responses.create(
+      {
+        model: openaiConfig.model,
+        max_output_tokens: opts.maxOutputTokens ?? openaiConfig.maxOutputTokens,
+        instructions: opts.system,
+        input: opts.input,
+      },
+      // Pass the caller's signal so a client disconnect aborts the upstream call.
+      { signal: opts.signal }
+    );
 
     const text = (response.output_text ?? "").trim();
 
@@ -71,6 +84,7 @@ export async function generateText(opts: {
       inputTokens: response.usage?.input_tokens,
       outputTokens: response.usage?.output_tokens,
       latencyMs: Date.now() - startedAt,
+      requestId: opts.requestId,
     });
 
     if (!text) {
@@ -91,6 +105,7 @@ export async function generateText(opts: {
       model: openaiConfig.model,
       status: aborted ? "timeout" : "error",
       latencyMs: Date.now() - startedAt,
+      requestId: opts.requestId,
     });
     return {
       ok: false,
