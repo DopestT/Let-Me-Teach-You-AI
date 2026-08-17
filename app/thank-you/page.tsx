@@ -8,8 +8,7 @@ export const metadata: Metadata = {
     "You're on the list. Download your free 25-prompt starter pack and get ready for beginner-friendly AI lessons.",
 };
 
-const DOWNLOAD_URL =
-  "/lead-magnet/Start_Using_AI_Today_25_Beginner_Prompts.pdf";
+const DOWNLOAD_URL = "/api/prompt-pack";
 
 export default function ThankYouPage() {
   return (
@@ -20,14 +19,12 @@ export default function ThankYouPage() {
         </h1>
         <p className="mt-5 text-lg leading-relaxed text-[--color-navy-600]">
           Your free <strong className="text-[--color-navy]">25-Prompt Starter Pack</strong>{" "}
-          is ready. Download it immediately below. We&apos;ll also send it by email
-          when your subscription is confirmed.
+          is on its way to your inbox. You can also download it immediately below.
         </p>
 
         <div className="mt-8">
           <a
             href={DOWNLOAD_URL}
-            download
             className="primary-cta inline-flex items-center justify-center gap-2 rounded-[--radius] px-7 py-3.5 font-semibold shadow-sm transition-colors"
           >
             <Download className="h-5 w-5" aria-hidden />
@@ -36,8 +33,7 @@ export default function ThankYouPage() {
         </div>
 
         <p className="mt-8 text-sm leading-relaxed text-[--color-slate]">
-          Don&apos;t see the email in a few minutes? Check spam or promotions. You can
-          still use the download button above right away.
+          Don&apos;t see the email in a few minutes? Check your spam or promotions folder. The download button above works independently of email delivery.
         </p>
 
         <div className="mt-10">
