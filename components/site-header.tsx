@@ -26,7 +26,7 @@ export function SiteHeader() {
           </Link>
           <Link
             href="/#join"
-            className="rounded-full bg-[--color-brand] px-4 py-2 text-white transition-colors hover:bg-[--color-brand-dark]"
+            className="rounded-full bg-[#1d4ed8] px-4 py-2 font-semibold text-white shadow-sm transition-colors hover:bg-[#1740b3] focus-visible:bg-[#1740b3]"
           >
             Join free
           </Link>
