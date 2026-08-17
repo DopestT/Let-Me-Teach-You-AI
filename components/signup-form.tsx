@@ -105,7 +105,7 @@ export function SignupForm({ compact = false }: { compact?: boolean }) {
         <button
           type="submit"
           disabled={status === "loading"}
-          className="inline-flex items-center justify-center gap-2 rounded-[--radius] bg-[--color-brand] px-6 py-3 font-semibold text-white transition-colors hover:bg-[--color-brand-dark] disabled:opacity-60 sm:self-end"
+          className="inline-flex items-center justify-center gap-2 rounded-[--radius] bg-[#1d4ed8] px-6 py-3 font-semibold text-white shadow-sm transition-colors hover:bg-[#1740b3] focus-visible:bg-[#1740b3] disabled:cursor-not-allowed disabled:opacity-60 sm:self-end"
         >
           {status === "loading" ? (
             <>
