@@ -58,6 +58,17 @@ section[id] {
   scroll-margin-top: 5.5rem;
 }
 
+/* Safari/Tailwind fallback for the primary hero CTA. */
+a[href="#join"] {
+  background-color: #1d4ed8;
+  color: #ffffff;
+}
+
+a[href="#join"]:hover,
+a[href="#join"]:focus-visible {
+  background-color: #1740b3;
+}
+
 h1,
 h2,
 h3,
