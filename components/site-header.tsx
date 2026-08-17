@@ -7,29 +7,15 @@ export function SiteHeader() {
   return (
     <header className="border-b border-[--color-line] bg-[--color-cream]/80 backdrop-blur supports-[backdrop-filter]:bg-[--color-cream]/60 sticky top-0 z-40">
       <div className="container-editorial flex h-16 items-center justify-between">
-        <Link
-          href="/"
-          className="flex items-center gap-2 font-editorial text-lg font-semibold text-[--color-navy]"
-        >
+        <Link href="/" className="flex items-center gap-2 font-editorial text-lg font-semibold text-[--color-navy]">
           <Sparkles className="h-5 w-5 text-[--color-gold]" aria-hidden />
           {SITE_NAME}
         </Link>
         <nav className="flex items-center gap-6 text-sm font-medium text-[--color-navy-600]">
-          <Link href="/#lessons" className="hidden sm:inline hover:text-[--color-brand]">
-            What you'll learn
-          </Link>
-          <Link href="/playground" className="hidden sm:inline hover:text-[--color-brand]">
-            AI helper
-          </Link>
-          <Link href="/contact" className="hidden sm:inline hover:text-[--color-brand]">
-            Contact
-          </Link>
-          <Link
-            href="/#join"
-            className="rounded-full bg-[#1d4ed8] px-4 py-2 font-semibold text-white shadow-sm transition-colors hover:bg-[#1740b3] focus-visible:bg-[#1740b3]"
-          >
-            Join free
-          </Link>
+          <Link href="/#lessons" className="hidden sm:inline hover:text-[--color-brand]">What you'll learn</Link>
+          <Link href="/playground" className="hidden sm:inline hover:text-[--color-brand]">AI helper</Link>
+          <Link href="/contact" className="hidden sm:inline hover:text-[--color-brand]">Contact</Link>
+          <Link href="/#join" className="primary-cta rounded-full px-4 py-2 font-semibold shadow-sm transition-colors">Join free</Link>
         </nav>
       </div>
     </header>
