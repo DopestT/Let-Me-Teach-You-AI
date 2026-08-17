@@ -2,50 +2,29 @@
 
 /* ---------------------------------------------------------------------------
    Let Me Teach You AI — brand system
-   Warm white background · deep navy text · accessible blue accent
-   · small warm-gold accents · clean editorial typography.
 --------------------------------------------------------------------------- */
 
 @theme {
-  /* Warm white surfaces */
   --color-cream: #fbfaf7;
   --color-cream-soft: #f4f1ea;
   --color-paper: #ffffff;
-
-  /* Deep navy text */
   --color-navy: #0f1e3d;
   --color-navy-800: #1a2c52;
   --color-navy-600: #33456e;
   --color-slate: #4a5878;
-
-  /* Accessible blue accent (WCAG AA on cream) */
   --color-brand: #1d4ed8;
   --color-brand-dark: #1740b3;
   --color-brand-soft: #e6edfb;
-
-  /* Warm gold accents (small use only) */
   --color-gold: #c69749;
   --color-gold-soft: #f3e9d2;
-
   --color-line: #e7e2d6;
-
-  /* Editorial typography */
   --font-serif: "Georgia", "Iowan Old Style", "Times New Roman", serif;
-  --font-sans: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto,
-    Helvetica, Arial, sans-serif;
-
+  --font-sans: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
   --radius: 0.75rem;
 }
 
-:root {
-  color-scheme: light;
-}
-
-html {
-  scroll-behavior: smooth;
-  scroll-padding-top: 5.5rem;
-}
-
+:root { color-scheme: light; }
+html { scroll-behavior: smooth; scroll-padding-top: 5.5rem; }
 body {
   background-color: var(--color-cream);
   color: var(--color-navy);
@@ -53,37 +32,37 @@ body {
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
 }
+section[id] { scroll-margin-top: 5.5rem; }
 
-section[id] {
-  scroll-margin-top: 5.5rem;
+/* Explicit iOS/Safari-safe primary CTA styling. */
+a.primary-cta,
+button.primary-cta {
+  background: #1d4ed8 !important;
+  background-color: #1d4ed8 !important;
+  color: #ffffff !important;
+  -webkit-text-fill-color: #ffffff;
+  opacity: 1;
+  appearance: none;
+  -webkit-appearance: none;
 }
-
-/* Safari/Tailwind fallback for the primary hero CTA. */
-a[href="#join"] {
-  background-color: #1d4ed8;
-  color: #ffffff;
+a.primary-cta:hover,
+a.primary-cta:focus-visible,
+button.primary-cta:hover,
+button.primary-cta:focus-visible {
+  background: #1740b3 !important;
+  background-color: #1740b3 !important;
 }
+button.primary-cta:disabled { opacity: .6; }
 
-a[href="#join"]:hover,
-a[href="#join"]:focus-visible {
-  background-color: #1740b3;
-}
-
-h1,
-h2,
-h3,
-.font-editorial {
+h1, h2, h3, .font-editorial {
   font-family: var(--font-serif);
   letter-spacing: -0.01em;
 }
-
-/* Focus ring — keep keyboard accessibility obvious */
 :where(a, button, input, textarea, select):focus-visible {
   outline: 2px solid var(--color-brand);
   outline-offset: 2px;
   border-radius: 4px;
 }
-
 .container-editorial {
   width: 100%;
   max-width: 68rem;
