@@ -1,39 +1,7 @@
 import Link from "next/link";
-import {
-  BookOpen,
-  CheckCircle2,
-  Clock,
-  Compass,
-  FlaskConical,
-  Hammer,
-  ListChecks,
-  Sparkles,
-  UserRound,
-} from "lucide-react";
+import { ArrowRight, BookOpen, CheckCircle2, Sparkles, Workflow, Globe2, Bot } from "lucide-react";
 import { SignupForm } from "@/components/signup-form";
-
-const learn = [
-  {
-    icon: Compass,
-    title: "Start from zero",
-    body: "What AI actually is, which tools matter, and how to try them without feeling lost.",
-  },
-  {
-    icon: ListChecks,
-    title: "Prompts that work",
-    body: "Copy-and-paste prompts for writing, planning, research, and everyday tasks.",
-  },
-  {
-    icon: FlaskConical,
-    title: "Test before you trust",
-    body: "How to check AI output, spot mistakes, and use it responsibly.",
-  },
-  {
-    icon: Hammer,
-    title: "Build small things",
-    body: "Simple, useful projects you can finish — no coding background required.",
-  },
-];
+import { BuildChooser } from "@/components/build-chooser";
 
 const packBullets = [
   "Written for total beginners",
@@ -41,214 +9,155 @@ const packBullets = [
   "No fluff, no hype",
 ];
 
-const audience = [
+const projects = [
   {
-    icon: Compass,
-    title: "Total beginners",
-    body: "You feel a step behind on AI — and you just want a clear place to start.",
+    icon: Workflow,
+    label: "AUTOMATION",
+    title: "Build an AI workflow from plain English",
+    body: "Turn a repeated process into a trigger, actions, approval points, and a test plan.",
   },
   {
-    icon: Clock,
-    title: "Busy people",
-    body: "You don't have hours to spare. You want practical wins you can use today.",
+    icon: Globe2,
+    label: "BUILD",
+    title: "Launch an AI-made landing page",
+    body: "Generate the first version, audit it, test it on mobile, and put it online.",
   },
   {
-    icon: UserRound,
-    title: "Curious, non-technical folks",
-    body: "No coding, no jargon. Just plain-language lessons that make sense.",
-  },
-  {
-    icon: Sparkles,
-    title: "Anyone tired of hype",
-    body: "You want honest guidance from a real person, not another loud pitch.",
+    icon: Bot,
+    label: "AGENTS",
+    title: "Design an AI agent that stays under control",
+    body: "Define the job, tools, limits, and human checkpoints before giving it access.",
   },
 ];
 
 export default function HomePage() {
   return (
     <>
-      {/* 1. Hero */}
-      <section className="container-editorial pt-16 pb-14 sm:pt-24 sm:pb-20">
-        <div className="max-w-3xl">
-          <span className="inline-flex items-center gap-2 rounded-full bg-[--color-gold-soft] px-3 py-1 text-xs font-semibold text-[--color-gold]">
-            <BookOpen className="h-3.5 w-3.5" aria-hidden />
-            A beginner-friendly AI newsletter
-          </span>
-          <h1 className="mt-5 font-editorial text-4xl font-semibold leading-tight text-[--color-navy] sm:text-5xl">
-            Learn AI, one clear step at a time.
-          </h1>
-          <p className="mt-5 text-lg leading-relaxed text-[--color-navy-600]">
-            We all got hit with AI at the same time. I decided I wasn&apos;t
-            going to get left behind — so I started learning, testing, building,
-            failing, and figuring out what actually works.{" "}
-            <strong className="text-[--color-navy]">
-              Now I want to teach you what I know.
-            </strong>
-          </p>
-          <div className="mt-8 flex flex-wrap items-center gap-x-6 gap-y-3">
-            <Link
-              href="#join"
-              className="inline-flex items-center rounded-full bg-[--color-brand] px-6 py-3 font-semibold text-white transition-colors hover:bg-[--color-brand-dark]"
-            >
-              Get 25 Free AI Prompts
-            </Link>
-            <Link
-              href="/playground"
-              className="inline-flex items-center gap-2 font-semibold text-[--color-brand] hover:text-[--color-brand-dark]"
-            >
-              <Sparkles className="h-4 w-4" aria-hidden />
-              Try the free AI helper
-            </Link>
+      <section className="relative overflow-hidden border-b border-[#dbe3ef] bg-[linear-gradient(180deg,#f7f9ff_0%,#fbfaf7_76%)]">
+        <div className="pointer-events-none absolute inset-0 opacity-60 [background-image:linear-gradient(rgba(29,78,216,.05)_1px,transparent_1px),linear-gradient(90deg,rgba(29,78,216,.05)_1px,transparent_1px)] [background-size:34px_34px]" />
+        <div className="container-editorial relative grid gap-12 py-16 sm:py-24 lg:grid-cols-[1.05fr_.95fr] lg:items-center">
+          <div>
+            <span className="inline-flex items-center gap-2 rounded-full border border-[#d4def8] bg-white/80 px-3 py-1.5 text-xs font-bold uppercase tracking-[.13em] text-[#3158b5] shadow-sm">
+              <BookOpen className="h-3.5 w-3.5" aria-hidden />
+              Learn AI by building real things
+            </span>
+            <h1 className="mt-6 max-w-3xl font-editorial text-5xl font-semibold leading-[.98] tracking-[-.035em] text-[#0a1937] sm:text-6xl lg:text-7xl">
+              What do you want AI to help you <span className="text-[#2457ff]">build?</span>
+            </h1>
+            <p className="mt-6 max-w-2xl text-lg leading-8 text-[#4f5f79] sm:text-xl">
+              Skip the jargon. Pick a real outcome, learn the workflow, and build something useful with AI today.
+            </p>
+            <div className="mt-8 flex flex-wrap gap-3">
+              <Link href="#lab" className="primary-cta inline-flex items-center gap-2 rounded-xl px-6 py-3.5 font-bold shadow-[0_12px_30px_rgba(29,78,216,.22)]">
+                Open the AI Lab <ArrowRight className="h-4 w-4" />
+              </Link>
+              <Link href="#join" className="inline-flex items-center rounded-xl border border-[#ccd7ea] bg-white px-6 py-3.5 font-bold text-[#10213f] shadow-sm transition hover:border-[#9db2df] hover:shadow-md">
+                Get 25 Free AI Prompts
+              </Link>
+            </div>
+          </div>
+
+          <div className="relative mx-auto w-full max-w-xl">
+            <div className="absolute -inset-6 rounded-[2.5rem] bg-[radial-gradient(circle_at_top_right,rgba(78,112,255,.22),transparent_55%)] blur-2xl" />
+            <div className="relative overflow-hidden rounded-[2rem] border border-[#20345f] bg-[#07152f] p-5 shadow-[0_32px_90px_rgba(7,21,47,.28)] sm:p-7">
+              <div className="mb-6 flex items-center justify-between border-b border-white/10 pb-4">
+                <div className="flex items-center gap-2 text-sm font-bold text-white"><Sparkles className="h-4 w-4 text-[#7da2ff]" /> LMTYAI Lab</div>
+                <div className="flex gap-1.5"><span className="h-2.5 w-2.5 rounded-full bg-[#ff6b6b]"/><span className="h-2.5 w-2.5 rounded-full bg-[#ffd166]"/><span className="h-2.5 w-2.5 rounded-full bg-[#50d890]"/></div>
+              </div>
+              <div className="space-y-4">
+                <div className="rounded-2xl border border-white/10 bg-white/[.055] p-4">
+                  <div className="text-[11px] font-bold uppercase tracking-[.14em] text-[#7fa5ff]">You say</div>
+                  <p className="mt-2 text-sm leading-6 text-white/90">“I want to automate the follow-up after someone fills out my website form.”</p>
+                </div>
+                <div className="ml-6 rounded-2xl border border-[#355ac0]/50 bg-[#10255b] p-4">
+                  <div className="text-[11px] font-bold uppercase tracking-[.14em] text-[#9bb7ff]">AI maps it</div>
+                  <div className="mt-3 space-y-2 text-sm text-white/85">
+                    <div className="flex items-center gap-2"><span className="h-2 w-2 rounded-full bg-[#6ea0ff]"/> Form submitted</div>
+                    <div className="ml-1 h-4 border-l border-dashed border-white/20"/>
+                    <div className="flex items-center gap-2"><span className="h-2 w-2 rounded-full bg-[#6ea0ff]"/> Validate lead</div>
+                    <div className="ml-1 h-4 border-l border-dashed border-white/20"/>
+                    <div className="flex items-center gap-2"><span className="h-2 w-2 rounded-full bg-[#ffd166]"/> Human approval</div>
+                    <div className="ml-1 h-4 border-l border-dashed border-white/20"/>
+                    <div className="flex items-center gap-2"><span className="h-2 w-2 rounded-full bg-[#50d890]"/> Send + log result</div>
+                  </div>
+                </div>
+              </div>
+              <div className="mt-5 rounded-xl border border-white/10 bg-black/20 px-4 py-3 text-xs text-white/55">Plain English → clear workflow → safe first test</div>
+            </div>
           </div>
         </div>
       </section>
 
-      {/* 2. Prompt-pack signup (primary conversion) */}
-      <section id="join" className="scroll-mt-24 border-y border-[--color-line] bg-[--color-paper]">
-        <div className="container-editorial py-14 sm:py-16">
-          <div className="mx-auto max-w-2xl rounded-[--radius] border border-[--color-line] bg-[--color-cream] p-6 shadow-sm sm:p-8">
-            <p className="text-sm font-semibold uppercase tracking-wide text-[--color-brand]">
-              Free when you join
-            </p>
-            <h2 className="mt-2 font-editorial text-3xl font-semibold text-[--color-navy]">
-              The 25-Prompt Starter Pack
-            </h2>
-            <p className="mt-4 leading-relaxed text-[--color-navy-600]">
-              Twenty-five prompts you can actually use today — for writing
-              clearer emails, planning your week, learning faster, and getting
-              real answers instead of vague ones.
-            </p>
-            <ul className="mt-5 space-y-2 text-sm text-[--color-navy-600]">
-              {packBullets.map((bullet) => (
-                <li key={bullet} className="flex items-center gap-2">
-                  <CheckCircle2
-                    className="h-4 w-4 text-[--color-gold]"
-                    aria-hidden
-                  />
-                  {bullet}
-                </li>
-              ))}
+      <section id="lab" className="border-b border-[#dfe6f0] bg-[#f4f7fc] py-16 sm:py-20">
+        <div className="container-editorial">
+          <div className="mb-10 max-w-3xl">
+            <p className="text-sm font-bold uppercase tracking-[.14em] text-[#2457ff]">Interactive AI Lab</p>
+            <h2 className="mt-3 font-editorial text-4xl font-semibold leading-tight text-[#0c1d3f] sm:text-5xl">Start with what you want to accomplish.</h2>
+            <p className="mt-4 text-lg leading-8 text-[#56647a]">Pick a goal. The site shows you the kind of workflow to build and gives you a direct starting point.</p>
+          </div>
+          <BuildChooser />
+        </div>
+      </section>
+
+      <section className="bg-white py-16 sm:py-20">
+        <div className="container-editorial">
+          <div className="flex flex-col justify-between gap-5 sm:flex-row sm:items-end">
+            <div className="max-w-2xl">
+              <p className="text-sm font-bold uppercase tracking-[.14em] text-[#2457ff]">Build in public</p>
+              <h2 className="mt-3 font-editorial text-4xl font-semibold text-[#0c1d3f]">Learn from projects that actually ship.</h2>
+            </div>
+            <p className="max-w-md text-[#5a687c]">Real workflows, real sites, real agents — broken down so a beginner can understand what happened.</p>
+          </div>
+          <div className="mt-10 grid gap-5 lg:grid-cols-3">
+            {projects.map(({icon: Icon,label,title,body}) => (
+              <article key={title} className="group rounded-3xl border border-[#dfe6f0] bg-[#fbfcff] p-6 shadow-sm transition hover:-translate-y-1 hover:shadow-xl">
+                <div className="flex items-center justify-between"><span className="text-[11px] font-bold tracking-[.15em] text-[#6a7da3]">{label}</span><Icon className="h-5 w-5 text-[#2457ff]"/></div>
+                <h3 className="mt-8 font-editorial text-2xl font-semibold leading-tight text-[#0f1e3d]">{title}</h3>
+                <p className="mt-3 leading-7 text-[#59677c]">{body}</p>
+                <div className="mt-8 text-sm font-bold text-[#2457ff]">Read the build →</div>
+              </article>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      <section id="join" className="border-y border-[#20345f] bg-[#07152f] py-16 text-white sm:py-20">
+        <div className="container-editorial grid gap-10 lg:grid-cols-[.9fr_1.1fr] lg:items-center">
+          <div>
+            <p className="text-sm font-bold uppercase tracking-[.14em] text-[#8fb0ff]">Free when you join</p>
+            <h2 className="mt-3 font-editorial text-4xl font-semibold leading-tight sm:text-5xl">Get the 25-Prompt Starter Pack.</h2>
+            <p className="mt-5 max-w-xl text-lg leading-8 text-[#c8d5ea]">Twenty-five prompts you can use today for writing, planning, research, learning, and getting better answers from AI.</p>
+            <ul className="mt-7 space-y-3 text-[#dce5f5]">
+              {packBullets.map((bullet) => <li key={bullet} className="flex items-center gap-3"><CheckCircle2 className="h-5 w-5 text-[#7fa5ff]"/>{bullet}</li>)}
             </ul>
-            <div className="mt-6">
-              <SignupForm />
-            </div>
+          </div>
+          <div className="rounded-3xl border border-white/10 bg-white/[.06] p-6 shadow-2xl sm:p-8 [&_label]:!text-[#e4ecfa] [&_input]:!border-white/15 [&_input]:!bg-white [&_input]:!text-[#0f1e3d] [&_p]:!text-[#aebdd5] [&_a]:!text-white">
+            <SignupForm />
           </div>
         </div>
       </section>
 
-      {/* 3. What readers will learn */}
-      <section id="lessons" className="container-editorial py-16 scroll-mt-24">
-        <div className="max-w-2xl">
-          <h2 className="font-editorial text-3xl font-semibold text-[--color-navy]">
-            What you&apos;ll learn
-          </h2>
-          <p className="mt-3 text-[--color-navy-600]">
-            Short, practical lessons in plain language. Read one in a coffee
-            break, use it the same day.
-          </p>
-        </div>
-        <div className="mt-10 grid gap-6 sm:grid-cols-2">
-          {learn.map(({ icon: Icon, title, body }) => (
-            <div
-              key={title}
-              className="rounded-[--radius] border border-[--color-line] bg-[--color-paper] p-6"
-            >
-              <div className="flex h-10 w-10 items-center justify-center rounded-full bg-[--color-brand-soft]">
-                <Icon className="h-5 w-5 text-[--color-brand]" aria-hidden />
-              </div>
-              <h3 className="mt-4 text-lg font-semibold text-[--color-navy]">
-                {title}
-              </h3>
-              <p className="mt-2 text-sm leading-relaxed text-[--color-navy-600]">
-                {body}
-              </p>
-            </div>
-          ))}
-        </div>
-      </section>
-
-      {/* 4. Founder story */}
-      <section className="border-t border-[--color-line] bg-[--color-cream-soft]">
-        <div className="container-editorial py-16">
-          <div className="max-w-2xl">
-            <h2 className="font-editorial text-3xl font-semibold text-[--color-navy]">
-              Why I&apos;m doing this
-            </h2>
-            <p className="mt-5 leading-relaxed text-[--color-navy-600]">
-              We all got hit with AI at the same time. I wasn&apos;t an expert,
-              and I definitely didn&apos;t have it all figured out — but I
-              decided I wasn&apos;t going to get left behind. So I started
-              learning, testing, building, failing, and slowly figuring out what
-              actually works.
-            </p>
-            <p className="mt-4 leading-relaxed text-[--color-navy-600]">
-              Along the way I saw how much noise there is out there — hype,
-              jargon, and people promising the world. That&apos;s not me. I want
-              to teach you what I know in plain language, one clear step at a
-              time, so you can use these tools with confidence too.
-            </p>
+      <section className="bg-[#fbfaf7] py-16 sm:py-20">
+        <div className="container-editorial grid gap-10 lg:grid-cols-[1.05fr_.95fr]">
+          <div>
+            <p className="text-sm font-bold uppercase tracking-[.14em] text-[#2457ff]">Why this exists</p>
+            <h2 className="mt-3 font-editorial text-4xl font-semibold leading-tight text-[#0f1e3d]">AI moved fast. Most explanations didn’t help normal people catch up.</h2>
+          </div>
+          <div className="space-y-5 text-lg leading-8 text-[#536177]">
+            <p>I wasn’t going to sit on the sidelines, so I started learning, testing, building, failing, and figuring out what actually works.</p>
+            <p>Let Me Teach You AI is where I turn that work into practical lessons you can use without pretending you need to become a programmer first.</p>
+            <p className="font-semibold text-[#0f1e3d]">No fake guru act. No overnight-rich promises. Build something useful and learn from it.</p>
           </div>
         </div>
       </section>
 
-      {/* 5. Who this is for */}
-      <section className="container-editorial py-16">
-        <div className="max-w-2xl">
-          <h2 className="font-editorial text-3xl font-semibold text-[--color-navy]">
-            Who this is for
-          </h2>
-          <p className="mt-3 text-[--color-navy-600]">
-            If any of these sound like you, you&apos;ll feel right at home.
-          </p>
-        </div>
-        <div className="mt-10 grid gap-6 sm:grid-cols-2">
-          {audience.map(({ icon: Icon, title, body }) => (
-            <div
-              key={title}
-              className="rounded-[--radius] border border-[--color-line] bg-[--color-paper] p-6"
-            >
-              <div className="flex h-10 w-10 items-center justify-center rounded-full bg-[--color-gold-soft]">
-                <Icon className="h-5 w-5 text-[--color-gold]" aria-hidden />
-              </div>
-              <h3 className="mt-4 text-lg font-semibold text-[--color-navy]">
-                {title}
-              </h3>
-              <p className="mt-2 text-sm leading-relaxed text-[--color-navy-600]">
-                {body}
-              </p>
-            </div>
-          ))}
-        </div>
-        <p className="mt-8 max-w-2xl text-sm leading-relaxed text-[--color-slate]">
-          Who it&apos;s <strong className="text-[--color-navy-600]">not</strong>{" "}
-          for: anyone looking for get-rich-quick schemes or overnight shortcuts.
-          This is about learning real, practical skills — not chasing hype.
-        </p>
-      </section>
-
-      {/* 6. Brand promise */}
-      <section className="border-t border-[--color-line] bg-[--color-cream-soft]">
-        <div className="container-editorial py-16 text-center">
-          <blockquote className="mx-auto max-w-2xl font-editorial text-2xl leading-snug text-[--color-navy]">
-            &ldquo;No fake gurus. No get-rich-quick promises. Just a real person
-            figuring out AI and sharing what works.&rdquo;
-          </blockquote>
-        </div>
-      </section>
-
-      {/* 7. Final signup call to action */}
-      <section className="border-t border-[--color-line] bg-[--color-brand-soft]">
-        <div className="container-editorial py-16">
-          <div className="mx-auto max-w-2xl text-center">
-            <h2 className="font-editorial text-3xl font-semibold text-[--color-navy]">
-              Get your 25 free prompts
-            </h2>
-            <p className="mt-3 text-[--color-navy-600]">
-              Join the newsletter and start using AI with confidence today.
-            </p>
-            <div className="mt-6 text-left">
-              <SignupForm compact />
-            </div>
+      <section className="border-t border-[#dfe6f0] bg-white py-16">
+        <div className="container-editorial text-center">
+          <h2 className="font-editorial text-4xl font-semibold text-[#0f1e3d]">Start with one useful thing.</h2>
+          <p className="mx-auto mt-4 max-w-xl text-lg text-[#59677c]">Pick a goal in the AI Lab or join free and get the 25 prompts.</p>
+          <div className="mt-7 flex flex-wrap justify-center gap-3">
+            <Link href="#lab" className="primary-cta rounded-xl px-6 py-3.5 font-bold">Open the AI Lab</Link>
+            <Link href="#join" className="rounded-xl border border-[#ccd7ea] bg-white px-6 py-3.5 font-bold text-[#10213f]">Get the prompts</Link>
           </div>
         </div>
       </section>
