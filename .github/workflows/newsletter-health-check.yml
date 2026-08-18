@@ -16,28 +16,15 @@ jobs:
           echo
           echo 'LIVE_NEWSLETTER_HEALTH_END'
 
-      - name: Test Beehiiv public subscribe path
+      - name: Test production subscribe endpoint
         run: |
           set -euo pipefail
-          UA='Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 Chrome/140.0 Safari/537.36'
-          EMAIL='khewitt1985+lmtyai-public-final-20260818@gmail.com'
+          EMAIL='khewitt1985+lmtyai-api-final-20260818@gmail.com'
           echo "TEST_EMAIL=$EMAIL"
-          curl -A "$UA" -L --silent --show-error --max-time 20 \
-            -H 'Origin: https://letmeteachyouai.beehiiv.com' \
-            -H 'Referer: https://letmeteachyouai.beehiiv.com/subscribe' \
-            -H 'Content-Type: application/x-www-form-urlencoded' \
-            --data-urlencode 'subscribe_error_message=Oops, something went wrong.' \
-            --data-urlencode 'subscribe_success_message=Subscribed!' \
-            --data-urlencode 'sent_from_orchid=true' \
-            --data-urlencode 'signup_flow_id=' \
-            --data-urlencode 'automation_ids=' \
-            --data-urlencode 'double_opt=false' \
-            --data-urlencode 'auto_login_enabled=true' \
-            --data-urlencode "email=$EMAIL" \
-            -o /tmp/sub-result.txt \
-            -w 'HTTP_STATUS=%{http_code}\nFINAL_URL=%{url_effective}\n' \
-            'https://letmeteachyouai.beehiiv.com/create'
-          echo 'SUBSCRIBE_RESPONSE_BEGIN'
-          head -c 2000 /tmp/sub-result.txt || true
-          echo
-          echo 'SUBSCRIBE_RESPONSE_END'
+          echo 'SUBSCRIBE_API_BEGIN'
+          curl -L --silent --show-error --max-time 20 \
+            -H 'Content-Type: application/json' \
+            -d "{\"email\":\"$EMAIL\",\"firstName\":\"Launch Test\",\"company\":\"\"}" \
+            -w '\nHTTP_STATUS=%{http_code}\nFINAL_URL=%{url_effective}\n' \
+            https://letmeteachyouai.com/api/subscribe
+          echo 'SUBSCRIBE_API_END'
