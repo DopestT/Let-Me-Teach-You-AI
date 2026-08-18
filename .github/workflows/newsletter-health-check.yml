@@ -16,19 +16,29 @@ jobs:
           echo
           echo 'LIVE_NEWSLETTER_HEALTH_END'
 
-      - name: Inspect public Beehiiv publication metadata
+      - name: Inspect public Beehiiv subscribe form
         run: |
-          set -u
+          set -euo pipefail
           UA='Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 Chrome/140.0 Safari/537.36'
-          for URL in https://letmeteachyouaihq.beehiiv.com/ https://letmeteachyouai.beehiiv.com/; do
-            echo "BEEHIIV_URL=$URL"
-            CODE=$(curl -A "$UA" -L --silent --show-error --max-time 20 -o /tmp/beehiiv.html -w '%{http_code}' "$URL" || true)
-            echo "HTTP_STATUS=$CODE"
-            if [ "$CODE" = "200" ]; then
-              echo 'BEEHIIV_PUBLIC_METADATA_BEGIN'
-              grep -Eo 'pub_[A-Za-z0-9_-]+' /tmp/beehiiv.html | sort -u | head -20 || true
-              grep -Eoi 'https?://[^"'"'"'<> ]*(subscribe|subscription)[^"'"'"'<> ]*' /tmp/beehiiv.html | sort -u | head -20 || true
-              grep -Eoi '(form|action|subscribe|subscription|publication)[^<>]{0,220}' /tmp/beehiiv.html | head -80 || true
-              echo 'BEEHIIV_PUBLIC_METADATA_END'
-            fi
-          done
+          curl -A "$UA" -L --fail --silent --show-error --max-time 20 'https://letmeteachyouai.beehiiv.com/subscribe' -o /tmp/beehiiv.html
+          python - <<'PY'
+          from html.parser import HTMLParser
+          import re
+          html=open('/tmp/beehiiv.html',encoding='utf-8',errors='ignore').read()
+          class P(HTMLParser):
+              def handle_starttag(self, tag, attrs):
+                  d=dict(attrs)
+                  if tag=='form': print('FORM', d)
+                  if tag=='input': print('INPUT', {k:v for k,v in d.items() if k in ('name','type','value','placeholder','id')})
+                  if tag=='script' and d.get('src') and any(x in d.get('src','').lower() for x in ('subscr','form','widget')): print('SCRIPT',d['src'])
+          P().feed(html)
+          print('ENDPOINT_CANDIDATES')
+          pats=[r'https?://[^"\'<> ]+', r'/[^"\'<> ]*(?:subscribe|subscription)[^"\'<> ]*']
+          seen=set()
+          for pat in pats:
+              for s in re.findall(pat,html,re.I):
+                  if any(x in s.lower() for x in ('subscribe','subscription')) and s not in seen:
+                      seen.add(s); print(s[:500])
+          print('UUIDS')
+          for s in sorted(set(re.findall(r'\b[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}\b',html,re.I))): print(s)
+          PY
