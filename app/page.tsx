@@ -15,18 +15,21 @@ const projects = [
     label: "AUTOMATION",
     title: "Build an AI workflow from plain English",
     body: "Turn a repeated process into a trigger, actions, approval points, and a test plan.",
+    href: "/build/ai-workflow-from-plain-english",
   },
   {
     icon: Globe2,
     label: "BUILD",
     title: "Launch an AI-made landing page",
     body: "Generate the first version, audit it, test it on mobile, and put it online.",
+    href: null,
   },
   {
     icon: Bot,
     label: "AGENTS",
     title: "Design an AI agent that stays under control",
     body: "Define the job, tools, limits, and human checkpoints before giving it access.",
+    href: null,
   },
 ];
 
@@ -109,12 +112,18 @@ export default function HomePage() {
             <p className="max-w-md text-[#5a687c]">Real workflows, real sites, real agents — broken down so a beginner can understand what happened.</p>
           </div>
           <div className="mt-10 grid gap-5 lg:grid-cols-3">
-            {projects.map(({icon: Icon,label,title,body}) => (
+            {projects.map(({icon: Icon,label,title,body,href}) => (
               <article key={title} className="group rounded-3xl border border-[#dfe6f0] bg-[#fbfcff] p-6 shadow-sm transition hover:-translate-y-1 hover:shadow-xl">
                 <div className="flex items-center justify-between"><span className="text-[11px] font-bold tracking-[.15em] text-[#6a7da3]">{label}</span><Icon className="h-5 w-5 text-[#2457ff]"/></div>
                 <h3 className="mt-8 font-editorial text-2xl font-semibold leading-tight text-[#0f1e3d]">{title}</h3>
                 <p className="mt-3 leading-7 text-[#59677c]">{body}</p>
-                <div className="mt-8 text-sm font-bold text-[#2457ff]">Read the build →</div>
+                {href ? (
+                  <Link href={href} className="mt-8 inline-flex items-center gap-1 text-sm font-bold text-[#2457ff]">
+                    Read the build <ArrowRight className="h-4 w-4" />
+                  </Link>
+                ) : (
+                  <div className="mt-8 text-sm font-bold text-[#8b97aa]">Coming soon</div>
+                )}
               </article>
             ))}
           </div>
