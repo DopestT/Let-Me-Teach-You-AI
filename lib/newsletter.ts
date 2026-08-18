@@ -1,14 +1,15 @@
 /**
  * Newsletter integration (server-side only). Provider: Beehiiv.
  *
- * Beehiiv owns the subscriber list, the 5-email welcome sequence, and
- * lead-magnet (PDF) delivery via its automations. We send only the minimum
- * personal data required to subscribe: email + optional first name.
+ * Beehiiv owns the subscriber list, the welcome sequence, and lead-magnet
+ * delivery. We send only the minimum personal data required to subscribe:
+ * email + optional first name.
  *
  * Provider-agnostic env names so the provider can be swapped without touching
  * callers:
- *   NEWSLETTER_API_KEY     -> Beehiiv API key
- *   NEWSLETTER_AUDIENCE_ID -> Beehiiv Publication ID
+ *   NEWSLETTER_API_KEY                  -> Beehiiv API key
+ *   NEWSLETTER_AUDIENCE_ID              -> Beehiiv Publication ID
+ *   NEWSLETTER_WELCOME_AUTOMATION_ID    -> optional Beehiiv Automation ID
  *
  * Docs: https://developers.beehiiv.com
  */
@@ -17,6 +18,8 @@ import { logger } from "@/lib/logger";
 
 const API_BASE = "https://api.beehiiv.com/v2";
 const SIGNUP_TAG = process.env.NEWSLETTER_SIGNUP_TAG ?? "beginner-prompt-pack";
+const WELCOME_AUTOMATION_ID =
+  process.env.NEWSLETTER_WELCOME_AUTOMATION_ID?.trim();
 
 type SubscribeArgs = {
   email: string;
@@ -65,11 +68,18 @@ export async function subscribe(
         body: JSON.stringify({
           email: args.email,
           reactivate_existing: true,
-          send_welcome_email: true, // triggers the welcome automation + PDF
+          // If the multi-email Beehiiv automation is configured, enroll the
+          // subscriber directly and suppress the separate one-off welcome
+          // email to avoid sending two welcome messages.
+          send_welcome_email: !WELCOME_AUTOMATION_ID,
+          ...(WELCOME_AUTOMATION_ID
+            ? { automation_ids: [WELCOME_AUTOMATION_ID] }
+            : {}),
           utm_source: args.utmSource ?? "website",
           referring_site: args.referringSite ?? "letmeteachyouai.com",
-          // Segmentation tag for the prompt-pack funnel.
-          tags: [SIGNUP_TAG],
+          // Keep funnel attribution in a Beehiiv custom field. The create
+          // subscription API does not currently document `tags` as a writable
+          // request field.
           custom_fields: [
             { name: "Signup Source", value: SIGNUP_TAG },
             ...(args.firstName
@@ -87,7 +97,11 @@ export async function subscribe(
 
     const data = (await res.json()) as { data?: { status?: string } };
     const alreadySubscribed = data?.data?.status === "active";
-    logger.info("newsletter.subscribed", { alreadySubscribed, tag: SIGNUP_TAG });
+    logger.info("newsletter.subscribed", {
+      alreadySubscribed,
+      signupSource: SIGNUP_TAG,
+      welcomeMode: WELCOME_AUTOMATION_ID ? "automation" : "welcome_email",
+    });
     return { ok: true, alreadySubscribed };
   } catch (err) {
     logger.error("newsletter.request_failed", {
