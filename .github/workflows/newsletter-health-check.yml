@@ -16,15 +16,10 @@ jobs:
           echo
           echo 'LIVE_NEWSLETTER_HEALTH_END'
 
-      - name: Test production subscribe endpoint
+      - name: List Beehiiv automations
         run: |
           set -euo pipefail
-          EMAIL='khewitt1985+lmtyai-api-final-20260818@gmail.com'
-          echo "TEST_EMAIL=$EMAIL"
-          echo 'SUBSCRIBE_API_BEGIN'
-          curl -L --silent --show-error --max-time 20 \
-            -H 'Content-Type: application/json' \
-            -d "{\"email\":\"$EMAIL\",\"firstName\":\"Launch Test\",\"company\":\"\"}" \
-            -w '\nHTTP_STATUS=%{http_code}\nFINAL_URL=%{url_effective}\n' \
-            https://letmeteachyouai.com/api/subscribe
-          echo 'SUBSCRIBE_API_END'
+          echo 'BEEHIIV_AUTOMATIONS_BEGIN'
+          curl -L --fail --silent --show-error --max-time 20 https://letmeteachyouai.com/api/newsletter-automations
+          echo
+          echo 'BEEHIIV_AUTOMATIONS_END'
