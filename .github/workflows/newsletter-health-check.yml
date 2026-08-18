@@ -1,9 +1,7 @@
 name: Newsletter Health Check
 
 on:
-  push:
-    paths:
-      - '.github/workflows/newsletter-health-check.yml'
+  pull_request:
   workflow_dispatch:
 
 jobs:
