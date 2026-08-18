@@ -6,35 +6,26 @@ export function SiteFooter() {
   const year = 2026;
   return (
     <footer className="border-t border-[--color-line] bg-[--color-cream-soft]">
-      <div className="container-editorial py-10 flex flex-col gap-6 sm:flex-row sm:items-center sm:justify-between">
+      <div className="container-editorial py-10 flex flex-col gap-6 sm:flex-row sm:items-start sm:justify-between">
         <div>
-          <p className="font-editorial text-base font-semibold text-[--color-navy]">
+          <Link href="/" className="font-editorial text-base font-semibold text-[--color-navy] hover:text-[--color-brand]">
             {SITE_NAME}
-          </p>
+          </Link>
           <p className="mt-1 text-sm text-[--color-slate] max-w-md">
             Practical AI, taught plainly. No hype, no get-rich-quick promises —
             just what actually works.
           </p>
         </div>
-        <nav className="flex flex-wrap gap-x-6 gap-y-2 text-sm text-[--color-navy-600]">
-          <Link href="/#join" className="hover:text-[--color-brand]">
-            Join
-          </Link>
-          <Link href="/playground" className="hover:text-[--color-brand]">
-            AI helper
-          </Link>
-          <Link href="/contact" className="hover:text-[--color-brand]">
-            Contact
-          </Link>
-          <Link href="/privacy" className="hover:text-[--color-brand]">
-            Privacy
-          </Link>
-          <Link href="/terms" className="hover:text-[--color-brand]">
-            Terms
-          </Link>
-          <Link href="/disclosure" className="hover:text-[--color-brand]">
-            Disclosure
-          </Link>
+        <nav className="flex max-w-xl flex-wrap gap-x-6 gap-y-3 text-sm text-[--color-navy-600]" aria-label="Footer navigation">
+          <Link href="/" className="hover:text-[--color-brand]">Home</Link>
+          <Link href="/#lab" className="hover:text-[--color-brand]">AI Lab</Link>
+          <Link href="/build/ai-workflow-from-plain-english" className="hover:text-[--color-brand]">Build guides</Link>
+          <Link href="/playground" className="hover:text-[--color-brand]">AI helper</Link>
+          <Link href="/#join" className="hover:text-[--color-brand]">Join free</Link>
+          <Link href="/contact" className="hover:text-[--color-brand]">Contact</Link>
+          <Link href="/privacy" className="hover:text-[--color-brand]">Privacy</Link>
+          <Link href="/terms" className="hover:text-[--color-brand]">Terms</Link>
+          <Link href="/disclosure" className="hover:text-[--color-brand]">Disclosure</Link>
         </nav>
       </div>
       <div className="container-editorial pb-8 text-xs text-[--color-slate]">
