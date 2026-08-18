@@ -1,0 +1,19 @@
+name: Newsletter Health Check
+
+on:
+  push:
+    paths:
+      - '.github/workflows/newsletter-health-check.yml'
+  workflow_dispatch:
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check live newsletter configuration
+        run: |
+          set -euo pipefail
+          echo 'LIVE_NEWSLETTER_HEALTH_BEGIN'
+          curl --fail --silent --show-error --max-time 20 https://letmeteachyouai.com/api/newsletter-health
+          echo
+          echo 'LIVE_NEWSLETTER_HEALTH_END'
