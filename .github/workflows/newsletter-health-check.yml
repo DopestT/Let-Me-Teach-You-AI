@@ -15,3 +15,13 @@ jobs:
           curl -L --fail --silent --show-error --max-time 20 https://letmeteachyouai.com/api/newsletter-health
           echo
           echo 'LIVE_NEWSLETTER_HEALTH_END'
+
+      - name: Inspect public Beehiiv publication metadata
+        run: |
+          set -euo pipefail
+          curl -L --fail --silent --show-error --max-time 20 https://letmeteachyouaihq.beehiiv.com/ -o /tmp/beehiiv.html
+          echo 'BEEHIIV_PUBLIC_METADATA_BEGIN'
+          grep -Eo 'pub_[A-Za-z0-9_-]+' /tmp/beehiiv.html | sort -u | head -20 || true
+          grep -Eoi 'https?://[^"'"'"'<> ]*(subscribe|subscription)[^"'"'"'<> ]*' /tmp/beehiiv.html | sort -u | head -20 || true
+          grep -Eoi '(form|action|subscribe|subscription|publication)[^<>]{0,220}' /tmp/beehiiv.html | head -60 || true
+          echo 'BEEHIIV_PUBLIC_METADATA_END'
