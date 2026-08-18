@@ -18,10 +18,17 @@ jobs:
 
       - name: Inspect public Beehiiv publication metadata
         run: |
-          set -euo pipefail
-          curl -L --fail --silent --show-error --max-time 20 https://letmeteachyouaihq.beehiiv.com/ -o /tmp/beehiiv.html
-          echo 'BEEHIIV_PUBLIC_METADATA_BEGIN'
-          grep -Eo 'pub_[A-Za-z0-9_-]+' /tmp/beehiiv.html | sort -u | head -20 || true
-          grep -Eoi 'https?://[^"'"'"'<> ]*(subscribe|subscription)[^"'"'"'<> ]*' /tmp/beehiiv.html | sort -u | head -20 || true
-          grep -Eoi '(form|action|subscribe|subscription|publication)[^<>]{0,220}' /tmp/beehiiv.html | head -60 || true
-          echo 'BEEHIIV_PUBLIC_METADATA_END'
+          set -u
+          UA='Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 Chrome/140.0 Safari/537.36'
+          for URL in https://letmeteachyouaihq.beehiiv.com/ https://letmeteachyouai.beehiiv.com/; do
+            echo "BEEHIIV_URL=$URL"
+            CODE=$(curl -A "$UA" -L --silent --show-error --max-time 20 -o /tmp/beehiiv.html -w '%{http_code}' "$URL" || true)
+            echo "HTTP_STATUS=$CODE"
+            if [ "$CODE" = "200" ]; then
+              echo 'BEEHIIV_PUBLIC_METADATA_BEGIN'
+              grep -Eo 'pub_[A-Za-z0-9_-]+' /tmp/beehiiv.html | sort -u | head -20 || true
+              grep -Eoi 'https?://[^"'"'"'<> ]*(subscribe|subscription)[^"'"'"'<> ]*' /tmp/beehiiv.html | sort -u | head -20 || true
+              grep -Eoi '(form|action|subscribe|subscription|publication)[^<>]{0,220}' /tmp/beehiiv.html | head -80 || true
+              echo 'BEEHIIV_PUBLIC_METADATA_END'
+            fi
+          done
