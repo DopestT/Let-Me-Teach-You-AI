@@ -32,6 +32,9 @@ export function SiteFooter() {
           <Link href="/terms" className="hover:text-[--color-brand]">
             Terms
           </Link>
+          <Link href="/disclosure" className="hover:text-[--color-brand]">
+            Disclosure
+          </Link>
         </nav>
       </div>
       <div className="container-editorial pb-8 text-xs text-[--color-slate]">
