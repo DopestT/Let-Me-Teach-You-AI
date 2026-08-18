@@ -18,8 +18,9 @@ export function SiteFooter() {
         </div>
         <nav className="flex max-w-xl flex-wrap gap-x-6 gap-y-3 text-sm text-[--color-navy-600]" aria-label="Footer navigation">
           <Link href="/" className="hover:text-[--color-brand]">Home</Link>
+          <Link href="/learn" className="hover:text-[--color-brand]">Learn</Link>
           <Link href="/#lab" className="hover:text-[--color-brand]">AI Lab</Link>
-          <Link href="/build/ai-workflow-from-plain-english" className="hover:text-[--color-brand]">Build guides</Link>
+          <Link href="/build/ai-workflow-from-plain-english" className="hover:text-[--color-brand]">Build guide</Link>
           <Link href="/playground" className="hover:text-[--color-brand]">AI helper</Link>
           <Link href="/#join" className="hover:text-[--color-brand]">Join free</Link>
           <Link href="/contact" className="hover:text-[--color-brand]">Contact</Link>
