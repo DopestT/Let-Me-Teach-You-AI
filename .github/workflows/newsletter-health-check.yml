@@ -12,6 +12,6 @@ jobs:
         run: |
           set -euo pipefail
           echo 'LIVE_NEWSLETTER_HEALTH_BEGIN'
-          curl --fail --silent --show-error --max-time 20 https://letmeteachyouai.com/api/newsletter-health
+          curl -L --fail --silent --show-error --max-time 20 https://letmeteachyouai.com/api/newsletter-health
           echo
           echo 'LIVE_NEWSLETTER_HEALTH_END'
