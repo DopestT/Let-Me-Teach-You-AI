@@ -1,6 +1,7 @@
 {
   "approval_id": "2026-08-20-turn-project-files-into-action-plan-with-ai",
   "status": "approved",
+  "ready_to_send": false,
   "approved_at": "2026-08-20T13:11:40-04:00",
   "issue_date": "2026-08-20",
   "subject": "Talk Through Your Files and Leave With a Real Action Plan",
@@ -14,6 +15,6 @@
   "html_url": "",
   "beehiiv_post_id": "",
   "sent_at": "",
-  "error": "",
-  "notes": "ChatGPT writes this queue record when the user says Approved. n8n should process each unique approval_id once."
+  "error": "html_url_not_published_yet",
+  "notes": "ChatGPT writes this queue record when the user says Approved. n8n processes each unique approval_id only when ready_to_send=true and html_url is populated."
 }
