@@ -1,0 +1,19 @@
+{
+  "approval_id": "2026-08-20-turn-project-files-into-action-plan-with-ai",
+  "status": "approved",
+  "approved_at": "2026-08-20T13:11:40-04:00",
+  "issue_date": "2026-08-20",
+  "subject": "Talk Through Your Files and Leave With a Real Action Plan",
+  "preview_text": "ChatGPT Voice can now work inside Projects with uploaded files. Here’s a practical way to turn a messy project packet into a clean brief, decisions, and next steps.",
+  "web_title": "How to Turn a Messy Project Folder Into a Clear Action Plan With AI",
+  "slug": "turn-project-files-into-action-plan-with-ai",
+  "category": "AI Workflows",
+  "author": "Brother Big",
+  "google_doc_id": "1ZB-XFUMurBHngvZRwbpax3T7AjK5pehZn5z3GAUmRW4",
+  "google_doc_url": "https://docs.google.com/document/d/1ZB-XFUMurBHngvZRwbpax3T7AjK5pehZn5z3GAUmRW4/edit?usp=drivesdk",
+  "html_url": "",
+  "beehiiv_post_id": "",
+  "sent_at": "",
+  "error": "",
+  "notes": "ChatGPT writes this queue record when the user says Approved. n8n should process each unique approval_id once."
+}
