@@ -17,125 +17,136 @@ jobs:
       - name: Check out repository
         uses: actions/checkout@v4
 
-      - name: Trigger production Beehiiv sender
+      - name: Send, verify, and persist result
         shell: bash
         run: |
-          set -euo pipefail
+          set -u
           url="https://letmeteachyouai.com/api/newsletter-send-approved"
-          result_file="$RUNNER_TEMP/newsletter-send.json"
+          approval_file="automation/newsletter-approval.json"
+          diagnostic_file="automation/newsletter-send-last.json"
+          send_body=''
+          send_http=''
+          verify_body=''
+          verify_http=''
+          post_id=''
+          post_status=''
+          web_url=''
+          final_error=''
+          outcome='failed'
 
           for attempt in $(seq 1 12); do
             echo "SEND_ATTEMPT=$attempt"
-            response="$(curl --silent --show-error --max-time 35 -w $'\nHTTP_STATUS=%{http_code}' "$url" || true)"
-            status="$(printf '%s\n' "$response" | sed -n 's/^HTTP_STATUS=//p' | tail -1)"
-            body="$(printf '%s\n' "$response" | sed '/^HTTP_STATUS=/d')"
-            echo "HTTP_STATUS=${status:-unknown}"
-            echo "$body"
+            response="$(curl --silent --show-error --max-time 35 -w $'\nHTTP_STATUS=%{http_code}' "$url" 2>&1 || true)"
+            send_http="$(printf '%s\n' "$response" | sed -n 's/^HTTP_STATUS=//p' | tail -1)"
+            send_body="$(printf '%s\n' "$response" | sed '/^HTTP_STATUS=/d')"
+            echo "HTTP_STATUS=${send_http:-unknown}"
+            echo "$send_body"
 
-            if printf '%s' "$body" | jq -e '.ok == true' >/dev/null 2>&1; then
-              printf '%s' "$body" > "$result_file"
+            if printf '%s' "$send_body" | jq -e '.ok == true' >/dev/null 2>&1; then
+              post_id="$(printf '%s' "$send_body" | jq -r '.post.id // .created.data.id // empty')"
               break
             fi
 
-            stage="$(printf '%s' "$body" | jq -r '.stage // empty' 2>/dev/null || true)"
+            stage="$(printf '%s' "$send_body" | jq -r '.stage // empty' 2>/dev/null || true)"
             if [[ "$stage" == "beehiiv_create" || "$stage" == "dedupe_lookup" || "$stage" == "configuration" ]]; then
-              echo "NON_RETRYABLE_STAGE=$stage" >&2
-              exit 1
+              final_error="${stage}: $(printf '%s' "$send_body" | jq -c '.' 2>/dev/null || printf '%s' "$send_body")"
+              break
             fi
-
             sleep 5
           done
 
-          if [[ ! -s "$result_file" ]]; then
-            echo "Newsletter sender never returned ok=true." >&2
-            exit 1
-          fi
-
-          post_id="$(jq -r '.post.id // .created.data.id // empty' "$result_file")"
-          if [[ -z "$post_id" || "$post_id" == "null" ]]; then
-            echo "Beehiiv response did not include a post ID." >&2
-            cat "$result_file"
-            exit 1
-          fi
-
-          echo "POST_ID=$post_id" >> "$GITHUB_ENV"
-          echo "Beehiiv accepted post: $post_id"
-
-      - name: Verify confirmed post without resubmitting
-        shell: bash
-        run: |
-          set -euo pipefail
-          verify_file="$RUNNER_TEMP/newsletter-verify.json"
-          verify_url="https://letmeteachyouai.com/api/newsletter-send-approved?post_id=${POST_ID}"
-
-          for attempt in $(seq 1 15); do
-            echo "VERIFY_ATTEMPT=$attempt"
-            response="$(curl --silent --show-error --max-time 35 -w $'\nHTTP_STATUS=%{http_code}' "$verify_url" || true)"
-            status="$(printf '%s\n' "$response" | sed -n 's/^HTTP_STATUS=//p' | tail -1)"
-            body="$(printf '%s\n' "$response" | sed '/^HTTP_STATUS=/d')"
-            echo "HTTP_STATUS=${status:-unknown}"
-            echo "$body"
-
-            if printf '%s' "$body" | jq -e --arg id "$POST_ID" '.ok == true and .post.id == $id' >/dev/null 2>&1; then
-              printf '%s' "$body" > "$verify_file"
-              break
+          if [[ -z "$post_id" ]]; then
+            if [[ -z "$final_error" ]]; then
+              final_error="sender_no_post_id: ${send_body}"
             fi
+          else
+            verify_url="${url}?post_id=${post_id}"
+            for attempt in $(seq 1 15); do
+              echo "VERIFY_ATTEMPT=$attempt"
+              response="$(curl --silent --show-error --max-time 35 -w $'\nHTTP_STATUS=%{http_code}' "$verify_url" 2>&1 || true)"
+              verify_http="$(printf '%s\n' "$response" | sed -n 's/^HTTP_STATUS=//p' | tail -1)"
+              verify_body="$(printf '%s\n' "$response" | sed '/^HTTP_STATUS=/d')"
+              echo "HTTP_STATUS=${verify_http:-unknown}"
+              echo "$verify_body"
 
-            if printf '%s' "$body" | jq -e '.processing == true' >/dev/null 2>&1; then
+              if printf '%s' "$verify_body" | jq -e --arg id "$post_id" '.ok == true and .post.id == $id' >/dev/null 2>&1; then
+                post_status="$(printf '%s' "$verify_body" | jq -r '.post.status // empty')"
+                web_url="$(printf '%s' "$verify_body" | jq -r '.post.web_url // empty')"
+                break
+              fi
+
+              if printf '%s' "$verify_body" | jq -e '.processing == true' >/dev/null 2>&1; then
+                sleep 4
+                continue
+              fi
+
+              stage="$(printf '%s' "$verify_body" | jq -r '.stage // empty' 2>/dev/null || true)"
+              if [[ "$stage" == "post_status" && "${verify_http:-}" != "202" ]]; then
+                final_error="post_status: $(printf '%s' "$verify_body" | jq -c '.' 2>/dev/null || printf '%s' "$verify_body")"
+                break
+              fi
               sleep 4
-              continue
+            done
+
+            if [[ "$post_status" == "confirmed" ]]; then
+              outcome='sent'
+              final_error=''
+            elif [[ -z "$final_error" ]]; then
+              final_error="unexpected_post_status:${post_status:-unknown}"
             fi
-
-            stage="$(printf '%s' "$body" | jq -r '.stage // empty' 2>/dev/null || true)"
-            if [[ "$stage" == "post_status" && "${status:-}" != "202" ]]; then
-              echo "Post verification failed." >&2
-              exit 1
-            fi
-
-            sleep 4
-          done
-
-          if [[ ! -s "$verify_file" ]]; then
-            echo "Beehiiv post did not finish processing." >&2
-            exit 1
           fi
 
-          post_status="$(jq -r '.post.status // empty' "$verify_file")"
-          if [[ "$post_status" != "confirmed" ]]; then
-            echo "Unexpected Beehiiv status: $post_status" >&2
-            cat "$verify_file"
-            exit 1
-          fi
+          recorded_at="$(date -u +'%Y-%m-%dT%H:%M:%SZ')"
+          jq -n \
+            --arg outcome "$outcome" \
+            --arg recorded_at "$recorded_at" \
+            --arg post_id "$post_id" \
+            --arg post_status "$post_status" \
+            --arg web_url "$web_url" \
+            --arg send_http "$send_http" \
+            --arg verify_http "$verify_http" \
+            --arg error "$final_error" \
+            --arg send_body "$send_body" \
+            --arg verify_body "$verify_body" \
+            '{outcome:$outcome, recorded_at:$recorded_at, post_id:$post_id, post_status:$post_status, web_url:$web_url, send_http:$send_http, verify_http:$verify_http, error:$error, send_body:$send_body, verify_body:$verify_body}' \
+            > "$diagnostic_file"
 
-          web_url="$(jq -r '.post.web_url // empty' "$verify_file")"
-          echo "POST_STATUS=$post_status" >> "$GITHUB_ENV"
-          echo "POST_WEB_URL=$web_url" >> "$GITHUB_ENV"
-          echo "Beehiiv post verified confirmed."
-
-      - name: Record verified send in approval queue
-        shell: bash
-        run: |
-          set -euo pipefail
-          file="automation/newsletter-approval.json"
-          sent_at="$(date -u +'%Y-%m-%dT%H:%M:%SZ')"
           tmp="$(mktemp)"
-
-          jq \
-            --arg id "$POST_ID" \
-            --arg sent_at "$sent_at" \
-            --arg web_url "${POST_WEB_URL:-}" \
-            '.beehiiv_post_id = $id
-             | .sent_at = $sent_at
-             | .beehiiv_web_url = $web_url
-             | .status = "sent"
-             | .ready_to_send = false
-             | .error = ""
-             | .notes = "Direct Beehiiv Send API accepted the approved branded issue and the returned post was verified with status confirmed. The fragile n8n send dependency was bypassed."' \
-            "$file" > "$tmp"
-          mv "$tmp" "$file"
+          if [[ "$outcome" == "sent" ]]; then
+            jq \
+              --arg id "$post_id" \
+              --arg sent_at "$recorded_at" \
+              --arg web_url "$web_url" \
+              '.beehiiv_post_id = $id
+               | .sent_at = $sent_at
+               | .beehiiv_web_url = $web_url
+               | .status = "sent"
+               | .ready_to_send = false
+               | .error = ""
+               | .notes = "Direct Beehiiv Send API accepted the approved branded issue and the returned post was verified with status confirmed. The fragile n8n send dependency was bypassed."' \
+              "$approval_file" > "$tmp"
+          else
+            jq \
+              --arg error "$final_error" \
+              --arg id "$post_id" \
+              '.beehiiv_post_id = (if $id == "" then .beehiiv_post_id else $id end)
+               | .status = "send_failed"
+               | .ready_to_send = false
+               | .error = $error
+               | .notes = "Direct send attempt failed. See automation/newsletter-send-last.json for the exact upstream response."' \
+              "$approval_file" > "$tmp"
+          fi
+          mv "$tmp" "$approval_file"
 
           git config user.name "AI Ledger Send Bot"
           git config user.email "actions@users.noreply.github.com"
-          git add "$file"
-          git commit -m "Record verified Beehiiv send for Aug 31 AI Ledger"
-          git push
+          git add "$approval_file" "$diagnostic_file"
+          git commit -m "Record AI Ledger Beehiiv send outcome" || true
+          git push || true
+
+          if [[ "$outcome" != "sent" ]]; then
+            echo "NEWSLETTER_SEND_FAILED: $final_error" >&2
+            exit 1
+          fi
+
+          echo "NEWSLETTER_SEND_VERIFIED: $post_id"
