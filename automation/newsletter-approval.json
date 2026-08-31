@@ -1,7 +1,7 @@
 {
   "approval_id": "2026-08-31-stop-using-ai-like-a-chatbot-start-using-it-like-a-coworker",
-  "status": "approved",
-  "ready_to_send": true,
+  "status": "send_failed",
+  "ready_to_send": false,
   "send_api_confirmed": true,
   "approved_at": "2026-08-31T09:09:48-04:00",
   "send_requested_at": "2026-08-31T09:09:48-04:00",
@@ -17,6 +17,6 @@
   "html_url": "https://raw.githubusercontent.com/DopestT/Let-Me-Teach-You-AI/main/automation/approved/2026-08-31-stop-using-ai-like-a-chatbot-start-using-it-like-a-coworker.html",
   "beehiiv_post_id": "",
   "sent_at": "",
-  "error": "",
-  "notes": "User approved the current AI Ledger edition and requested immediate send when the branded final was complete. n8n should process this unique approval_id once, publish/send through Beehiiv, then store the returned post ID and sent_at to prevent duplicates."
+  "error": "sender_no_post_id: Redirecting...",
+  "notes": "Direct send attempt failed. See automation/newsletter-send-last.json for the exact upstream response."
 }

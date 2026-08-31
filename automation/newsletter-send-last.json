@@ -1,0 +1,12 @@
+{
+  "outcome": "failed",
+  "recorded_at": "2026-08-31T13:28:08Z",
+  "post_id": "",
+  "post_status": "",
+  "web_url": "",
+  "send_http": "307",
+  "verify_http": "",
+  "error": "sender_no_post_id: Redirecting...",
+  "send_body": "Redirecting...",
+  "verify_body": ""
+}
