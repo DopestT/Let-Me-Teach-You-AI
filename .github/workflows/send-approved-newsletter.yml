@@ -1,0 +1,42 @@
+name: Send Approved AI Ledger Issue
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - ".github/workflows/send-approved-newsletter.yml"
+  workflow_dispatch:
+
+jobs:
+  send:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Trigger production Beehiiv sender
+        shell: bash
+        run: |
+          set -euo pipefail
+          url="https://letmeteachyouai.com/api/newsletter-send-approved"
+          for attempt in $(seq 1 12); do
+            echo "SEND_ATTEMPT=$attempt"
+            response="$(curl --silent --show-error --max-time 35 -w $'\nHTTP_STATUS=%{http_code}' "$url" || true)"
+            status="$(printf '%s\n' "$response" | sed -n 's/^HTTP_STATUS=//p' | tail -1)"
+            body="$(printf '%s\n' "$response" | sed '/^HTTP_STATUS=/d')"
+            echo "HTTP_STATUS=${status:-unknown}"
+            echo "$body"
+
+            if printf '%s' "$body" | jq -e '.ok == true' >/dev/null 2>&1; then
+              echo "NEWSLETTER_SEND_OK"
+              exit 0
+            fi
+
+            stage="$(printf '%s' "$body" | jq -r '.stage // empty' 2>/dev/null || true)"
+            if [[ "$stage" == "beehiiv_create" || "$stage" == "dedupe_lookup" || "$stage" == "configuration" ]]; then
+              echo "NON_RETRYABLE_STAGE=$stage" >&2
+              exit 1
+            fi
+
+            sleep 5
+          done
+
+          echo "Newsletter sender did not return ok=true after retries." >&2
+          exit 1
