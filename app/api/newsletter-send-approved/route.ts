@@ -15,7 +15,7 @@ function headers(apiKey: string) {
   };
 }
 
-export async function GET() {
+export async function GET(request: Request) {
   const apiKey = process.env.NEWSLETTER_API_KEY;
   const publicationId = process.env.NEWSLETTER_AUDIENCE_ID;
 
@@ -27,6 +27,54 @@ export async function GET() {
   }
 
   try {
+    const requestUrl = new URL(request.url);
+    const postId = requestUrl.searchParams.get("post_id");
+
+    // Read-only verification mode. Never creates a post.
+    if (postId) {
+      if (!/^post_[0-9a-fA-F-]+$/.test(postId)) {
+        return NextResponse.json(
+          { ok: false, stage: "post_status", message: "Invalid post_id." },
+          { status: 400, headers: { "Cache-Control": "no-store" } }
+        );
+      }
+
+      const verify = await fetch(
+        `https://api.beehiiv.com/v2/publications/${publicationId}/posts/${postId}`,
+        {
+          headers: headers(apiKey),
+          cache: "no-store",
+        }
+      );
+
+      const text = await verify.text();
+      let payload: unknown = text;
+      try {
+        payload = JSON.parse(text);
+      } catch {
+        // Keep raw upstream text for diagnostics.
+      }
+
+      if (verify.status === 202) {
+        return NextResponse.json(
+          { ok: false, processing: true, stage: "post_status", post_id: postId, payload },
+          { status: 202, headers: { "Cache-Control": "no-store" } }
+        );
+      }
+
+      if (!verify.ok) {
+        return NextResponse.json(
+          { ok: false, stage: "post_status", upstreamStatus: verify.status, post_id: postId, payload },
+          { status: 502, headers: { "Cache-Control": "no-store" } }
+        );
+      }
+
+      return NextResponse.json(
+        { ok: true, verificationOnly: true, post: (payload as { data?: unknown })?.data ?? payload },
+        { headers: { "Cache-Control": "no-store" } }
+      );
+    }
+
     // Idempotency gate: if this exact slug already exists, never create another copy.
     const lookupUrl = new URL(`https://api.beehiiv.com/v2/publications/${publicationId}/posts`);
     lookupUrl.searchParams.append("slugs[]", SLUG);
