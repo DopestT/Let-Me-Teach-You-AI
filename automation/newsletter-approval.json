@@ -1,8 +1,8 @@
 {
   "approval_id": "2026-08-31-stop-using-ai-like-a-chatbot-start-using-it-like-a-coworker",
-  "status": "send_failed",
+  "status": "blocked_by_beehiiv_plan",
   "ready_to_send": false,
-  "send_api_confirmed": true,
+  "send_api_confirmed": false,
   "approved_at": "2026-08-31T09:09:48-04:00",
   "send_requested_at": "2026-08-31T09:09:48-04:00",
   "issue_date": "2026-08-31",
@@ -17,6 +17,7 @@
   "html_url": "https://raw.githubusercontent.com/DopestT/Let-Me-Teach-You-AI/main/automation/approved/2026-08-31-stop-using-ai-like-a-chatbot-start-using-it-like-a-coworker.html",
   "beehiiv_post_id": "",
   "sent_at": "",
-  "error": "sender_no_post_id: Redirecting...",
-  "notes": "Direct send attempt failed. See automation/newsletter-send-last.json for the exact upstream response."
+  "error": "SEND_API_DISABLED: beehiiv support confirmed this workspace was on Launch, while Create Post / Send API requires Max or Enterprise as of August 2026.",
+  "required_action": "Upgrade this beehiiv workspace/publication to Max or Enterprise, or publish/send manually in the beehiiv Post Builder.",
+  "notes": "The branded approved HTML is complete and preserved. Automated API delivery is intentionally disabled until the beehiiv plan supports Create Post. Do not retry n8n, Make, GitHub Actions, or the Vercel direct-send route on Launch."
 }
