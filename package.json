@@ -4,7 +4,6 @@
   "private": true,
   "description": "Let Me Teach You AI — beginner-focused AI education newsletter and digital-product business.",
   "scripts": {
-    "prebuild": "node scripts/send-approved-newsletter.mjs",
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
