@@ -7,15 +7,23 @@ on:
       - ".github/workflows/send-approved-newsletter.yml"
   workflow_dispatch:
 
+permissions:
+  contents: write
+
 jobs:
   send:
     runs-on: ubuntu-latest
     steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
       - name: Trigger production Beehiiv sender
         shell: bash
         run: |
           set -euo pipefail
           url="https://letmeteachyouai.com/api/newsletter-send-approved"
+          result_file="$RUNNER_TEMP/newsletter-send.json"
+
           for attempt in $(seq 1 12); do
             echo "SEND_ATTEMPT=$attempt"
             response="$(curl --silent --show-error --max-time 35 -w $'\nHTTP_STATUS=%{http_code}' "$url" || true)"
@@ -25,8 +33,8 @@ jobs:
             echo "$body"
 
             if printf '%s' "$body" | jq -e '.ok == true' >/dev/null 2>&1; then
-              echo "NEWSLETTER_SEND_OK"
-              exit 0
+              printf '%s' "$body" > "$result_file"
+              break
             fi
 
             stage="$(printf '%s' "$body" | jq -r '.stage // empty' 2>/dev/null || true)"
@@ -38,5 +46,96 @@ jobs:
             sleep 5
           done
 
-          echo "Newsletter sender did not return ok=true after retries." >&2
-          exit 1
+          if [[ ! -s "$result_file" ]]; then
+            echo "Newsletter sender never returned ok=true." >&2
+            exit 1
+          fi
+
+          post_id="$(jq -r '.post.id // .created.data.id // empty' "$result_file")"
+          if [[ -z "$post_id" || "$post_id" == "null" ]]; then
+            echo "Beehiiv response did not include a post ID." >&2
+            cat "$result_file"
+            exit 1
+          fi
+
+          echo "POST_ID=$post_id" >> "$GITHUB_ENV"
+          echo "Beehiiv accepted post: $post_id"
+
+      - name: Verify confirmed post without resubmitting
+        shell: bash
+        run: |
+          set -euo pipefail
+          verify_file="$RUNNER_TEMP/newsletter-verify.json"
+          verify_url="https://letmeteachyouai.com/api/newsletter-send-approved?post_id=${POST_ID}"
+
+          for attempt in $(seq 1 15); do
+            echo "VERIFY_ATTEMPT=$attempt"
+            response="$(curl --silent --show-error --max-time 35 -w $'\nHTTP_STATUS=%{http_code}' "$verify_url" || true)"
+            status="$(printf '%s\n' "$response" | sed -n 's/^HTTP_STATUS=//p' | tail -1)"
+            body="$(printf '%s\n' "$response" | sed '/^HTTP_STATUS=/d')"
+            echo "HTTP_STATUS=${status:-unknown}"
+            echo "$body"
+
+            if printf '%s' "$body" | jq -e --arg id "$POST_ID" '.ok == true and .post.id == $id' >/dev/null 2>&1; then
+              printf '%s' "$body" > "$verify_file"
+              break
+            fi
+
+            if printf '%s' "$body" | jq -e '.processing == true' >/dev/null 2>&1; then
+              sleep 4
+              continue
+            fi
+
+            stage="$(printf '%s' "$body" | jq -r '.stage // empty' 2>/dev/null || true)"
+            if [[ "$stage" == "post_status" && "${status:-}" != "202" ]]; then
+              echo "Post verification failed." >&2
+              exit 1
+            fi
+
+            sleep 4
+          done
+
+          if [[ ! -s "$verify_file" ]]; then
+            echo "Beehiiv post did not finish processing." >&2
+            exit 1
+          fi
+
+          post_status="$(jq -r '.post.status // empty' "$verify_file")"
+          if [[ "$post_status" != "confirmed" ]]; then
+            echo "Unexpected Beehiiv status: $post_status" >&2
+            cat "$verify_file"
+            exit 1
+          fi
+
+          web_url="$(jq -r '.post.web_url // empty' "$verify_file")"
+          echo "POST_STATUS=$post_status" >> "$GITHUB_ENV"
+          echo "POST_WEB_URL=$web_url" >> "$GITHUB_ENV"
+          echo "Beehiiv post verified confirmed."
+
+      - name: Record verified send in approval queue
+        shell: bash
+        run: |
+          set -euo pipefail
+          file="automation/newsletter-approval.json"
+          sent_at="$(date -u +'%Y-%m-%dT%H:%M:%SZ')"
+          tmp="$(mktemp)"
+
+          jq \
+            --arg id "$POST_ID" \
+            --arg sent_at "$sent_at" \
+            --arg web_url "${POST_WEB_URL:-}" \
+            '.beehiiv_post_id = $id
+             | .sent_at = $sent_at
+             | .beehiiv_web_url = $web_url
+             | .status = "sent"
+             | .ready_to_send = false
+             | .error = ""
+             | .notes = "Direct Beehiiv Send API accepted the approved branded issue and the returned post was verified with status confirmed. The fragile n8n send dependency was bypassed."' \
+            "$file" > "$tmp"
+          mv "$tmp" "$file"
+
+          git config user.name "AI Ledger Send Bot"
+          git config user.email "actions@users.noreply.github.com"
+          git add "$file"
+          git commit -m "Record verified Beehiiv send for Aug 31 AI Ledger"
+          git push
