@@ -61,8 +61,8 @@ export function BuildChooser() {
   const active = options.find((item) => item.id === activeId) ?? options[0];
 
   return (
-    <div className="grid gap-8 lg:grid-cols-[1.1fr_.9fr] lg:items-start">
-      <div className="grid gap-3 sm:grid-cols-2">
+    <div className="space-y-8 sm:space-y-10">
+      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
         {options.map(({ id, icon: Icon, title, text }) => {
           const selected = id === activeId;
           return (
@@ -70,7 +70,7 @@ export function BuildChooser() {
               key={id}
               type="button"
               onClick={() => setActiveId(id)}
-              className={`group rounded-2xl border p-5 text-left transition-all ${
+              className={`group h-full rounded-2xl border p-5 text-left transition-all sm:p-6 ${
                 selected
                   ? "border-[#2457ff] bg-white shadow-[0_18px_50px_rgba(29,78,216,.16)]"
                   : "border-[#dfe6f2] bg-white/80 hover:-translate-y-0.5 hover:border-[#a9bdf7] hover:shadow-lg"
@@ -86,7 +86,7 @@ export function BuildChooser() {
         })}
       </div>
 
-      <div className="sticky top-24 rounded-3xl border border-[#20345f] bg-[#07152f] p-6 text-white shadow-[0_28px_80px_rgba(7,21,47,.22)] sm:p-8">
+      <div className="mx-auto w-full max-w-4xl rounded-3xl border border-[#20345f] bg-[#07152f] p-6 text-white shadow-[0_24px_70px_rgba(7,21,47,.2)] sm:p-8">
         <div className="mb-5 flex items-center justify-between">
           <span className="rounded-full border border-white/15 bg-white/5 px-3 py-1 text-xs font-bold uppercase tracking-[.16em] text-[#8bb0ff]">AI Lab</span>
           <span className="flex items-center gap-2 text-xs text-white/55"><span className="h-2 w-2 rounded-full bg-emerald-400" /> interactive</span>

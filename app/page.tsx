@@ -130,17 +130,17 @@ export default function HomePage() {
         </div>
       </section>
 
-      <section id="join" className="border-y border-[#20345f] bg-[#07152f] py-16 text-white sm:py-20">
-        <div className="container-editorial grid gap-10 lg:grid-cols-[.9fr_1.1fr] lg:items-center">
+      <section id="join" className="border-y border-[#20345f] bg-[#07152f] py-12 text-white sm:py-14">
+        <div className="container-editorial grid max-w-5xl gap-8 lg:grid-cols-[.95fr_1.05fr] lg:items-center">
           <div>
             <p className="text-sm font-bold uppercase tracking-[.14em] text-[#8fb0ff]">Free when you join</p>
-            <h2 className="mt-3 font-editorial text-4xl font-semibold leading-tight sm:text-5xl">Get the 25-Prompt Starter Pack.</h2>
-            <p className="mt-5 max-w-xl text-lg leading-8 text-[#c8d5ea]">Twenty-five prompts you can use today for writing, planning, research, learning, and getting better answers from AI.</p>
-            <ul className="mt-7 space-y-3 text-[#dce5f5]">
+            <h2 className="mt-3 font-editorial text-3xl font-semibold leading-tight sm:text-4xl">Get the 25-Prompt Starter Pack.</h2>
+            <p className="mt-4 max-w-xl leading-7 text-[#c8d5ea]">Twenty-five prompts you can use today for writing, planning, research, learning, and getting better answers from AI.</p>
+            <ul className="mt-5 space-y-2.5 text-sm text-[#dce5f5] sm:text-base">
               {packBullets.map((bullet) => <li key={bullet} className="flex items-center gap-3"><CheckCircle2 className="h-5 w-5 text-[#7fa5ff]"/>{bullet}</li>)}
             </ul>
           </div>
-          <div className="rounded-3xl border border-white/10 bg-white/[.06] p-6 shadow-2xl sm:p-8 [&_label]:!text-[#e4ecfa] [&_input]:!border-white/15 [&_input]:!bg-white [&_input]:!text-[#0f1e3d] [&_p]:!text-[#aebdd5] [&_a]:!text-white">
+          <div className="rounded-2xl border border-white/10 bg-white/[.055] p-5 shadow-[0_18px_55px_rgba(0,0,0,.22)] sm:p-6 [&_label]:!text-[#e4ecfa] [&_input]:!border-white/15 [&_input]:!bg-white [&_input]:!text-[#0f1e3d] [&_p]:!text-[#aebdd5] [&_a]:!text-white">
             <SignupForm />
           </div>
         </div>
