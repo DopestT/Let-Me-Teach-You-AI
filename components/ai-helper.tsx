@@ -355,7 +355,9 @@ export function AiHelper() {
       restorePrompt(trimmed);
     } finally {
       controllers.current.delete(id);
-      inFlight.current = false;
+      // A replacement request may have started just after this one was
+      // cancelled. Keep the guard active while any controller remains.
+      inFlight.current = controllers.current.size > 0;
     }
   }
 
@@ -374,7 +376,7 @@ export function AiHelper() {
   function cancel(id: string) {
     controllers.current.get(id)?.abort();
     controllers.current.delete(id);
-    inFlight.current = false;
+    inFlight.current = controllers.current.size > 0;
     dispatch({ kind: "cancel", id });
   }
 
