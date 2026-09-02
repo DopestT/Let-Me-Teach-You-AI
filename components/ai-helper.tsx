@@ -2,13 +2,15 @@
 
 import { useEffect, useReducer, useRef, useState } from "react";
 import {
+  ArrowUp,
+  Check,
   CornerUpLeft,
   Lightbulb,
   Loader2,
   MessageCircleQuestion,
   RotateCw,
   ScrollText,
-  Send,
+  ShieldCheck,
   Sparkles,
   Wand2,
   X,
@@ -17,44 +19,132 @@ import {
 /** Task presets — mirror the server's SYSTEM_PROMPTS in app/api/openai/route.ts. */
 type Task = "general" | "prompt-help" | "summarize" | "lesson";
 
+type Starter = {
+  label: string;
+  prompt: string;
+};
+
 const TASKS: {
   id: Task;
   label: string;
+  description: string;
   icon: typeof Sparkles;
+  inputLabel: string;
   placeholder: string;
   hint: string;
+  starters: Starter[];
 }[] = [
   {
     id: "general",
     label: "Ask anything",
+    description: "Get a clear answer",
     icon: MessageCircleQuestion,
-    placeholder: "Ask a beginner AI question — e.g. “What is a large language model?”",
-    hint: "A plain-language answer to any AI question.",
+    inputLabel: "What are you trying to understand?",
+    placeholder:
+      "Ask in your own words — for example, “What is an AI agent, and what could it do for my business?”",
+    hint: "A plain-language answer without unnecessary jargon.",
+    starters: [
+      {
+        label: "Chatbot vs. AI agent",
+        prompt:
+          "What is the difference between an AI chatbot and an AI agent? Explain it with a simple real-life example.",
+      },
+      {
+        label: "Choose the right AI tool",
+        prompt:
+          "Help me choose the right kind of AI tool for a repetitive task. Ask me only the questions you need first.",
+      },
+      {
+        label: "Turn an idea into steps",
+        prompt:
+          "I have a rough idea but I am not sure where to start. Help me turn it into a small, practical first project.",
+      },
+    ],
   },
   {
     id: "prompt-help",
     label: "Improve a prompt",
+    description: "Make your request stronger",
     icon: Wand2,
-    placeholder: "Paste a prompt you're working on and I'll help you sharpen it.",
-    hint: "Get a clearer, more effective version of your prompt.",
+    inputLabel: "What prompt should we improve?",
+    placeholder:
+      "Paste your prompt here. Add what you want the answer to accomplish if you know it.",
+    hint: "Get a clearer prompt plus a quick explanation of what changed.",
+    starters: [
+      {
+        label: "Rewrite my prompt",
+        prompt:
+          "Improve this prompt so it gives me a specific, useful answer:\n\n[Paste your prompt here]\n\nThe result should help me: [describe your goal].",
+      },
+      {
+        label: "Build a reusable template",
+        prompt:
+          "Turn this rough request into a reusable prompt template with blanks I can fill in:\n\n[Paste your request here]",
+      },
+      {
+        label: "Make the output clearer",
+        prompt:
+          "Rewrite this prompt so the answer is concise, practical, and returned as a step-by-step plan:\n\n[Paste your prompt here]",
+      },
+    ],
   },
   {
     id: "summarize",
     label: "Summarize text",
+    description: "Find the important point",
     icon: ScrollText,
-    placeholder: "Paste some text and I'll summarize it simply.",
-    hint: "A faithful, beginner-friendly summary of what you paste.",
+    inputLabel: "What should we simplify?",
+    placeholder:
+      "Paste the article, notes, email, or other text you want summarized.",
+    hint: "A faithful summary that separates the main point from the details.",
+    starters: [
+      {
+        label: "Five useful bullets",
+        prompt:
+          "Summarize the text below in five useful bullets, then give me the single most important takeaway:\n\n[Paste text here]",
+      },
+      {
+        label: "Explain it simply",
+        prompt:
+          "Explain this text in plain language for someone who knows nothing about the topic. Do not add facts that are not in the source:\n\n[Paste text here]",
+      },
+      {
+        label: "Turn notes into actions",
+        prompt:
+          "Summarize these notes, separate decisions from open questions, and list the next actions:\n\n[Paste notes here]",
+      },
+    ],
   },
   {
     id: "lesson",
     label: "Teach me a topic",
+    description: "Learn it step by step",
     icon: Lightbulb,
-    placeholder: "Name a topic — e.g. “How do AI image generators work?”",
-    hint: "A short, structured mini-lesson with a next step to try.",
+    inputLabel: "What do you want to learn?",
+    placeholder:
+      "Name a topic — for example, “Teach me how AI image generators work.”",
+    hint: "A short lesson, a simple example, and one next step to try.",
+    starters: [
+      {
+        label: "How AI agents work",
+        prompt:
+          "Teach me how AI agents work using one simple real-life example. Assume I am a complete beginner.",
+      },
+      {
+        label: "Automation basics",
+        prompt:
+          "Teach me the difference between a trigger, an action, and an approval step in an automation.",
+      },
+      {
+        label: "Better AI instructions",
+        prompt:
+          "Teach me the five parts of a strong AI request. Show a weak example and a better version.",
+      },
+    ],
   },
 ];
 
-const TASK_BY_ID = Object.fromEntries(TASKS.map((t) => [t.id, t])) as Record<
+const TASK_BY_ID = Object.fromEntries(TASKS.map((item) => [item.id, item])) as Record<
   Task,
   (typeof TASKS)[number]
 >;
@@ -90,23 +180,27 @@ type Action =
   | { kind: "fail"; id: string; error: TurnError }
   | { kind: "cancel"; id: string };
 
-// Newest turn first — the request form sits above this list. Each action only
-// touches the matching turn, so a later failure never erases an earlier answer.
+// Newest turn first. Each action only touches its matching turn, so a later
+// failure never erases an earlier answer.
 function reducer(state: Turn[], action: Action): Turn[] {
   switch (action.kind) {
     case "add":
       return [action.turn, ...state];
     case "resolve":
-      return state.map((t) =>
-        t.id === action.id ? { ...t, status: "success", text: action.text } : t
+      return state.map((turn) =>
+        turn.id === action.id
+          ? { ...turn, status: "success", text: action.text }
+          : turn
       );
     case "fail":
-      return state.map((t) =>
-        t.id === action.id ? { ...t, status: "error", error: action.error } : t
+      return state.map((turn) =>
+        turn.id === action.id
+          ? { ...turn, status: "error", error: action.error }
+          : turn
       );
     case "cancel":
-      return state.map((t) =>
-        t.id === action.id ? { ...t, status: "cancelled" } : t
+      return state.map((turn) =>
+        turn.id === action.id ? { ...turn, status: "cancelled" } : turn
       );
   }
 }
@@ -117,34 +211,41 @@ function errorForStatus(
   serverMessage?: string,
   retryAfterSeconds?: number
 ): TurnError {
-  if (status === 400 || status === 413 || status === 415)
+  if (status === 400 || status === 413 || status === 415) {
     return {
       type: "validation",
       message: serverMessage ?? "Please check your input and try again.",
     };
+  }
   if (status === 429) {
     const wait =
       retryAfterSeconds && retryAfterSeconds > 0
-        ? ` Please wait ${retryAfterSeconds} second${retryAfterSeconds === 1 ? "" : "s"} and try again.`
+        ? " Please wait " +
+          retryAfterSeconds +
+          " second" +
+          (retryAfterSeconds === 1 ? "" : "s") +
+          " and try again."
         : " Please wait a moment and try again.";
     return {
       type: "rate-limit",
       message: (serverMessage ?? "You're going a bit fast.") + wait,
     };
   }
-  if (status === 504)
+  if (status === 504) {
     return {
       type: "timeout",
       message:
         serverMessage ?? "That took longer than expected. Please try again.",
     };
-  if (status === 502 || status === 503)
+  }
+  if (status === 502 || status === 503) {
     return {
       type: "service",
       message:
         serverMessage ??
         "Our AI helper is taking a break right now. Please try again in a little while.",
     };
+  }
   return {
     type: "unknown",
     message: serverMessage ?? "Something went wrong. Please try again in a moment.",
@@ -156,14 +257,11 @@ export function AiHelper() {
   const [prompt, setPrompt] = useState("");
   const [turns, dispatch] = useReducer(reducer, []);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
-  // In-flight request controllers, keyed by turn id, so a turn can be cancelled.
   const controllers = useRef<Map<string, AbortController>>(new Map());
-  // Synchronous single-flight guard — closes the race window that a derived
-  // `isPending` boolean leaves open between rapid submits.
   const inFlight = useRef(false);
 
   const active = TASK_BY_ID[task];
-  const isPending = turns.some((t) => t.status === "pending");
+  const isPending = turns.some((turn) => turn.status === "pending");
   const latest = turns[0];
   const liveMessage =
     latest?.status === "pending"
@@ -172,15 +270,28 @@ export function AiHelper() {
         ? "Answer ready."
         : "";
 
-  // Abort any in-flight request if the component unmounts (e.g. navigation).
   useEffect(() => {
     const map = controllers.current;
-    return () => map.forEach((c) => c.abort());
+    return () => map.forEach((controller) => controller.abort());
   }, []);
 
-  /** Restore a prompt into the composer, but only if the user hasn't typed a new one. */
+  function focusComposer() {
+    requestAnimationFrame(() => {
+      const textarea = textareaRef.current;
+      if (!textarea) return;
+      textarea.focus();
+      textarea.setSelectionRange(textarea.value.length, textarea.value.length);
+    });
+  }
+
+  function chooseStarter(starter: Starter) {
+    setPrompt(starter.prompt.slice(0, MAX_PROMPT));
+    focusComposer();
+  }
+
+  /** Restore a prompt only if the user has not already started another one. */
   function restorePrompt(text: string) {
-    setPrompt((prev) => (prev.trim() === "" ? text : prev));
+    setPrompt((current) => (current.trim() === "" ? text : current));
   }
 
   async function submit(rawPrompt: string, submittedTask: Task) {
@@ -191,7 +302,7 @@ export function AiHelper() {
     const id =
       typeof crypto !== "undefined" && crypto.randomUUID
         ? crypto.randomUUID()
-        : `${Date.now()}-${turns.length}`;
+        : Date.now() + "-" + turns.length;
     const controller = new AbortController();
     controllers.current.set(id, controller);
 
@@ -201,36 +312,36 @@ export function AiHelper() {
     });
 
     try {
-      const res = await fetch("/api/openai", {
+      const response = await fetch("/api/openai", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ prompt: trimmed, task: submittedTask }),
         signal: controller.signal,
       });
-      // Parse defensively — a proxy or error page may return HTML, not JSON.
-      const data = (await res.json().catch(() => ({}))) as {
+      const data = (await response.json().catch(() => ({}))) as {
         ok?: boolean;
         text?: string;
         message?: string;
       };
 
-      // Ignore late responses from a request that was aborted meanwhile.
       if (controller.signal.aborted) return;
 
-      if (!res.ok || !data.ok || !data.text) {
-        const retryAfter = Number(res.headers.get("Retry-After") ?? "");
-        const error = errorForStatus(
-          res.status,
-          data.message,
-          Number.isFinite(retryAfter) ? retryAfter : undefined
-        );
-        dispatch({ kind: "fail", id, error });
+      if (!response.ok || !data.ok || !data.text) {
+        const retryAfter = Number(response.headers.get("Retry-After") ?? "");
+        dispatch({
+          kind: "fail",
+          id,
+          error: errorForStatus(
+            response.status,
+            data.message,
+            Number.isFinite(retryAfter) ? retryAfter : undefined
+          ),
+        });
         restorePrompt(trimmed);
         return;
       }
       dispatch({ kind: "resolve", id, text: data.text });
-    } catch (err) {
-      // A cancelled request already has its status set — don't overwrite it.
+    } catch {
       if (controller.signal.aborted) return;
       dispatch({
         kind: "fail",
@@ -248,12 +359,16 @@ export function AiHelper() {
     }
   }
 
-  function handleSubmit(e: React.FormEvent) {
-    e.preventDefault();
+  function sendCurrentPrompt() {
     if (inFlight.current || prompt.trim().length === 0) return;
     const current = prompt;
     setPrompt("");
     void submit(current, task);
+  }
+
+  function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+    sendCurrentPrompt();
   }
 
   function cancel(id: string) {
@@ -263,149 +378,210 @@ export function AiHelper() {
     dispatch({ kind: "cancel", id });
   }
 
-  /** Copy an answer into the composer as reference for a brand-new question. */
+  /** Put an earlier answer into the composer as context for a new request. */
   function useAnswer(text: string) {
-    const context = `Here's an earlier answer for reference:\n"""\n${text}\n"""\n\nMy follow-up: `;
+    const context = [
+      "Here is an earlier answer for reference:",
+      "\"\"\"",
+      text,
+      "\"\"\"",
+      "",
+      "My follow-up: ",
+    ].join("\n");
     setPrompt(context.slice(0, MAX_PROMPT));
-    requestAnimationFrame(() => {
-      const ta = textareaRef.current;
-      if (ta) {
-        ta.focus();
-        ta.setSelectionRange(ta.value.length, ta.value.length);
-      }
-    });
+    focusComposer();
   }
 
   return (
-    <div className="rounded-[--radius] border border-[--color-line] bg-[--color-paper] shadow-sm">
-      {/* Screen-reader status — announces pending/ready without reading whole answers. */}
-      <p role="status" aria-live="polite" className="sr-only">
-        {liveMessage}
-      </p>
+    <section className="ai-workspace overflow-hidden rounded-[2rem] border border-white/10 shadow-[0_28px_80px_rgba(15,30,61,0.24)]">
+      <div className="relative z-10">
+        <p role="status" aria-live="polite" className="sr-only">
+          {liveMessage}
+        </p>
 
-      {/* Request form (task presets + composer) */}
-      <form onSubmit={handleSubmit} className="p-4 sm:p-5">
-        <fieldset>
-          <legend className="text-sm font-medium text-[--color-navy-600]">
-            What would you like help with?
-          </legend>
-          <div className="mt-2 flex flex-wrap gap-2">
-            {TASKS.map(({ id, label, icon: Icon }) => {
-              const selected = id === task;
-              return (
-                <label
-                  key={id}
-                  className={
-                    "inline-flex cursor-pointer items-center gap-2 rounded-full px-4 py-2 text-sm font-medium transition-colors has-[:focus-visible]:outline has-[:focus-visible]:outline-2 has-[:focus-visible]:outline-offset-2 has-[:focus-visible]:outline-[--color-brand] " +
-                    (selected
-                      ? "bg-[--color-brand] text-white"
-                      : "bg-[--color-cream] text-[--color-navy-600] hover:bg-[--color-brand-soft]")
-                  }
-                >
-                  <input
-                    type="radio"
-                    name="task"
-                    value={id}
-                    checked={selected}
-                    onChange={() => setTask(id)}
-                    className="sr-only"
-                  />
-                  <Icon className="h-4 w-4" aria-hidden />
-                  {label}
-                </label>
-              );
-            })}
-          </div>
-        </fieldset>
-
-        <label
-          htmlFor="ai-prompt"
-          className="mt-4 block text-sm font-medium text-[--color-navy-600]"
-        >
-          Your question
-        </label>
-        <textarea
-          id="ai-prompt"
-          ref={textareaRef}
-          value={prompt}
-          maxLength={MAX_PROMPT}
-          aria-describedby="ai-help ai-count"
-          onChange={(e) => setPrompt(e.target.value)}
-          onKeyDown={(e) => {
-            if (e.key === "Enter" && (e.metaKey || e.ctrlKey)) {
-              handleSubmit(e);
-            }
-          }}
-          rows={3}
-          placeholder={active.placeholder}
-          className="mt-1 w-full resize-y rounded-[--radius] border border-[--color-line] bg-[--color-paper] px-4 py-3 text-[--color-navy] placeholder:text-[--color-slate]"
-        />
-        <div className="mt-3 flex flex-wrap items-center justify-between gap-3">
-          <p id="ai-help" className="max-w-md text-xs text-[--color-slate]">
-            {active.hint} Every question is answered independently — this helper
-            doesn&apos;t remember earlier ones. Press{" "}
-            <kbd className="rounded border border-[--color-line] bg-[--color-cream] px-1.5 py-0.5 font-sans text-[0.7rem]">
-              ⌘/Ctrl + Enter
-            </kbd>{" "}
-            to send.
-          </p>
+        <header className="flex flex-wrap items-center justify-between gap-4 border-b border-white/10 px-5 py-4 text-white sm:px-7">
           <div className="flex items-center gap-3">
-            <span id="ai-count" className="text-xs tabular-nums text-[--color-slate]">
-              {prompt.length}/{MAX_PROMPT}
-            </span>
-            <button
-              type="submit"
-              disabled={isPending || prompt.trim().length === 0}
-              className="inline-flex shrink-0 items-center gap-2 rounded-[--radius] bg-[--color-brand] px-5 py-2.5 font-semibold text-white transition-colors hover:bg-[--color-brand-dark] disabled:opacity-60"
-            >
-              {isPending ? (
-                <>
-                  <Loader2 className="h-4 w-4 motion-safe:animate-spin" aria-hidden />
-                  Sending…
-                </>
-              ) : (
-                <>
-                  <Send className="h-4 w-4" aria-hidden />
-                  Send
-                </>
-              )}
-            </button>
+            <div className="ai-signal flex h-10 w-10 items-center justify-center rounded-2xl">
+              <Sparkles className="h-5 w-5 text-white" aria-hidden />
+            </div>
+            <div>
+              <p className="font-editorial text-lg font-semibold">LMTYAI Helper</p>
+              <p className="text-xs text-blue-100/70">Plain-language AI guidance</p>
+            </div>
           </div>
-        </div>
-      </form>
+          <div className="inline-flex items-center gap-2 rounded-full border border-emerald-300/20 bg-emerald-300/10 px-3 py-1.5 text-xs font-semibold text-emerald-100">
+            <span className="h-2 w-2 rounded-full bg-emerald-300 shadow-[0_0_12px_rgba(110,231,183,0.95)]" />
+            Ready when you are
+          </div>
+        </header>
 
-      {/* Results from this session */}
-      {turns.length === 0 ? (
-        <div className="flex flex-col items-center gap-3 border-t border-[--color-line] px-5 py-10 text-center">
-          <div className="flex h-12 w-12 items-center justify-center rounded-full bg-[--color-gold-soft]">
-            <Sparkles className="h-6 w-6 text-[--color-gold]" aria-hidden />
-          </div>
-          <p className="max-w-sm text-sm leading-relaxed text-[--color-slate]">
-            Pick an option above, type a question, and try it out — no account
-            needed. Your results from this session will appear here.
-          </p>
-        </div>
-      ) : (
-        <section
-          aria-label="Results from this session"
-          className="max-h-[30rem] space-y-4 overflow-y-auto border-t border-[--color-line] bg-[--color-cream] p-4 sm:p-5"
-        >
-          <h3 className="text-xs font-semibold uppercase tracking-wide text-[--color-slate]">
-            Results from this session
-          </h3>
-          {turns.map((turn) => (
-            <ResultCard
-              key={turn.id}
-              turn={turn}
-              onCancel={() => cancel(turn.id)}
-              onRetry={() => submit(turn.prompt, turn.task)}
-              onUseAnswer={() => turn.text && useAnswer(turn.text)}
-              retryDisabled={isPending}
+        <form onSubmit={handleSubmit} className="px-5 py-6 sm:px-7 sm:py-8">
+          <fieldset>
+            <legend className="text-sm font-semibold text-blue-100">
+              Choose the kind of help you want
+            </legend>
+            <div className="mt-3 grid grid-cols-2 gap-2 lg:grid-cols-4 lg:gap-3">
+              {TASKS.map(({ id, label, description, icon: Icon }) => {
+                const selected = id === task;
+                return (
+                  <label
+                    key={id}
+                    className={
+                      "group cursor-pointer rounded-2xl border p-3 text-left transition-all has-[:focus-visible]:outline has-[:focus-visible]:outline-2 has-[:focus-visible]:outline-offset-2 has-[:focus-visible]:outline-white sm:p-4 " +
+                      (selected
+                        ? "border-white bg-white text-[--color-navy] shadow-lg shadow-blue-950/20"
+                        : "border-white/15 bg-white/[0.06] text-white hover:border-white/30 hover:bg-white/[0.1]")
+                    }
+                  >
+                    <input
+                      type="radio"
+                      name="task"
+                      value={id}
+                      checked={selected}
+                      onChange={() => setTask(id)}
+                      className="sr-only"
+                    />
+                    <span
+                      className={
+                        "flex h-9 w-9 items-center justify-center rounded-xl " +
+                        (selected
+                          ? "bg-[--color-brand-soft] text-[--color-brand]"
+                          : "bg-white/10 text-blue-100")
+                      }
+                    >
+                      <Icon className="h-4 w-4" aria-hidden />
+                    </span>
+                    <span className="mt-3 block text-sm font-bold">{label}</span>
+                    <span
+                      className={
+                        "mt-1 hidden text-xs leading-relaxed sm:block " +
+                        (selected ? "text-[--color-slate]" : "text-blue-100/65")
+                      }
+                    >
+                      {description}
+                    </span>
+                  </label>
+                );
+              })}
+            </div>
+          </fieldset>
+
+          <div className="mt-5 rounded-3xl bg-white p-2 shadow-[0_18px_50px_rgba(0,0,0,0.2)] sm:p-3">
+            <label
+              htmlFor="ai-prompt"
+              className="block px-3 pt-2 text-xs font-bold uppercase tracking-[0.13em] text-[--color-brand]"
+            >
+              {active.inputLabel}
+            </label>
+            <textarea
+              id="ai-prompt"
+              ref={textareaRef}
+              value={prompt}
+              maxLength={MAX_PROMPT}
+              aria-describedby="ai-help ai-count"
+              onChange={(event) => setPrompt(event.target.value)}
+              onKeyDown={(event) => {
+                if (event.key === "Enter" && (event.metaKey || event.ctrlKey)) {
+                  event.preventDefault();
+                  sendCurrentPrompt();
+                }
+              }}
+              rows={5}
+              placeholder={active.placeholder}
+              className="min-h-40 w-full resize-y border-0 bg-transparent px-3 py-4 text-base leading-relaxed text-[--color-navy] outline-none placeholder:text-[--color-slate]/70 focus-visible:outline-none sm:text-lg"
             />
-          ))}
-        </section>
-      )}
-    </div>
+            <div className="flex flex-wrap items-center justify-between gap-3 border-t border-[--color-line] px-2 pt-3 sm:px-3">
+              <div className="flex items-center gap-2 text-xs text-[--color-slate]">
+                <ShieldCheck className="h-4 w-4 text-[--color-brand]" aria-hidden />
+                <span id="ai-help">{active.hint}</span>
+              </div>
+              <div className="flex items-center gap-3">
+                <span id="ai-count" className="text-xs tabular-nums text-[--color-slate]">
+                  {prompt.length}/{MAX_PROMPT}
+                </span>
+                <button
+                  type="submit"
+                  disabled={isPending || prompt.trim().length === 0}
+                  className="primary-cta inline-flex min-h-11 shrink-0 items-center gap-2 rounded-full px-5 py-2.5 font-semibold shadow-lg shadow-blue-900/20 transition-transform enabled:hover:-translate-y-0.5 disabled:cursor-not-allowed disabled:opacity-50"
+                >
+                  {isPending ? (
+                    <>
+                      <Loader2 className="h-4 w-4 motion-safe:animate-spin" aria-hidden />
+                      Thinking…
+                    </>
+                  ) : (
+                    <>
+                      Help me
+                      <ArrowUp className="h-4 w-4" aria-hidden />
+                    </>
+                  )}
+                </button>
+              </div>
+            </div>
+          </div>
+
+          {prompt.length === 0 ? (
+            <div className="mt-5">
+              <p className="text-xs font-semibold uppercase tracking-[0.14em] text-blue-100/60">
+                Or start with an example
+              </p>
+              <div className="mt-2 flex flex-wrap gap-2">
+                {active.starters.map((starter) => (
+                  <button
+                    key={starter.label}
+                    type="button"
+                    onClick={() => chooseStarter(starter)}
+                    className="rounded-full border border-white/15 bg-white/[0.06] px-3.5 py-2 text-left text-xs font-medium text-blue-50 transition-colors hover:border-white/30 hover:bg-white/[0.12] sm:text-sm"
+                  >
+                    {starter.label}
+                  </button>
+                ))}
+              </div>
+            </div>
+          ) : null}
+
+          <p className="mt-5 text-center text-xs text-blue-100/55">
+            No account. No saved prompt history. Press ⌘/Ctrl + Enter to send.
+          </p>
+        </form>
+
+        {turns.length === 0 ? (
+          <div className="border-t border-white/10 bg-[#07152f]/70 px-5 py-7 text-center text-blue-50 sm:px-7">
+            <p className="font-editorial text-xl font-semibold">
+              It does not have to be a perfect prompt.
+            </p>
+            <p className="mx-auto mt-2 max-w-xl text-sm leading-relaxed text-blue-100/65">
+              Begin with what you know. The helper will give you a useful answer
+              without assuming you already speak “AI.”
+            </p>
+          </div>
+        ) : (
+          <section
+            aria-label="Results from this session"
+            className="max-h-[44rem] space-y-5 overflow-y-auto border-t border-white/10 bg-[--color-cream-soft] p-5 sm:p-7"
+          >
+            <div className="flex items-center justify-between gap-3">
+              <h2 className="font-editorial text-xl font-semibold text-[--color-navy]">
+                Your workspace
+              </h2>
+              <span className="text-xs font-medium text-[--color-slate]">
+                Newest answer first
+              </span>
+            </div>
+            {turns.map((turn) => (
+              <ResultCard
+                key={turn.id}
+                turn={turn}
+                onCancel={() => cancel(turn.id)}
+                onRetry={() => submit(turn.prompt, turn.task)}
+                onUseAnswer={() => turn.text && useAnswer(turn.text)}
+                retryDisabled={isPending}
+              />
+            ))}
+          </section>
+        )}
+      </div>
+    </section>
   );
 }
 
@@ -426,71 +602,69 @@ function ResultCard({
   const Icon = preset.icon;
 
   return (
-    <article className="rounded-[--radius] border border-[--color-line] bg-[--color-paper] p-4 shadow-sm">
-      {/* Header: task badge + status label */}
-      <div className="flex flex-wrap items-center justify-between gap-2">
-        <span className="inline-flex items-center gap-1.5 rounded-full bg-[--color-brand-soft] px-2.5 py-1 text-xs font-semibold text-[--color-brand-dark]">
-          <Icon className="h-3.5 w-3.5" aria-hidden />
-          {preset.label}
-        </span>
-        {turn.status === "success" && (
-          <span className="text-xs font-medium text-[--color-slate]">
-            Independent answer
+    <article className="overflow-hidden rounded-3xl border border-[--color-line] bg-white shadow-sm">
+      <div className="bg-[--color-navy] px-4 py-4 text-white sm:px-5">
+        <div className="flex flex-wrap items-center justify-between gap-2">
+          <span className="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-[0.12em] text-blue-100">
+            <Icon className="h-4 w-4" aria-hidden />
+            {preset.label}
           </span>
-        )}
-        {turn.status === "cancelled" && (
-          <span className="text-xs font-medium text-[--color-slate]">
-            Cancelled
-          </span>
-        )}
-      </div>
-
-      {/* The question */}
-      <div className="mt-3">
-        <p className="text-xs font-semibold uppercase tracking-wide text-[--color-slate]">
-          You asked
-        </p>
-        <p className="mt-1 text-sm leading-relaxed text-[--color-navy-600] whitespace-pre-wrap">
+          {turn.status === "success" ? (
+            <span className="inline-flex items-center gap-1.5 text-xs font-medium text-emerald-200">
+              <Check className="h-3.5 w-3.5" aria-hidden />
+              Answer ready
+            </span>
+          ) : null}
+          {turn.status === "cancelled" ? (
+            <span className="text-xs font-medium text-blue-100/70">Cancelled</span>
+          ) : null}
+        </div>
+        <p className="mt-3 whitespace-pre-wrap text-sm leading-relaxed text-white/90">
           {turn.prompt}
         </p>
       </div>
 
-      {/* The result */}
-      <div className="mt-3 border-t border-[--color-line] pt-3">
-        {turn.status === "pending" && (
+      <div className="p-4 sm:p-5">
+        {turn.status === "pending" ? (
           <div className="flex items-center justify-between gap-3">
-            <span className="inline-flex items-center gap-2 text-sm text-[--color-slate]">
-              <Loader2 className="h-4 w-4 motion-safe:animate-spin" aria-hidden />
-              Thinking…
+            <span className="inline-flex items-center gap-3 text-sm font-medium text-[--color-slate]">
+              <span className="ai-signal flex h-9 w-9 items-center justify-center rounded-xl">
+                <Loader2 className="h-4 w-4 animate-spin text-white" aria-hidden />
+              </span>
+              Working through your request…
             </span>
             <button
               type="button"
               onClick={onCancel}
-              className="inline-flex items-center gap-1.5 rounded-[--radius] border border-[--color-line] px-3 py-1.5 text-xs font-medium text-[--color-navy-600] transition-colors hover:bg-[--color-cream]"
+              className="inline-flex items-center gap-1.5 rounded-full border border-[--color-line] px-3 py-1.5 text-xs font-semibold text-[--color-navy-600] transition-colors hover:bg-[--color-cream]"
             >
               <X className="h-3.5 w-3.5" aria-hidden />
               Cancel
             </button>
           </div>
-        )}
+        ) : null}
 
-        {turn.status === "success" && (
+        {turn.status === "success" ? (
           <>
-            <p className="text-sm leading-relaxed text-[--color-navy] whitespace-pre-wrap">
+            <div className="flex items-center gap-2 text-xs font-bold uppercase tracking-[0.12em] text-[--color-brand]">
+              <Sparkles className="h-4 w-4" aria-hidden />
+              LMTYAI answer
+            </div>
+            <p className="mt-3 whitespace-pre-wrap text-[0.95rem] leading-7 text-[--color-navy]">
               {turn.text}
             </p>
             <button
               type="button"
               onClick={onUseAnswer}
-              className="mt-3 inline-flex items-center gap-1.5 rounded-[--radius] border border-[--color-line] px-3 py-1.5 text-xs font-medium text-[--color-brand] transition-colors hover:bg-[--color-brand-soft]"
+              className="mt-5 inline-flex items-center gap-2 rounded-full border border-[--color-line] px-4 py-2 text-xs font-semibold text-[--color-brand] transition-colors hover:bg-[--color-brand-soft]"
             >
               <CornerUpLeft className="h-3.5 w-3.5" aria-hidden />
-              Use this answer in a new request
+              Ask a follow-up with this answer
             </button>
           </>
-        )}
+        ) : null}
 
-        {turn.status === "error" && (
+        {turn.status === "error" ? (
           <div className="flex flex-wrap items-center justify-between gap-3">
             <p role="alert" className="text-sm text-[--color-brand-dark]">
               {turn.error?.message}
@@ -499,30 +673,28 @@ function ResultCard({
               type="button"
               onClick={onRetry}
               disabled={retryDisabled}
-              className="inline-flex items-center gap-1.5 rounded-[--radius] border border-[--color-line] px-3 py-1.5 text-xs font-medium text-[--color-navy-600] transition-colors hover:bg-[--color-cream] disabled:opacity-60"
+              className="inline-flex items-center gap-1.5 rounded-full border border-[--color-line] px-3 py-1.5 text-xs font-semibold text-[--color-navy-600] transition-colors hover:bg-[--color-cream] disabled:opacity-60"
             >
               <RotateCw className="h-3.5 w-3.5" aria-hidden />
               Try again
             </button>
           </div>
-        )}
+        ) : null}
 
-        {turn.status === "cancelled" && (
+        {turn.status === "cancelled" ? (
           <div className="flex items-center justify-between gap-3">
-            <p className="text-sm text-[--color-slate]">
-              You cancelled this request.
-            </p>
+            <p className="text-sm text-[--color-slate]">You cancelled this request.</p>
             <button
               type="button"
               onClick={onRetry}
               disabled={retryDisabled}
-              className="inline-flex items-center gap-1.5 rounded-[--radius] border border-[--color-line] px-3 py-1.5 text-xs font-medium text-[--color-navy-600] transition-colors hover:bg-[--color-cream] disabled:opacity-60"
+              className="inline-flex items-center gap-1.5 rounded-full border border-[--color-line] px-3 py-1.5 text-xs font-semibold text-[--color-navy-600] transition-colors hover:bg-[--color-cream] disabled:opacity-60"
             >
               <RotateCw className="h-3.5 w-3.5" aria-hidden />
               Try again
             </button>
           </div>
-        )}
+        ) : null}
       </div>
     </article>
   );
