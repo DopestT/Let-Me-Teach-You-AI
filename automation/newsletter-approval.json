@@ -1,6 +1,6 @@
 {
   "approval_id": "2026-09-07-build-client-quote-calculator-with-ai",
-  "status": "send_requested",
+  "status": "send_blocked",
   "ready_to_send": true,
   "send_api_confirmed": false,
   "approved_at": "2026-09-07T09:51:06-04:00",
@@ -17,7 +17,7 @@
   "html_url": "https://raw.githubusercontent.com/DopestT/Let-Me-Teach-You-AI/main/automation/approved/2026-09-07-build-client-quote-calculator-with-ai.html",
   "beehiiv_post_id": "",
   "sent_at": "",
-  "error": "",
-  "required_action": "",
-  "notes": "Explicitly approved and send requested by user on September 7, 2026. Use idempotent direct-send verification; never create a duplicate slug."
+  "error": "AUTOMATED_SEND_NOT_VERIFIED: production deployment dpl_4LcQPYFHz4VT4RmyZ5V9AuMtRTAE failed while running the one-time Beehiiv sender; the connected Vercel tool could not retrieve that deployment's build logs, so the exact upstream Beehiiv response is not available here.",
+  "required_action": "Send/publish through the Beehiiv Post Builder or restore a supported Beehiiv Create Post API path, then verify the post ID/status before marking sent.",
+  "notes": "The approved branded HTML is staged and preserved. No Beehiiv post ID or confirmed status was returned to this session, so the issue must not be represented as sent. The one-time prebuild sender was removed after the failed attempt so normal site deployments are restored."
 }
