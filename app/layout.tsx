@@ -4,9 +4,8 @@ import { SiteHeader } from "@/components/site-header";
 import { SiteFooter } from "@/components/site-footer";
 import "./globals.css";
 
-const SITE_URL =
-  process.env.NEXT_PUBLIC_SITE_URL ?? "https://letmeteachyouai.com";
-const SITE_NAME = process.env.NEXT_PUBLIC_SITE_NAME ?? "Let Me Teach You AI";
+const SITE_URL = "https://www.letmeteachyouai.com";
+const SITE_NAME = "Let Me Teach You AI";
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
@@ -25,9 +24,14 @@ export const metadata: Metadata = {
     "AI education",
   ],
   authors: [{ name: SITE_NAME }],
+  creator: SITE_NAME,
+  publisher: SITE_NAME,
+  alternates: {
+    canonical: "./",
+  },
   openGraph: {
     type: "website",
-    url: SITE_URL,
+    url: "./",
     siteName: SITE_NAME,
     title: `${SITE_NAME} — Learn AI, one clear step at a time`,
     description:
@@ -39,7 +43,17 @@ export const metadata: Metadata = {
     description:
       "Practical, beginner-friendly AI lessons. Join free and get 25 prompts you can use today.",
   },
-  robots: { index: true, follow: true },
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      "max-image-preview": "large",
+      "max-snippet": -1,
+      "max-video-preview": -1,
+    },
+  },
 };
 
 export default function RootLayout({
