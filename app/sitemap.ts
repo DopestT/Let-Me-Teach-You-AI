@@ -1,8 +1,7 @@
 import type { MetadataRoute } from "next";
 import { aiBusinessCourse } from "@/lib/courses";
 
-const SITE_URL =
-  process.env.NEXT_PUBLIC_SITE_URL ?? "https://letmeteachyouai.com";
+const SITE_URL = "https://www.letmeteachyouai.com";
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const now = new Date();
