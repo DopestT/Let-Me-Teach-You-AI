@@ -13,8 +13,9 @@ export function SiteHeader() {
         </Link>
         <nav className="flex items-center gap-6 text-sm font-medium text-[--color-navy-600]" aria-label="Primary navigation">
           <Link href="/learn" className="hidden sm:inline hover:text-[--color-brand]">Learn</Link>
+          <Link href="/guides" className="hidden sm:inline hover:text-[--color-brand]">Guides</Link>
           <Link href="/#lab" className="hidden md:inline hover:text-[--color-brand]">AI Lab</Link>
-          <Link href="/playground" className="hidden sm:inline hover:text-[--color-brand]">AI helper</Link>
+          <Link href="/playground" className="hidden md:inline hover:text-[--color-brand]">AI helper</Link>
           <Link href="/contact" className="hidden lg:inline hover:text-[--color-brand]">Contact</Link>
           <Link href="/#join" className="primary-cta rounded-full px-4 py-2 font-semibold shadow-sm transition-colors">Join free</Link>
         </nav>
