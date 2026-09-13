@@ -1,5 +1,6 @@
 import type { MetadataRoute } from "next";
 import { aiBusinessCourse } from "@/lib/courses";
+import { seoGuides } from "@/lib/seo-guides";
 
 const SITE_URL = "https://www.letmeteachyouai.com";
 
@@ -10,6 +11,13 @@ export default function sitemap(): MetadataRoute.Sitemap {
   return [
     { url: SITE_URL, lastModified: now, changeFrequency: "weekly", priority: 1 },
     { url: `${SITE_URL}/learn`, lastModified: now, changeFrequency: "weekly", priority: 0.9 },
+    { url: `${SITE_URL}/guides`, lastModified: now, changeFrequency: "weekly", priority: 0.95 },
+    ...seoGuides.map((guide) => ({
+      url: `${SITE_URL}/guides/${guide.slug}`,
+      lastModified: now,
+      changeFrequency: "monthly" as const,
+      priority: 0.9,
+    })),
     { url: courseBase, lastModified: now, changeFrequency: "monthly", priority: 0.9 },
     ...aiBusinessCourse.lessons.map((lesson) => ({
       url: `${courseBase}/${lesson.slug}`,
