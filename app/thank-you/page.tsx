@@ -6,6 +6,10 @@ export const metadata: Metadata = {
   title: "Thank You",
   description:
     "You're on the list. Download your free 25-prompt starter pack and get ready for beginner-friendly AI lessons.",
+  robots: {
+    index: false,
+    follow: false,
+  },
 };
 
 const DOWNLOAD_URL = "/api/prompt-pack";
