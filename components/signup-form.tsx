@@ -30,7 +30,8 @@ export function SignupForm({ compact = false }: { compact?: boolean }) {
         setMessage(data.message ?? "Something went wrong. Please try again in a moment.");
         return;
       }
-      try { sessionStorage.setItem("lmtyai_subscriber_email", email); } catch {}\n      router.push(data.redirectTo ?? "/thank-you");
+      try { sessionStorage.setItem("lmtyai_subscriber_email", email); } catch {}
+      router.push(data.redirectTo ?? "/thank-you");
     } catch {
       setStatus("error");
       setMessage("We couldn't reach the server. Please check your connection and try again.");
