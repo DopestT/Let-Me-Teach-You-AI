@@ -8,7 +8,7 @@ export const runtime = "nodejs";
 
 const REDIRECT_TO = "/thank-you";
 const DOWNLOAD_URL =
-  "/lead-magnet/Start_Using_AI_Today_25_Beginner_Prompts.pdf";
+  "/lead-magnet/AI_Work_Kit.pdf";
 
 export async function POST(req: Request) {
   // --- Rate limit (per IP): 5 attempts / minute ---
@@ -95,8 +95,8 @@ export async function POST(req: Request) {
   return NextResponse.json({
     ok: true,
     message: result.alreadySubscribed
-      ? "You're already on the list — here's your prompt pack again."
-      : "You're in! Your 25-prompt starter pack is on its way to your inbox.",
+      ? "You're already on the list — here's your AI Work Kit again."
+      : "You're in! Your AI Work Kit is on its way to your inbox.",
     redirectTo: REDIRECT_TO,
     downloadUrl: DOWNLOAD_URL,
   });
