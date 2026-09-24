@@ -14,7 +14,7 @@ export const metadata: Metadata = {
     template: `%s · ${SITE_NAME}`,
   },
   description:
-    "A beginner-friendly AI newsletter. We all got hit with AI at the same time — here's what actually works, taught plainly. Free 25-prompt starter pack when you join.",
+    "Practical AI education built around real outcomes. Get the free AI Work Kit: 25 prompts, 5 workflows, a tool cheat sheet, and a 10-minute quick start.",
   keywords: [
     "learn AI",
     "AI for beginners",
@@ -35,13 +35,13 @@ export const metadata: Metadata = {
     siteName: SITE_NAME,
     title: `${SITE_NAME} — Learn AI, one clear step at a time`,
     description:
-      "Practical, beginner-friendly AI lessons. Join free and get 25 prompts you can use today.",
+      "Stop collecting prompts. Get the free AI Work Kit and start using AI like a coworker.",
   },
   twitter: {
     card: "summary_large_image",
     title: `${SITE_NAME} — Learn AI, one clear step at a time`,
     description:
-      "Practical, beginner-friendly AI lessons. Join free and get 25 prompts you can use today.",
+      "Stop collecting prompts. Get the free AI Work Kit and start using AI like a coworker.",
   },
   robots: {
     index: true,
