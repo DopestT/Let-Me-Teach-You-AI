@@ -1,58 +1,139 @@
 {
-  "title": "25 AI Prompts for Total Beginners",
-  "subtitle": "Copy, paste, and adapt. Works with ChatGPT, Gemini, or any chat AI.",
+  "title": "The AI Work Kit",
+  "subtitle": "25 practical prompts + 5 plug-and-play workflows to help you use AI like a coworker.",
   "brand": "Let Me Teach You AI",
+  "quickStart": [
+    "Pick one task you need to finish today — not a vague goal.",
+    "Choose the closest prompt or workflow in this kit.",
+    "Replace every [bracketed placeholder] with your real context.",
+    "Give the AI examples, constraints, and the format you want back.",
+    "Review the result. Ask for one specific improvement instead of starting over."
+  ],
+  "toolCheatSheet": [
+    {
+      "task": "General writing, planning, analysis, brainstorming",
+      "tool": "ChatGPT / Claude / Gemini"
+    },
+    {
+      "task": "Research that needs current web sources",
+      "tool": "A web-connected AI or search/research tool"
+    },
+    {
+      "task": "Long documents and careful document analysis",
+      "tool": "Claude / ChatGPT with the source file attached"
+    },
+    {
+      "task": "Images, concepts, thumbnails, visual ideation",
+      "tool": "An image-generation tool"
+    },
+    {
+      "task": "Repeatable multi-step work",
+      "tool": "Your preferred AI plus an automation platform"
+    }
+  ],
   "sections": [
     {
-      "name": "Everyday writing",
+      "name": "Writing & communication",
       "prompts": [
-        "Rewrite this email so it sounds friendly but professional. Keep it under 120 words: [paste your email].",
-        "Help me reply to this message. I want to say no politely without burning the bridge: [paste message].",
-        "Turn these rough notes into a clear, well-structured message: [paste notes].",
-        "Proofread this for spelling, grammar, and clarity. Show me the corrected version, then list what you changed: [paste text].",
-        "Give me three subject lines for an email about [topic]. Make one plain, one curious, and one direct."
+        "Rewrite this so it sounds clear, confident, and human. Keep my meaning, remove filler, and keep it under [length]: [paste text].",
+        "Draft a reply to this message. My goal is [goal], my tone should be [tone], and I do not want to say or promise [constraint]: [paste message].",
+        "Turn these rough notes into a finished [email/post/document]. Put the most important point first and end with a clear next step: [notes].",
+        "Edit this in two passes. First fix clarity and structure. Then tighten the language without making it sound robotic: [paste text].",
+        "Give me three versions of this message: direct, warm, and persuasive. Preserve the facts exactly: [paste message]."
       ]
     },
     {
-      "name": "Planning your day and week",
+      "name": "Research & learning",
       "prompts": [
-        "I have these tasks today: [list]. Help me order them from most to least important and suggest a realistic schedule.",
-        "Break this big goal into small, doable steps I can start this week: [goal].",
-        "Act as a planning partner. Ask me 3 questions to understand my week, then build me a simple plan.",
-        "Help me write a short weekly review: what went well, what didn't, and one thing to try next week. Here are my notes: [notes].",
-        "I keep procrastinating on [task]. Suggest 3 small first steps that take under 10 minutes each."
+        "Teach me [topic] from zero. Start with the mental model I need first, use one everyday example, then give me three things to learn next.",
+        "Research [question]. Separate verified facts, reasonable inferences, and open questions. Cite sources for claims that could have changed.",
+        "I need to understand this quickly: [paste text]. Give me the five most important points, define unfamiliar terms, and tell me what deserves a closer look.",
+        "Compare [option A] and [option B] for this situation: [context]. Use the criteria [criteria] and show where the evidence is uncertain.",
+        "Quiz me on [topic] one question at a time. Adjust difficulty based on my answers and explain mistakes simply."
       ]
     },
     {
-      "name": "Learning faster",
+      "name": "Business & decisions",
       "prompts": [
-        "Explain [topic] to me like I'm a complete beginner. Use a simple everyday example.",
-        "I read this and didn't fully get it. Explain it more simply and tell me the one key idea: [paste text].",
-        "Quiz me with 5 easy questions on [topic], one at a time, and tell me if I'm right after each answer.",
-        "Give me a 5-day plan to learn the basics of [topic], with one small task per day.",
-        "What are the 3 most common beginner mistakes with [topic], and how do I avoid them?"
+        "Turn this business idea into a one-page plan covering customer, problem, offer, acquisition channel, revenue model, biggest assumption, and first test: [idea].",
+        "Act as a skeptical customer. Review this offer and tell me what is unclear, unbelievable, unnecessary, or missing: [offer].",
+        "I need to decide [decision]. Build a decision table using these priorities: [priorities]. Ask me for missing facts before reaching a conclusion.",
+        "Find the weakest assumption in this plan and design the cheapest test that could prove or disprove it within [time/budget]: [plan].",
+        "Turn these customer comments into themes. Identify repeated problems, desired outcomes, exact phrases worth preserving, and possible offers: [feedback]."
       ]
     },
     {
-      "name": "Getting real answers, not vague ones",
+      "name": "Content & creation",
       "prompts": [
-        "Before you answer, ask me any questions you need to give a genuinely useful response. My question is: [question].",
-        "Give me the short answer first in one sentence, then a longer explanation underneath.",
-        "Compare [option A] and [option B] for someone who cares most about [what matters to you]. Use a simple table.",
-        "You gave a general answer. Make it specific to my situation: [describe your situation].",
-        "List the pros and cons of [decision], then tell me which you'd lean toward and why."
+        "Turn this idea into 10 content angles for [platform]. Avoid repeating the same hook. Target [audience] and drive toward [CTA]: [idea].",
+        "Write five hooks for this topic using different structures: surprising fact, problem, contrarian question, story opening, and specific outcome: [topic].",
+        "Repurpose this long piece into one short video script, one carousel outline, one email, and three short posts without copying sentences word-for-word: [content].",
+        "Review this content for attention drop-offs. Mark where a viewer is likely to leave and rewrite those sections to create forward momentum: [script].",
+        "Build a seven-day content plan around [theme]. Each day needs a distinct angle, format, opening hook, and CTA."
       ]
     },
     {
-      "name": "Getting things done",
+      "name": "Productivity & automation",
       "prompts": [
-        "Help me draft a simple checklist for [task or event] so I don't forget anything.",
-        "Summarize this long text into 5 bullet points a busy person could read in 30 seconds: [paste text].",
-        "I need to make a decision about [topic]. Walk me through it by asking one question at a time.",
-        "Turn this idea into a short, clear plan I could hand to someone else: [describe idea].",
-        "Act as a friendly coach. I want to build the habit of [habit]. Give me a simple starting plan and one way to stay on track."
+        "Here are my tasks: [list]. Rank them by impact, urgency, effort, and dependency, then build a realistic plan for [time available].",
+        "Break this repeated task into trigger, inputs, decisions, actions, human approvals, outputs, and failure cases: [task].",
+        "Turn this messy process into a standard operating procedure that someone else could follow without asking me questions: [process].",
+        "Look at this workflow and identify what AI can draft, what software can automate, and what should stay human-controlled: [workflow].",
+        "I have [amount of time] to make progress on [goal]. Give me the smallest sequence of actions that produces a visible result today."
       ]
     }
   ],
-  "footer": "A note on using AI well: treat these as starting points, not magic. Always read what the AI gives you, check anything important, and make it your own. — Let Me Teach You AI"
+  "workflows": [
+    {
+      "name": "Research → Brief",
+      "steps": [
+        "Define the exact question, audience, deadline, and what would count as a useful answer.",
+        "Gather current sources and separate facts from opinions or assumptions.",
+        "Extract the recurring findings, disagreements, numbers, and unanswered questions.",
+        "Ask AI to draft a structured brief using only the supplied evidence.",
+        "Review every important claim, tighten the brief, and add next actions."
+      ]
+    },
+    {
+      "name": "Idea → Finished Content",
+      "steps": [
+        "Describe the audience, platform, point of view, and desired action.",
+        "Generate several genuinely different angles before choosing one.",
+        "Create an outline with hook, value, proof/example, and CTA.",
+        "Draft the content, then run a separate clarity and retention edit.",
+        "Publish, record performance, and feed the result into the next iteration."
+      ]
+    },
+    {
+      "name": "Messy Task → Repeatable System",
+      "steps": [
+        "Write down how the task is actually performed today.",
+        "Separate triggers, inputs, decisions, actions, outputs, and exceptions.",
+        "Mark each step human, AI-assisted, or automatable.",
+        "Create the smallest safe workflow and define an approval checkpoint.",
+        "Test with one real case, record failures, and update the process."
+      ]
+    },
+    {
+      "name": "Customer Problem → Offer",
+      "steps": [
+        "Collect real customer language, complaints, questions, and desired outcomes.",
+        "Cluster the evidence into repeated problems and high-value outcomes.",
+        "Choose one problem and write a specific promise for one audience.",
+        "Build the smallest version of the offer that can test demand.",
+        "Put it in front of real people, measure response, and revise from evidence."
+      ]
+    },
+    {
+      "name": "Big Goal → This Week",
+      "steps": [
+        "Define what done looks like in observable terms.",
+        "List dependencies and the few actions that create the most progress.",
+        "Break those actions into tasks that fit your actual available time.",
+        "Schedule the first irreversible or visible action early.",
+        "End the week with a review: result, blocker, lesson, and next move."
+      ]
+    }
+  ],
+  "footer": "Use AI as a working partner, not an unquestioned authority. Check important facts, protect sensitive information, and make the final work your own. — Let Me Teach You AI"
 }
