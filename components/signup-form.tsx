@@ -30,6 +30,7 @@ export function SignupForm({ compact = false }: { compact?: boolean }) {
         setMessage(data.message ?? "Something went wrong. Please try again in a moment.");
         return;
       }
+      try { sessionStorage.setItem("lmtyai_subscriber_email", email); } catch {}
       router.push(data.redirectTo ?? "/thank-you");
     } catch {
       setStatus("error");
@@ -54,7 +55,7 @@ export function SignupForm({ compact = false }: { compact?: boolean }) {
           <label htmlFor="company">Company<input id="company" type="text" name="company" tabIndex={-1} autoComplete="off" value={company} onChange={(e) => setCompany(e.target.value)} /></label>
         </div>
         <button type="submit" disabled={status === "loading"} className="primary-cta inline-flex items-center justify-center gap-2 rounded-[--radius] px-6 py-3 font-semibold shadow-sm transition-colors disabled:cursor-not-allowed sm:self-end">
-          {status === "loading" ? <><Loader2 className="h-4 w-4 animate-spin" aria-hidden />Joining…</> : <>Get 25 Free AI Prompts<ArrowRight className="h-4 w-4" aria-hidden /></>}
+          {status === "loading" ? <><Loader2 className="h-4 w-4 animate-spin" aria-hidden />Joining…</> : <>Send Me the AI Work Kit<ArrowRight className="h-4 w-4" aria-hidden /></>}
         </button>
       </div>
       {status === "error" && <p role="alert" className="mt-3 text-sm text-[--color-brand-dark]">{message}</p>}

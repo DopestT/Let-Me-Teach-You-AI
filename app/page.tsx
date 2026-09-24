@@ -133,9 +133,9 @@ export default function HomePage() {
       <section id="join" className="border-y border-[#20345f] bg-[#07152f] py-12 text-white sm:py-14">
         <div className="container-editorial grid max-w-5xl gap-8 lg:grid-cols-[.95fr_1.05fr] lg:items-center">
           <div>
-            <p className="text-sm font-bold uppercase tracking-[.14em] text-[#8fb0ff]">Free when you join</p>
-            <h2 className="mt-3 font-editorial text-3xl font-semibold leading-tight sm:text-4xl">Get the 25-Prompt Starter Pack.</h2>
-            <p className="mt-4 max-w-xl leading-7 text-[#c8d5ea]">Twenty-five prompts you can use today for writing, planning, research, learning, and getting better answers from AI.</p>
+            <p className="text-sm font-bold uppercase tracking-[.14em] text-[#8fb0ff]">Free AI Work Kit</p>
+            <h2 className="mt-3 font-editorial text-3xl font-semibold leading-tight sm:text-4xl">Stop collecting prompts. Start using AI like a coworker.</h2>
+            <p className="mt-4 max-w-xl leading-7 text-[#c8d5ea]">Get 25 practical prompts, 5 plug-and-play workflows, a one-page AI tool cheat sheet, and a 10-minute quick-start guide.</p>
             <ul className="mt-5 space-y-2.5 text-sm text-[#dce5f5] sm:text-base">
               {packBullets.map((bullet) => <li key={bullet} className="flex items-center gap-3"><CheckCircle2 className="h-5 w-5 text-[#7fa5ff]"/>{bullet}</li>)}
             </ul>
@@ -163,10 +163,10 @@ export default function HomePage() {
       <section className="border-t border-[#dfe6f0] bg-white py-16">
         <div className="container-editorial text-center">
           <h2 className="font-editorial text-4xl font-semibold text-[#0f1e3d]">Start with one useful thing.</h2>
-          <p className="mx-auto mt-4 max-w-xl text-lg text-[#59677c]">Pick a goal in the AI Lab or join free and get the 25 prompts.</p>
+          <p className="mx-auto mt-4 max-w-xl text-lg text-[#59677c]">Pick a goal in the AI Lab or get the free AI Work Kit.</p>
           <div className="mt-7 flex flex-wrap justify-center gap-3">
             <Link href="#lab" className="primary-cta rounded-xl px-6 py-3.5 font-bold">Open the AI Lab</Link>
-            <Link href="#join" className="rounded-xl border border-[#ccd7ea] bg-white px-6 py-3.5 font-bold text-[#10213f]">Get the prompts</Link>
+            <Link href="/ai-work-kit" className="rounded-xl border border-[#ccd7ea] bg-white px-6 py-3.5 font-bold text-[#10213f]">Get the AI Work Kit</Link>
           </div>
         </div>
       </section>
