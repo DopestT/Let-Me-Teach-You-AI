@@ -5,7 +5,7 @@ import { ArrowLeft, Download } from "lucide-react";
 export const metadata: Metadata = {
   title: "Thank You",
   description:
-    "You're on the list. Download your free 25-prompt starter pack and get ready for beginner-friendly AI lessons.",
+    "You're on the list. Download your free AI Work Kit and start putting AI to work.",
   robots: {
     index: false,
     follow: false,
@@ -22,7 +22,7 @@ export default function ThankYouPage() {
           You&apos;re in! 🎉
         </h1>
         <p className="mt-5 text-lg leading-relaxed text-[--color-navy-600]">
-          Your free <strong className="text-[--color-navy]">25-Prompt Starter Pack</strong>{" "}
+          Your free <strong className="text-[--color-navy]">AI Work Kit</strong>{" "}
           is on its way to your inbox. You can also download it immediately below.
         </p>
 
@@ -32,7 +32,7 @@ export default function ThankYouPage() {
             className="primary-cta inline-flex items-center justify-center gap-2 rounded-[--radius] px-7 py-3.5 font-semibold shadow-sm transition-colors"
           >
             <Download className="h-5 w-5" aria-hidden />
-            Download your 25 prompts
+            Download the AI Work Kit
           </a>
         </div>
 
