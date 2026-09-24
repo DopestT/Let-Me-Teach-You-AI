@@ -53,8 +53,18 @@ function ensureSpace(needed) {
   if (y - needed < MARGIN) newPage();
 }
 
+function safeText(text) {
+  return String(text)
+    .replaceAll("→", "->")
+    .replaceAll("—", "-")
+    .replaceAll("–", "-")
+    .replaceAll("“", '"')
+    .replaceAll("”", '"')
+    .replaceAll("’", "'");
+}
+
 function wrap(text, font, size, maxWidth) {
-  const words = String(text).split(/\s+/);
+  const words = safeText(text).split(/\s+/);
   const lines = [];
   let line = "";
   for (const word of words) {
