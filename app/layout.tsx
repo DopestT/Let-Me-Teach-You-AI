@@ -36,12 +36,21 @@ export const metadata: Metadata = {
     title: `${SITE_NAME} — Learn AI, one clear step at a time`,
     description:
       "Stop collecting prompts. Get the free AI Work Kit and start using AI like a coworker.",
+    images: [
+      {
+        url: "/opengraph-image",
+        width: 1200,
+        height: 630,
+        alt: "Let Me Teach You AI — learn AI by building useful things",
+      },
+    ],
   },
   twitter: {
     card: "summary_large_image",
     title: `${SITE_NAME} — Learn AI, one clear step at a time`,
     description:
       "Stop collecting prompts. Get the free AI Work Kit and start using AI like a coworker.",
+    images: ["/twitter-image"],
   },
   robots: {
     index: true,
