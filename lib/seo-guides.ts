@@ -640,7 +640,7 @@ export const seoGuides: SeoGuide[] = [
       { question: "Do I need to build an app to start an AI business?", answer: "No. Many strong product ideas begin as a manual or concierge service. Software should automate a proven process, not substitute for understanding the customer." },
       { question: "How do I choose a niche?", answer: "Choose a group you can reach and a problem you can observe. Access and problem clarity matter more than choosing the trendiest industry." },
     ],
-    related: ["how-to-use-chatgpt-for-business", "ai-workflow-examples-for-beginners", "automate-email-follow-up-with-ai"],
+    related: ["ai-automation-for-small-business", "how-to-use-chatgpt-for-business", "ai-workflow-examples-for-beginners", "automate-email-follow-up-with-ai"],
   },
   {
     slug: "ai-automation-roadmap-for-beginners",
@@ -724,7 +724,101 @@ export const seoGuides: SeoGuide[] = [
       { question: "When should I start learning AI agents?", answer: "After you can build reliable workflows with validation, error handling, and logs. Agents add flexible decision-making, so they are easier to control once the underlying workflow skills are familiar." },
       { question: "What is a good first AI automation project?", answer: "Choose a repeated task with an obvious input and output, such as classifying contact-form messages, summarizing meeting notes, or drafting a follow-up for human approval." }
     ],
-    related: ["ai-automation-for-beginners", "n8n-for-beginners", "ai-agent-vs-ai-workflow"],
+    related: ["ai-automation-for-small-business", "ai-automation-for-beginners", "n8n-for-beginners", "ai-agent-vs-ai-workflow"],
+    publishedAt: "2026-10-01",
+    updatedAt: "2026-10-01"
+  },
+  {
+    slug: "ai-automation-for-small-business",
+    title: "AI Automation for Small Business: Start With One Workflow",
+    seoTitle: "AI Automation for Small Business: A Practical Starter Guide",
+    description: "A practical small-business AI automation guide: choose the right task, map the workflow, keep humans in control, measure the result, and expand only after it works.",
+    eyebrow: "Small business",
+    primaryKeyword: "AI automation for small business",
+    intent: "Choose and build a useful first AI automation for a small business",
+    readTime: "11 min",
+    takeaways: [
+      "Automate a process you already understand before trying to automate an entire job.",
+      "Start with repetitive work such as lead follow-up, intake, scheduling, summaries, or routine drafting.",
+      "Keep pricing, legal, financial, hiring, and other judgment-heavy decisions behind human review.",
+      "Measure one operational result before expanding the workflow."
+    ],
+    sections: [
+      {
+        heading: "Start with a boring task that already repeats",
+        paragraphs: [
+          "The best first automation usually is not a futuristic agent. It is a task your business already performs over and over: replying to a new inquiry, collecting intake information, summarizing notes, preparing a draft response, scheduling a reminder, or moving a lead into the right queue.",
+          "Pick a task whose current manual process is understandable. If nobody can explain what good work looks like, automation will usually make the confusion faster rather than remove it."
+        ],
+        bullets: [
+          "The task happens often enough to matter.",
+          "The inputs and desired output are easy to describe.",
+          "A mistake is detectable and recoverable.",
+          "A person can review the output when judgment is needed.",
+          "You can measure whether the workflow helped."
+        ]
+      },
+      {
+        heading: "Map the workflow before adding AI",
+        paragraphs: [
+          "Write the process as trigger → input → rules → AI step → review → action → log. Many parts do not need AI at all. Exact rules such as required fields, routing, timestamps, duplicate checks, and approval thresholds should stay deterministic.",
+          "Use AI for the fuzzy parts: classifying a message, extracting information from text, summarizing, drafting a response, or organizing research. Keeping the boundary clear makes the system easier to test."
+        ]
+      },
+      {
+        heading: "A strong first example: lead follow-up",
+        paragraphs: [
+          "A simple lead workflow can capture a form submission, verify required fields, classify the request, prepare a short summary and draft reply, then place that draft in front of a person before anything is sent.",
+          "After approval, the workflow can send the message, create the follow-up reminder, and log what happened. That removes repetitive handling without giving the model authority over pricing, promises, or exceptions."
+        ],
+        bullets: [
+          "Trigger: a new inquiry arrives.",
+          "Validate: required contact and request fields are present.",
+          "AI: classify the request and draft a concise response.",
+          "Human: review anything customer-facing.",
+          "Action: send the approved response and schedule follow-up.",
+          "Evidence: log completion, failure, and response time."
+        ]
+      },
+      {
+        heading: "Do not automate judgment just because you can",
+        paragraphs: [
+          "High-impact decisions need stronger controls. Pricing changes, legal conclusions, financial decisions, employment decisions, refunds outside a defined policy, and sensitive customer commitments should not be delegated to an unbounded model.",
+          "The safer design is to let AI prepare information or a recommendation while a person remains responsible for the consequential action."
+        ]
+      },
+      {
+        heading: "Measure the workflow with one business result",
+        paragraphs: [
+          "Before launch, choose one result that tells you whether the automation is useful. For lead follow-up that might be median response time, percentage of inquiries receiving a completed follow-up, or staff minutes spent per inquiry.",
+          "Do not call a workflow successful because it ran. Success means the business result improved without an unacceptable increase in errors, corrections, or customer friction."
+        ]
+      },
+      {
+        heading: "Expand only after the first workflow is boringly reliable",
+        paragraphs: [
+          "Once the first workflow has enough successful runs, documented failure cases, and a measurable benefit, reuse the same pattern elsewhere. A business can then move from lead follow-up to onboarding, recurring reporting, support triage, invoice reminders, or internal knowledge workflows.",
+          "This sequence keeps the investment proportional to evidence. One reliable workflow is more valuable than five impressive demos nobody trusts."
+        ]
+      }
+    ],
+    steps: [
+      "List five repetitive tasks that happen every week.",
+      "Choose the one with clear inputs, clear output, and low downside if a draft is wrong.",
+      "Document how the task is performed manually today.",
+      "Separate deterministic rules from the parts that genuinely need AI.",
+      "Build the smallest end-to-end workflow with logging and a human review point.",
+      "Run real test cases, including missing information and failure cases.",
+      "Measure one business outcome plus errors and human corrections.",
+      "Expand only after the result is repeatable."
+    ],
+    faqs: [
+      { question: "What should a small business automate first with AI?", answer: "Start with a repetitive, well-understood task such as inquiry triage, follow-up drafting, intake organization, scheduling support, or summarization. Avoid beginning with a high-stakes decision or a process that is already poorly defined." },
+      { question: "Does a small business need an AI agent?", answer: "Usually not for the first workflow. A fixed automation with one or two AI steps is easier to test and control. Add agent-style decision-making only when the next step genuinely cannot be predetermined." },
+      { question: "How do I know whether the automation is worth it?", answer: "Choose a measurable operational result before building, such as response time, completion rate, staff minutes, corrections, or missed follow-ups. Compare the workflow against the current manual process." },
+      { question: "Which business tasks should stay human-reviewed?", answer: "Keep consequential judgment such as pricing exceptions, legal or financial conclusions, hiring decisions, sensitive commitments, and other high-impact actions behind appropriate human review." }
+    ],
+    related: ["automate-email-follow-up-with-ai", "how-to-use-chatgpt-for-business", "ai-automation-roadmap-for-beginners"],
     publishedAt: "2026-10-01",
     updatedAt: "2026-10-01"
   }
