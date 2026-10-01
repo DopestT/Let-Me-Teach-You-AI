@@ -64,8 +64,8 @@ export default async function GuidePage({
     url: canonicalUrl,
     author: { "@type": "Organization", name: "Let Me Teach You AI" },
     publisher: { "@type": "Organization", name: "Let Me Teach You AI" },
-    datePublished: "2026-09-13",
-    dateModified: "2026-09-13",
+    datePublished: guide.publishedAt ?? "2026-09-13",
+    dateModified: guide.updatedAt ?? guide.publishedAt ?? "2026-09-13",
     about: guide.primaryKeyword,
   };
 
