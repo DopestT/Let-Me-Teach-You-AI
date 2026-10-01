@@ -7,7 +7,7 @@ import { ArrowRight, Loader2 } from "lucide-react";
 
 type Status = "idle" | "loading" | "error";
 
-export function SignupForm({ compact = false }: { compact?: boolean }) {
+export function SignupForm({ compact = false, source = "website" }: { compact?: boolean; source?: string }) {
   const router = useRouter();
   const [email, setEmail] = useState("");
   const [firstName, setFirstName] = useState("");
@@ -23,7 +23,7 @@ export function SignupForm({ compact = false }: { compact?: boolean }) {
       const res = await fetch("/api/subscribe", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email, firstName, company }),
+        body: JSON.stringify({ email, firstName, company, source }),
       });
       const data = (await res.json()) as { ok?: boolean; message?: string; redirectTo?: string };
       if (!res.ok || !data.ok) {
@@ -32,7 +32,7 @@ export function SignupForm({ compact = false }: { compact?: boolean }) {
         return;
       }
       try { sessionStorage.setItem("lmtyai_subscriber_email", email); } catch {}
-      track("newsletter_signup", { surface: compact ? "compact" : "standard", offer: "ai_work_kit" });
+      track("newsletter_signup", { surface: compact ? "compact" : "standard", offer: "ai_work_kit", source });
       router.push(data.redirectTo ?? "/thank-you");
     } catch {
       setStatus("error");
