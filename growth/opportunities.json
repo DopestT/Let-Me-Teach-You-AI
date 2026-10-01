@@ -1,0 +1,67 @@
+{
+  "version": 1,
+  "generatedAt": "2026-10-01",
+  "objective": "qualified_newsletter_signups",
+  "rules": {
+    "preferClusterExpansionOverCannibalization": true,
+    "requireInformationGain": true,
+    "publishMode": "review_required"
+  },
+  "opportunities": [
+    {
+      "id": "opp-ai-automation-roadmap",
+      "status": "implemented",
+      "cluster": "ai-automation-beginners",
+      "targetKeyword": "AI automation roadmap for beginners",
+      "intent": "beginner learning path",
+      "score": 92,
+      "conversionFit": "high",
+      "rationale": "Recurring beginner demand asks where to start, which tools to learn, what first projects to build, and when to add agents.",
+      "evidence": [
+        "https://www.reddit.com/r/n8n/comments/1uhz2kd/where_should_i_start_learning_ai_automation_if_my/",
+        "https://www.reddit.com/r/n8n/comments/1sqi1hs/im_17_just_finished_high_school_and_want_to_learn/",
+        "https://www.reddit.com/r/n8nforbeginners/comments/1wmelc7/complete_beginner_in_n8n_how_did_you_learn/"
+      ]
+    },
+    {
+      "id": "opp-n8n-vs-python",
+      "status": "hold_supporting",
+      "cluster": "ai-automation-beginners",
+      "targetKeyword": "n8n vs Python for AI automation beginners",
+      "intent": "tool choice",
+      "score": 78,
+      "conversionFit": "medium",
+      "rationale": "Treat as a supporting section or later page only if search data shows distinct demand; avoid cannibalizing the roadmap."
+    },
+    {
+      "id": "opp-first-ai-automation-projects",
+      "status": "hold_supporting",
+      "cluster": "ai-automation-beginners",
+      "targetKeyword": "first AI automation projects for beginners",
+      "intent": "project ideas",
+      "score": 82,
+      "conversionFit": "high",
+      "rationale": "Strong bridge from education to the AI Work Kit and build lessons. Expand only after roadmap indexing and engagement are measurable."
+    },
+    {
+      "id": "opp-ai-automation-reliability",
+      "status": "backlog",
+      "cluster": "ai-automation-reliability",
+      "targetKeyword": "AI automation error handling for beginners",
+      "intent": "implementation help",
+      "score": 74,
+      "conversionFit": "medium",
+      "rationale": "Higher-information-gain topic covering validation, retries, timeouts, duplicate runs, logging, and fallbacks."
+    },
+    {
+      "id": "opp-ai-automation-small-business",
+      "status": "backlog",
+      "cluster": "ai-automation-business",
+      "targetKeyword": "AI automation for small business",
+      "intent": "commercial education",
+      "score": 86,
+      "conversionFit": "high",
+      "rationale": "Connects beginner education to measurable business outcomes without turning the site into generic AI news."
+    }
+  ]
+}
