@@ -5,7 +5,7 @@ import { ArrowLeft, ArrowRight, CheckCircle2, Clock3, Search, Sparkles } from "l
 import { getSeoGuide, seoGuides } from "@/lib/seo-guides";
 import { SignupForm } from "@/components/signup-form";
 
-const SITE_URL = "https://letmeteachyouai.com";
+const SITE_URL = "https://www.letmeteachyouai.com";
 
 export function generateStaticParams() {
   return seoGuides.map((guide) => ({ slug: guide.slug }));
