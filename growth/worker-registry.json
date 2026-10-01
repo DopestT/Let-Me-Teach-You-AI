@@ -1,0 +1,58 @@
+{
+  "version": 1,
+  "strategy": "Perception owns orchestration, verification, permissions, and business objective. Specialized workers remain replaceable.",
+  "workers": [
+    {
+      "id": "opportunity-content",
+      "role": [
+        "discover",
+        "cluster",
+        "score",
+        "draft"
+      ],
+      "implementation": "external-adapter",
+      "repository": "https://github.com/m0ntydad0n/pseo-engine-oss",
+      "license": "Apache-2.0",
+      "status": "candidate",
+      "notes": "Use behind the Growth Operator contract. Do not grant direct publish authority."
+    },
+    {
+      "id": "technical-crawl",
+      "role": [
+        "crawl",
+        "technical-audit",
+        "regression-check"
+      ],
+      "implementation": "external-adapter",
+      "repository": "https://github.com/MelnixDev/seo-crawl-audit",
+      "license": "MIT",
+      "status": "candidate",
+      "notes": "Preferred technical crawler candidate. Return findings to Perception for verification."
+    },
+    {
+      "id": "ai-visibility",
+      "role": [
+        "measure-ai-mentions",
+        "measure-ai-citations"
+      ],
+      "implementation": "reference-adapter",
+      "repository": "https://github.com/SamJale/ai-visibility-tracker",
+      "license": "MIT",
+      "status": "reference-only",
+      "notes": "Reuse measurement ideas, but avoid binding the product to its current search provider."
+    },
+    {
+      "id": "lmtyai-renderer",
+      "role": [
+        "render-guide",
+        "internal-links",
+        "schema",
+        "conversion-path"
+      ],
+      "implementation": "native",
+      "repository": "DopestT/Let-Me-Teach-You-AI",
+      "status": "active",
+      "notes": "Current first-party publishing surface. Publishing remains review-gated."
+    }
+  ]
+}
