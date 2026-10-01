@@ -20,10 +20,27 @@ export function SignupForm({ compact = false, source = "website" }: { compact?: 
     setStatus("loading");
     setMessage("");
     try {
+      const params = new URLSearchParams(window.location.search);
+      const referrerOrigin = (() => {
+        try {
+          return document.referrer ? new URL(document.referrer).origin : undefined;
+        } catch {
+          return undefined;
+        }
+      })();
+      const attribution = {
+        utmSource: params.get("utm_source") || source,
+        utmMedium: params.get("utm_medium") || "website",
+        utmCampaign: params.get("utm_campaign") || undefined,
+        utmContent: params.get("utm_content") || undefined,
+        utmTerm: params.get("utm_term") || undefined,
+        referringSite: referrerOrigin,
+      };
+
       const res = await fetch("/api/subscribe", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email, firstName, company, source }),
+        body: JSON.stringify({ email, firstName, company, source, attribution }),
       });
       const data = (await res.json()) as { ok?: boolean; message?: string; redirectTo?: string };
       if (!res.ok || !data.ok) {
@@ -32,7 +49,7 @@ export function SignupForm({ compact = false, source = "website" }: { compact?: 
         return;
       }
       try { sessionStorage.setItem("lmtyai_subscriber_email", email); } catch {}
-      track("newsletter_signup", { surface: compact ? "compact" : "standard", offer: "ai_work_kit", source });
+      track("newsletter_signup", { surface: compact ? "compact" : "standard", offer: "ai_work_kit", source, utm_source: attribution.utmSource, utm_medium: attribution.utmMedium, utm_campaign: attribution.utmCampaign ?? "none" });
       router.push(data.redirectTo ?? "/thank-you");
     } catch {
       setStatus("error");
