@@ -50,6 +50,13 @@ const guidePage = read("app/guides/[slug]/page.tsx");
 if (!guidePage.includes("SignupForm compact")) errors.push("guide page: missing conversion CTA");
 if (!guidePage.includes("guide:${guide.slug}")) errors.push("guide page: missing per-guide signup attribution");
 
+const newsletter = read("lib/newsletter.ts");
+if (!newsletter.includes("utm_medium: args.utmMedium")) errors.push("newsletter: utm_medium forwarding missing");
+if (!newsletter.includes("utm_campaign: args.utmCampaign")) errors.push("newsletter: utm_campaign forwarding missing");
+if (!newsletter.includes("utm_content: args.utmContent")) errors.push("newsletter: utm_content forwarding missing");
+if (!newsletter.includes("utm_term: args.utmTerm")) errors.push("newsletter: utm_term forwarding missing");
+const signupRoute = read("app/api/subscribe/route.ts");
+if (!signupRoute.includes("utmMedium: attribution.utmMedium")) errors.push("subscribe route: attribution forwarding missing");
 const signup = read("components/signup-form.tsx");
 if (!signup.includes('track("newsletter_signup"')) errors.push("signup form: conversion event missing");
 if (!signup.includes("source?: string")) errors.push("signup form: source attribution missing");
