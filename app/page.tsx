@@ -141,7 +141,7 @@ export default function HomePage() {
             </ul>
           </div>
           <div className="rounded-2xl border border-white/10 bg-white/[.055] p-5 shadow-[0_18px_55px_rgba(0,0,0,.22)] sm:p-6 [&_label]:!text-[#e4ecfa] [&_input]:!border-white/15 [&_input]:!bg-white [&_input]:!text-[#0f1e3d] [&_p]:!text-[#aebdd5] [&_a]:!text-white">
-            <SignupForm />
+            <SignupForm source="homepage" />
           </div>
         </div>
       </section>
