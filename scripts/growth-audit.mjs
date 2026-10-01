@@ -60,6 +60,20 @@ const operator = JSON.parse(read("growth/operator-contract.json"));
 if (operator?.orchestrator !== "Perception") errors.push("operator-contract: orchestrator must be Perception");
 if (!operator?.job?.prohibitedWithoutApproval?.includes("publish")) errors.push("operator-contract: publish must require approval");
 
+const workers = JSON.parse(read("growth/worker-registry.json"));
+if (!workers.workers.some((worker) => worker.id === "lmtyai-renderer" && worker.status === "active")) {
+  errors.push("worker-registry: active native renderer missing");
+}
+for (const worker of workers.workers.filter((worker) => worker.implementation !== "native")) {
+  if (!worker.repository || !worker.status) errors.push("worker-registry: incomplete external worker " + worker.id);
+}
+
+const baseline = JSON.parse(read("growth/baseline.json"));
+if (baseline.status !== "awaiting_connected_measurement") errors.push("baseline: unexpected status");
+for (const [key, value] of Object.entries(baseline.metrics)) {
+  if (value !== null) errors.push("baseline metric must remain null until authoritative measurement: " + key);
+}
+
 if (errors.length) {
   console.error("Growth audit failed:");
   for (const error of errors) console.error("- " + error);
