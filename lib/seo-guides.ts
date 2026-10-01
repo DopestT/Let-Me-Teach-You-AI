@@ -639,7 +639,7 @@ export const seoGuides: SeoGuide[] = [
       { question: "How do I choose a niche?", answer: "Choose a group you can reach and a problem you can observe. Access and problem clarity matter more than choosing the trendiest industry." },
     ],
     related: ["how-to-use-chatgpt-for-business", "ai-workflow-examples-for-beginners", "automate-email-follow-up-with-ai"],
-  },,
+  },
   {
     slug: "ai-automation-roadmap-for-beginners",
     title: "AI Automation Roadmap for Beginners: What to Learn First",
