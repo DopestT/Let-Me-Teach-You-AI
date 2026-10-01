@@ -55,13 +55,20 @@
     },
     {
       "id": "opp-ai-automation-small-business",
-      "status": "backlog",
+      "status": "implemented",
       "cluster": "ai-automation-business",
       "targetKeyword": "AI automation for small business",
       "intent": "commercial education",
       "score": 86,
       "conversionFit": "high",
-      "rationale": "Connects beginner education to measurable business outcomes without turning the site into generic AI news."
+      "rationale": "Connects beginner education to measurable business outcomes without turning the site into generic AI news.",
+      "evidence": [
+        "https://www.uschamber.com/co/run/technology/small-businesses-are-using-ai-heres-whats-actually-working",
+        "https://www.reddit.com/r/AiAutomations/comments/1w54430/if_you_had_a_small_business_what_would_you/",
+        "https://www.reddit.com/r/aiToolForBusiness/comments/1rkl9qi/what_are_small_businesses_realistically_doing/"
+      ],
+      "implementedAt": "2026-10-01",
+      "implementation": "/guides/ai-automation-for-small-business"
     }
   ]
 }
