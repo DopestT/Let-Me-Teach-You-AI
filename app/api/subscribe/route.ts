@@ -59,13 +59,17 @@ export async function POST(req: Request) {
     });
   }
 
-  const { email, firstName, source } = parsed.data;
+  const { email, firstName, source, attribution } = parsed.data;
 
   const result = await subscribe({
     email,
     firstName,
-    referringSite: "letmeteachyouai.com",
-    utmSource: source,
+    referringSite: attribution.referringSite ?? "https://letmeteachyouai.com",
+    utmSource: attribution.utmSource ?? source,
+    utmMedium: attribution.utmMedium ?? "website",
+    utmCampaign: attribution.utmCampaign,
+    utmContent: attribution.utmContent,
+    utmTerm: attribution.utmTerm,
   });
 
   // --- Upstream (provider) failure ---
