@@ -59,12 +59,13 @@ export async function POST(req: Request) {
     });
   }
 
-  const { email, firstName } = parsed.data;
+  const { email, firstName, source } = parsed.data;
 
   const result = await subscribe({
     email,
     firstName,
     referringSite: "letmeteachyouai.com",
+    utmSource: source,
   });
 
   // --- Upstream (provider) failure ---
