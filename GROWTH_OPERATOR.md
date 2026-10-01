@@ -8,7 +8,7 @@ Increase qualified AI Work Kit / newsletter signups for Let Me Teach You AI by a
 
 ## Site and repository
 
-- Canonical site: https://letmeteachyouai.com
+- Canonical site: https://www.letmeteachyouai.com
 - Repository: `DopestT/Let-Me-Teach-You-AI`
 - Primary conversion: `newsletter_signup`
 
