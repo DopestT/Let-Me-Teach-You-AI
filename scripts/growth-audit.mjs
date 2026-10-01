@@ -20,6 +20,14 @@ for (const file of sourceFiles) {
   if (body.includes("https://www.letmeteachyouai.com")) errors.push(file + ": hard-coded www canonical host");
 }
 
+const hasStaticLlms = fs.existsSync(path.join(root, "public/llms.txt"));
+const hasDynamicLlms = fs.existsSync(path.join(root, "app/llms.txt/route.ts"));
+if (hasStaticLlms && hasDynamicLlms) errors.push("llms.txt: static and dynamic implementations collide");
+if (fs.existsSync(path.join(root, "GROWTH_OPERATOR.md"))) {
+  const operatorDoc = read("GROWTH_OPERATOR.md");
+  if (operatorDoc.includes("Canonical site: https://www.letmeteachyouai.com")) errors.push("GROWTH_OPERATOR.md: canonical drift to www");
+}
+
 const config = JSON.parse(read("growth/growth-config.json"));
 if (config?.primaryConversion?.event !== "newsletter_signup") errors.push("growth-config: primary conversion must be newsletter_signup");
 if (config?.qualityGates?.publishMode !== "review_required") errors.push("growth-config: publishing must remain review_required during baseline");
