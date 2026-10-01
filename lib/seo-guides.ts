@@ -23,6 +23,8 @@ export type SeoGuide = {
   steps?: string[];
   faqs: GuideFaq[];
   related: string[];
+  publishedAt?: string;
+  updatedAt?: string;
 };
 
 export const seoGuides: SeoGuide[] = [
@@ -722,7 +724,9 @@ export const seoGuides: SeoGuide[] = [
       { question: "When should I start learning AI agents?", answer: "After you can build reliable workflows with validation, error handling, and logs. Agents add flexible decision-making, so they are easier to control once the underlying workflow skills are familiar." },
       { question: "What is a good first AI automation project?", answer: "Choose a repeated task with an obvious input and output, such as classifying contact-form messages, summarizing meeting notes, or drafting a follow-up for human approval." }
     ],
-    related: ["ai-automation-for-beginners", "n8n-for-beginners", "ai-agent-vs-ai-workflow"]
+    related: ["ai-automation-for-beginners", "n8n-for-beginners", "ai-agent-vs-ai-workflow"],
+    publishedAt: "2026-10-01",
+    updatedAt: "2026-10-01"
   }
 ];
 
