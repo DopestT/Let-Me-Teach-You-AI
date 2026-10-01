@@ -12,6 +12,14 @@ export const subscribeSchema = z.object({
   // Honeypot: bots fill this; humans never see it.
   company: z.string().max(0).optional(),
   source: z.string().trim().min(1).max(160).regex(/^[a-zA-Z0-9:_\/-]+$/).optional().default("website"),
+  attribution: z.object({
+    utmSource: z.string().trim().max(160).optional(),
+    utmMedium: z.string().trim().max(160).optional(),
+    utmCampaign: z.string().trim().max(200).optional(),
+    utmContent: z.string().trim().max(200).optional(),
+    utmTerm: z.string().trim().max(200).optional(),
+    referringSite: z.string().trim().url().max(500).optional(),
+  }).optional().default({}),
 });
 export type SubscribeInput = z.infer<typeof subscribeSchema>;
 
