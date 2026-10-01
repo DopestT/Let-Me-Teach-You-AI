@@ -91,7 +91,7 @@ export const seoGuides: SeoGuide[] = [
       { question: "What should I automate first?", answer: "Choose a task you already repeat and understand well. Lead triage, meeting summaries, email drafting, content repurposing, and structured data extraction are good starting points." },
       { question: "Is an AI automation the same as an AI agent?", answer: "Not exactly. A workflow follows a defined path. An agent has more freedom to decide which action or tool to use. Beginners usually get better results by learning workflows first." },
     ],
-    related: ["how-to-build-your-first-ai-workflow", "ai-workflow-examples-for-beginners", "ai-agent-vs-ai-workflow"],
+    related: ["ai-automation-roadmap-for-beginners", "how-to-build-your-first-ai-workflow", "ai-workflow-examples-for-beginners", "ai-agent-vs-ai-workflow"],
   },
   {
     slug: "how-to-build-your-first-ai-workflow",
@@ -277,7 +277,7 @@ export const seoGuides: SeoGuide[] = [
       { question: "Do I need to self-host n8n?", answer: "No. Hosting choice is separate from learning the workflow model. Beginners can focus first on building and understanding the automation." },
       { question: "Should I learn n8n or Make first?", answer: "Choose based on the kinds of integrations and control you need, then stick with one long enough to learn workflow fundamentals. The same concepts transfer between tools." },
     ],
-    related: ["make-vs-n8n-for-beginners", "how-to-build-your-first-ai-workflow", "ai-automation-for-beginners"],
+    related: ["ai-automation-roadmap-for-beginners", "make-vs-n8n-for-beginners", "how-to-build-your-first-ai-workflow", "ai-automation-for-beginners"],
   },
   {
     slug: "make-vs-n8n-for-beginners",
