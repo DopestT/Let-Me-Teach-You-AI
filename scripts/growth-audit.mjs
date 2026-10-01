@@ -46,6 +46,20 @@ const signup = read("components/signup-form.tsx");
 if (!signup.includes('track("newsletter_signup"')) errors.push("signup form: conversion event missing");
 if (!signup.includes("source?: string")) errors.push("signup form: source attribution missing");
 
+const opportunities = JSON.parse(read("growth/opportunities.json"));
+const opportunityIds = opportunities.opportunities.map((item) => item.id);
+for (const id of duplicate(opportunityIds)) errors.push("duplicate opportunity id: " + id);
+for (const item of opportunities.opportunities) {
+  if (!item.targetKeyword || !item.status) errors.push("opportunity missing targetKeyword/status: " + item.id);
+  if (item.status === "implemented" && !keywords.includes(item.targetKeyword.toLowerCase())) {
+    errors.push("implemented opportunity has no matching guide keyword: " + item.targetKeyword);
+  }
+}
+
+const operator = JSON.parse(read("growth/operator-contract.json"));
+if (operator?.orchestrator !== "Perception") errors.push("operator-contract: orchestrator must be Perception");
+if (!operator?.job?.prohibitedWithoutApproval?.includes("publish")) errors.push("operator-contract: publish must require approval");
+
 if (errors.length) {
   console.error("Growth audit failed:");
   for (const error of errors) console.error("- " + error);
