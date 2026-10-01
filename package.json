@@ -9,7 +9,8 @@
     "start": "next start",
     "lint": "next lint",
     "generate:pdf": "node scripts/generate-lead-magnet.mjs",
-    "growth:audit": "node scripts/growth-audit.mjs"
+    "growth:audit": "node scripts/growth-audit.mjs",
+    "growth:next": "node scripts/growth-next.mjs"
   },
   "dependencies": {
     "@vercel/analytics": "^1.6.1",
