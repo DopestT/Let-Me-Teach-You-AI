@@ -1,0 +1,84 @@
+{
+  "version": 1,
+  "name": "LMTYAI Growth Operator",
+  "orchestrator": "Perception",
+  "property": "LMTYAI",
+  "businessObjective": "Increase qualified newsletter signups to the AI Work Kit while preserving content quality and audience trust.",
+  "job": {
+    "required": [
+      "jobId",
+      "type",
+      "objective",
+      "evidence",
+      "proposedAction",
+      "verification"
+    ],
+    "allowedTypes": [
+      "discover",
+      "refresh",
+      "create",
+      "link",
+      "audit",
+      "measure",
+      "adapt"
+    ],
+    "allowedActions": [
+      "propose_content",
+      "propose_refresh",
+      "propose_internal_links",
+      "propose_metadata",
+      "run_audit",
+      "measure_conversion"
+    ],
+    "prohibitedWithoutApproval": [
+      "publish",
+      "delete_page",
+      "change_domain",
+      "send_email",
+      "buy_backlink",
+      "create_reciprocal_link",
+      "change_pricing"
+    ]
+  },
+  "verification": {
+    "requireEvidence": true,
+    "requireBuildPass": true,
+    "requireGrowthAudit": true,
+    "requireCanonicalCheck": true,
+    "requireNoDuplicatePrimaryKeyword": true,
+    "requireConversionPath": true
+  },
+  "result": {
+    "required": [
+      "jobId",
+      "status",
+      "evidence",
+      "changes",
+      "verification",
+      "nextAction"
+    ],
+    "statuses": [
+      "proposed",
+      "verified",
+      "blocked",
+      "failed",
+      "complete"
+    ]
+  },
+  "optimization": {
+    "primaryMetric": "newsletter_signup",
+    "secondaryMetrics": [
+      "organic_entry",
+      "guide_to_signup",
+      "build_to_signup",
+      "returning_reader_signup"
+    ],
+    "antiMetrics": [
+      "duplicate_pages",
+      "unverified_claims",
+      "broken_internal_links",
+      "canonical_drift",
+      "publish_without_review"
+    ]
+  }
+}

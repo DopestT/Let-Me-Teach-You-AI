@@ -1,0 +1,51 @@
+{
+  "version": 1,
+  "property": "LMTYAI",
+  "domain": "https://letmeteachyouai.com",
+  "businessObjective": "Grow qualified email subscribers by teaching people to use AI through practical builds and workflows.",
+  "primaryConversion": {
+    "event": "newsletter_signup",
+    "offer": "ai_work_kit",
+    "cta": "Send Me the AI Work Kit"
+  },
+  "secondaryConversions": [
+    "guide_to_signup",
+    "build_to_signup",
+    "returning_reader_signup"
+  ],
+  "contentPillars": [
+    "AI workflows for beginners",
+    "AI automation for small businesses",
+    "learning AI by building",
+    "AI agents with practical guardrails",
+    "AI tools and workflow comparisons"
+  ],
+  "qualityGates": {
+    "publishMode": "review_required",
+    "requireInformationGain": true,
+    "requireSourceVerificationForFactualClaims": true,
+    "rejectKeywordCannibalization": true,
+    "rejectNearDuplicatePages": true,
+    "requireInternalLinks": true,
+    "requireConversionPath": true
+  },
+  "growthLoop": [
+    "discover",
+    "score",
+    "create",
+    "verify",
+    "publish",
+    "measure",
+    "adapt"
+  ],
+  "optimizationOrder": [
+    "conversion_tracking",
+    "canonical_and_indexability",
+    "existing_content_refresh",
+    "high_intent_content_gaps",
+    "internal_linking",
+    "ai_visibility",
+    "distribution",
+    "link_earning"
+  ]
+}

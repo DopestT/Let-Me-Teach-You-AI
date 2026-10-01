@@ -23,6 +23,8 @@ export type SeoGuide = {
   steps?: string[];
   faqs: GuideFaq[];
   related: string[];
+  publishedAt?: string;
+  updatedAt?: string;
 };
 
 export const seoGuides: SeoGuide[] = [
@@ -91,7 +93,7 @@ export const seoGuides: SeoGuide[] = [
       { question: "What should I automate first?", answer: "Choose a task you already repeat and understand well. Lead triage, meeting summaries, email drafting, content repurposing, and structured data extraction are good starting points." },
       { question: "Is an AI automation the same as an AI agent?", answer: "Not exactly. A workflow follows a defined path. An agent has more freedom to decide which action or tool to use. Beginners usually get better results by learning workflows first." },
     ],
-    related: ["how-to-build-your-first-ai-workflow", "ai-workflow-examples-for-beginners", "ai-agent-vs-ai-workflow"],
+    related: ["ai-automation-roadmap-for-beginners", "how-to-build-your-first-ai-workflow", "ai-workflow-examples-for-beginners", "ai-agent-vs-ai-workflow"],
   },
   {
     slug: "how-to-build-your-first-ai-workflow",
@@ -277,7 +279,7 @@ export const seoGuides: SeoGuide[] = [
       { question: "Do I need to self-host n8n?", answer: "No. Hosting choice is separate from learning the workflow model. Beginners can focus first on building and understanding the automation." },
       { question: "Should I learn n8n or Make first?", answer: "Choose based on the kinds of integrations and control you need, then stick with one long enough to learn workflow fundamentals. The same concepts transfer between tools." },
     ],
-    related: ["make-vs-n8n-for-beginners", "how-to-build-your-first-ai-workflow", "ai-automation-for-beginners"],
+    related: ["ai-automation-roadmap-for-beginners", "make-vs-n8n-for-beginners", "how-to-build-your-first-ai-workflow", "ai-automation-for-beginners"],
   },
   {
     slug: "make-vs-n8n-for-beginners",
@@ -640,6 +642,92 @@ export const seoGuides: SeoGuide[] = [
     ],
     related: ["how-to-use-chatgpt-for-business", "ai-workflow-examples-for-beginners", "automate-email-follow-up-with-ai"],
   },
+  {
+    slug: "ai-automation-roadmap-for-beginners",
+    title: "AI Automation Roadmap for Beginners: What to Learn First",
+    seoTitle: "AI Automation Roadmap for Beginners: Start From Zero",
+    description: "A practical AI automation learning roadmap for beginners: workflow thinking, APIs and data, n8n or Make, AI steps, error handling, agents, and real projects.",
+    eyebrow: "Learning roadmap",
+    primaryKeyword: "AI automation roadmap for beginners",
+    intent: "Learn AI automation from scratch in the right order",
+    readTime: "12 min",
+    takeaways: [
+      "Learn workflow thinking before chasing autonomous agents.",
+      "Understand triggers, APIs, JSON, conditions, retries, and logs before adding more AI.",
+      "Build small real projects and inspect failures instead of watching tutorials indefinitely.",
+      "Use agents only when the next step genuinely depends on context."
+    ],
+    sections: [
+      {
+        heading: "Stage 1: Learn workflow thinking",
+        paragraphs: [
+          "Start with the shape of automation itself: trigger → input → validation → action → result. If you can describe a process in those blocks, you can move between n8n, Make, Zapier, code, or future tools without starting over.",
+          "Your first goal is not to build an impressive agent. It is to make one small process run reliably from beginning to end and understand what data moves between each step."
+        ],
+        bullets: [
+          "Triggers: what event starts the workflow?",
+          "Inputs: what information must exist before work begins?",
+          "Rules: which decisions are exact and deterministic?",
+          "Actions: what useful change should the workflow make?",
+          "Logs: how will you know what happened when something fails?"
+        ]
+      },
+      {
+        heading: "Stage 2: Learn data, APIs, and error handling",
+        paragraphs: [
+          "Most real automation problems are data problems. Learn how JSON is structured, how one step references fields from another, how HTTP requests work, and how APIs report success and failure.",
+          "Then practice the boring reliability work: missing fields, rate limits, retries, timeouts, duplicate runs, and fallback paths. These skills matter more in production than adding another model call."
+        ]
+      },
+      {
+        heading: "Stage 3: Add AI where ambiguity actually exists",
+        paragraphs: [
+          "Use an AI step when the task involves language, extraction, classification, summarization, research organization, or drafting. Keep exact business rules in normal software.",
+          "Ask the model for structured output whenever a later step must use the result. A predictable object such as category, summary, confidence, missing_information, and draft_reply is easier to validate than a long conversational answer."
+        ]
+      },
+      {
+        heading: "Stage 4: Build three portfolio projects",
+        paragraphs: [
+          "Project one should be deterministic: form → validation → database or spreadsheet → notification. Project two should add one AI step: inbound message → classification → summary → human review. Project three can add bounded decision-making: research from approved sources → compare findings → prepare a brief → verification.",
+          "For every project, keep a short build note showing the problem, workflow diagram, failure cases, test results, and measurable outcome. That proves you understand systems rather than only tutorials."
+        ]
+      },
+      {
+        heading: "Stage 5: Learn agents after workflows make sense",
+        paragraphs: [
+          "An agent becomes useful when the system cannot know every step in advance. Research and troubleshooting are good examples because the next action depends on what the system discovers.",
+          "Give an agent a narrow goal, a small tool set, budgets, prohibited actions, stop conditions, and a verification requirement. More autonomy is not automatically more useful."
+        ]
+      },
+      {
+        heading: "A simple 30-day learning sequence",
+        paragraphs: [
+          "Week one: triggers, nodes, data mapping, conditions, and simple APIs. Week two: build two deterministic workflows with logging and error paths. Week three: add AI classification, extraction, and drafting with structured output. Week four: build one end-to-end project for a real problem and document the result.",
+          "At the end of the month, decide what to learn next from the failures you actually encountered. That keeps your learning connected to real work instead of an endless tool list."
+        ]
+      }
+    ],
+    steps: [
+      "Pick one automation platform and stay with it for the first month.",
+      "Build a form-to-record workflow without AI.",
+      "Add API calls and inspect the raw data between steps.",
+      "Add retries, validation, and a failure path.",
+      "Add one AI classification or drafting step with structured output.",
+      "Build three small real projects and document what broke.",
+      "Only then build a bounded agent that can choose among approved tools.",
+      "Measure time saved, completion rate, errors, and human edits."
+    ],
+    faqs: [
+      { question: "Should I learn n8n or Python first for AI automation?", answer: "If your main goal is to learn workflow design and ship useful automations quickly, a visual platform such as n8n can make the system easier to inspect. Learn enough Python later when custom logic, data processing, or integrations require it." },
+      { question: "Do I need to learn coding before AI automation?", answer: "No, but basic concepts such as APIs, JSON, variables, conditions, and authentication become increasingly useful. You can learn them while building instead of completing a programming curriculum first." },
+      { question: "When should I start learning AI agents?", answer: "After you can build reliable workflows with validation, error handling, and logs. Agents add flexible decision-making, so they are easier to control once the underlying workflow skills are familiar." },
+      { question: "What is a good first AI automation project?", answer: "Choose a repeated task with an obvious input and output, such as classifying contact-form messages, summarizing meeting notes, or drafting a follow-up for human approval." }
+    ],
+    related: ["ai-automation-for-beginners", "n8n-for-beginners", "ai-agent-vs-ai-workflow"],
+    publishedAt: "2026-10-01",
+    updatedAt: "2026-10-01"
+  }
 ];
 
 export function getSeoGuide(slug: string) {

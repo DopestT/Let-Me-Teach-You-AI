@@ -3,8 +3,9 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { ArrowLeft, ArrowRight, CheckCircle2, Clock3, Search, Sparkles } from "lucide-react";
 import { getSeoGuide, seoGuides } from "@/lib/seo-guides";
+import { SignupForm } from "@/components/signup-form";
 
-const SITE_URL = "https://www.letmeteachyouai.com";
+const SITE_URL = "https://letmeteachyouai.com";
 
 export function generateStaticParams() {
   return seoGuides.map((guide) => ({ slug: guide.slug }));
@@ -63,8 +64,8 @@ export default async function GuidePage({
     url: canonicalUrl,
     author: { "@type": "Organization", name: "Let Me Teach You AI" },
     publisher: { "@type": "Organization", name: "Let Me Teach You AI" },
-    datePublished: "2026-09-13",
-    dateModified: "2026-09-13",
+    datePublished: guide.publishedAt ?? "2026-09-13",
+    dateModified: guide.updatedAt ?? guide.publishedAt ?? "2026-09-13",
     about: guide.primaryKeyword,
   };
 
@@ -184,6 +185,15 @@ export default async function GuidePage({
                     <p className="mt-3 leading-7 text-[#5a6980]">{faq.answer}</p>
                   </details>
                 ))}
+              </div>
+            </section>
+
+            <section className="mt-14 overflow-hidden rounded-[2rem] border border-[#20345f] bg-[#07152f] p-7 text-white shadow-[0_26px_70px_rgba(7,21,47,.12)] sm:p-9">
+              <p className="text-xs font-bold uppercase tracking-[.14em] text-[#8fb0ff]">Free AI Work Kit</p>
+              <h2 className="mt-3 font-editorial text-3xl font-semibold sm:text-4xl">Turn this guide into something you can use.</h2>
+              <p className="mt-4 max-w-2xl leading-7 text-[#c8d5ea]">Get 25 practical prompts, five workflows, a tool cheat sheet, and a 10-minute quick start. The signup source is tracked so we can improve the guides that actually help readers take action.</p>
+              <div className="mt-6 rounded-2xl border border-white/10 bg-white/[.055] p-5 [&_label]:!text-[#e4ecfa] [&_input]:!border-white/15 [&_input]:!bg-white [&_input]:!text-[#0f1e3d] [&_p]:!text-[#aebdd5] [&_a]:!text-white">
+                <SignupForm compact source={`guide:${guide.slug}`} />
               </div>
             </section>
 

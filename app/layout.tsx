@@ -4,8 +4,22 @@ import { SiteHeader } from "@/components/site-header";
 import { SiteFooter } from "@/components/site-footer";
 import "./globals.css";
 
-const SITE_URL = "https://www.letmeteachyouai.com";
+const SITE_URL = "https://letmeteachyouai.com";
 const SITE_NAME = "Let Me Teach You AI";
+
+const siteJsonLd = {
+  "@context": "https://schema.org",
+  "@type": "WebSite",
+  name: SITE_NAME,
+  url: SITE_URL,
+  description:
+    "Practical AI education for beginners focused on useful workflows, automations, agents, and small business systems.",
+  publisher: {
+    "@type": "Organization",
+    name: SITE_NAME,
+    url: SITE_URL,
+  },
+};
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
@@ -73,6 +87,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className="min-h-dvh flex flex-col">
+        <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(siteJsonLd) }} />
         <SiteHeader />
         <main className="flex-1">{children}</main>
         <SiteFooter />

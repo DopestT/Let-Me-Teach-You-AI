@@ -44,7 +44,7 @@ export default function AIWorkKitPage() {
             </p>
 
             <div className="mt-8 rounded-2xl border border-[#d7e0ef] bg-white p-5 shadow-[0_16px_50px_rgba(20,42,90,.10)] sm:p-6">
-              <SignupForm />
+              <SignupForm source="ai-work-kit" />
             </div>
 
             <p className="mt-4 text-sm text-[#6d7a91]">
@@ -116,7 +116,7 @@ export default function AIWorkKitPage() {
 
           <div className="rounded-2xl border border-white/10 bg-white/[.055] p-5 sm:p-6 [&_label]:!text-[#e4ecfa] [&_input]:!border-white/15 [&_input]:!bg-white [&_input]:!text-[#0f1e3d] [&_p]:!text-[#aebdd5] [&_a]:!text-white">
             <p className="mb-4 text-sm font-bold uppercase tracking-[.13em] text-[#8fb0ff]">Get it free</p>
-            <SignupForm />
+            <SignupForm source="ai-work-kit" />
           </div>
         </div>
       </section>

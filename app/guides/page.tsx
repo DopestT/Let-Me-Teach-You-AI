@@ -3,7 +3,7 @@ import Link from "next/link";
 import { ArrowRight, BookOpen, Search, Sparkles } from "lucide-react";
 import { seoGuides } from "@/lib/seo-guides";
 
-const SITE_URL = "https://www.letmeteachyouai.com/guides";
+const SITE_URL = "https://letmeteachyouai.com/guides";
 
 export const metadata: Metadata = {
   title: "Practical AI Guides for Beginners",
@@ -25,7 +25,7 @@ export default function GuidesPage() {
     itemListElement: seoGuides.map((guide, index) => ({
       "@type": "ListItem",
       position: index + 1,
-      url: `https://www.letmeteachyouai.com/guides/${guide.slug}`,
+      url: `https://letmeteachyouai.com/guides/${guide.slug}`,
       name: guide.title,
     })),
   };

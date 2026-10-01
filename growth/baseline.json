@@ -1,0 +1,22 @@
+{
+  "version": 1,
+  "capturedAt": "2026-10-01",
+  "property": "LMTYAI",
+  "status": "awaiting_connected_measurement",
+  "canonicalDomain": "https://letmeteachyouai.com",
+  "productionRepo": "DopestT/Let-Me-Teach-You-AI",
+  "primaryConversion": "newsletter_signup",
+  "metrics": {
+    "indexedPages": null,
+    "organicEntrances": null,
+    "newsletterSignups": null,
+    "signupConversionRate": null,
+    "aiAnswerMentions": null,
+    "aiAnswerCitations": null
+  },
+  "notes": [
+    "Null means not yet measured from an authoritative connected source; it does not mean zero.",
+    "A public web search did not surface reliable site: results during setup, but that is not treated as an indexing metric.",
+    "Do not compare future performance against invented baseline values."
+  ]
+}
