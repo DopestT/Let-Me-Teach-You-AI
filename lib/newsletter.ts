@@ -26,6 +26,10 @@ type SubscribeArgs = {
   firstName?: string;
   referringSite?: string;
   utmSource?: string;
+  utmMedium?: string;
+  utmCampaign?: string;
+  utmContent?: string;
+  utmTerm?: string;
 };
 
 export type SubscribeOutcome =
@@ -76,7 +80,11 @@ export async function subscribe(
             ? { automation_ids: [WELCOME_AUTOMATION_ID] }
             : {}),
           utm_source: args.utmSource ?? "website",
-          referring_site: args.referringSite ?? "letmeteachyouai.com",
+          utm_medium: args.utmMedium ?? "website",
+          ...(args.utmCampaign ? { utm_campaign: args.utmCampaign } : {}),
+          ...(args.utmContent ? { utm_content: args.utmContent } : {}),
+          ...(args.utmTerm ? { utm_term: args.utmTerm } : {}),
+          referring_site: args.referringSite ?? "https://letmeteachyouai.com",
           // Keep funnel attribution in a Beehiiv custom field. The create
           // subscription API does not currently document `tags` as a writable
           // request field.
@@ -100,6 +108,9 @@ export async function subscribe(
     logger.info("newsletter.subscribed", {
       alreadySubscribed,
       signupSource: SIGNUP_TAG,
+      utmSource: args.utmSource ?? "website",
+      utmMedium: args.utmMedium ?? "website",
+      utmCampaign: args.utmCampaign ?? null,
       welcomeMode: WELCOME_AUTOMATION_ID ? "automation" : "welcome_email",
     });
     return { ok: true, alreadySubscribed };
