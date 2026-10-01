@@ -11,6 +11,7 @@ export const subscribeSchema = z.object({
   firstName: z.string().trim().max(80).optional().default(""),
   // Honeypot: bots fill this; humans never see it.
   company: z.string().max(0).optional(),
+  source: z.string().trim().min(1).max(160).regex(/^[a-zA-Z0-9:_\/-]+$/).optional().default("website"),
 });
 export type SubscribeInput = z.infer<typeof subscribeSchema>;
 
