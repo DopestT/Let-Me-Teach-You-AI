@@ -4,7 +4,7 @@ import { notFound } from "next/navigation";
 import { ArrowLeft, ArrowRight, CheckCircle2, Clock3, Search, Sparkles } from "lucide-react";
 import { getSeoGuide, seoGuides } from "@/lib/seo-guides";
 
-const SITE_URL = "https://www.letmeteachyouai.com";
+const SITE_URL = "https://letmeteachyouai.com";
 
 export function generateStaticParams() {
   return seoGuides.map((guide) => ({ slug: guide.slug }));
