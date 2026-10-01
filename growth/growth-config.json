@@ -1,7 +1,7 @@
 {
   "version": 1,
   "property": "LMTYAI",
-  "domain": "https://letmeteachyouai.com",
+  "domain": "https://www.letmeteachyouai.com",
   "businessObjective": "Grow qualified email subscribers by teaching people to use AI through practical builds and workflows.",
   "primaryConversion": {
     "event": "newsletter_signup",
