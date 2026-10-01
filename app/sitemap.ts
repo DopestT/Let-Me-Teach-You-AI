@@ -2,7 +2,7 @@ import type { MetadataRoute } from "next";
 import { aiBusinessCourse } from "@/lib/courses";
 import { seoGuides } from "@/lib/seo-guides";
 
-const SITE_URL = "https://letmeteachyouai.com";
+const SITE_URL = "https://www.letmeteachyouai.com";
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const now = new Date();
