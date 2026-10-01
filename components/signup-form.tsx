@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { track } from "@vercel/analytics";
 import { ArrowRight, Loader2 } from "lucide-react";
 
 type Status = "idle" | "loading" | "error";
@@ -31,6 +32,7 @@ export function SignupForm({ compact = false }: { compact?: boolean }) {
         return;
       }
       try { sessionStorage.setItem("lmtyai_subscriber_email", email); } catch {}
+      track("newsletter_signup", { surface: compact ? "compact" : "standard", offer: "ai_work_kit" });
       router.push(data.redirectTo ?? "/thank-you");
     } catch {
       setStatus("error");
