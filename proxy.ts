@@ -1,6 +1,6 @@
 import { NextResponse, type NextRequest } from "next/server";
 
-const PRIMARY_HOST = "www.letmeteachyouai.com";
+const PRIMARY_HOST = "letmeteachyouai.com";
 
 export function proxy(req: NextRequest) {
   const host = (req.headers.get("host") ?? "")
@@ -10,7 +10,7 @@ export function proxy(req: NextRequest) {
   if (!host) return NextResponse.next();
 
   const shouldRedirect =
-    host === "letmeteachyouai.com" ||
+    host === "www.letmeteachyouai.com" ||
     host === "letmeteachyouai.net" ||
     host === "www.letmeteachyouai.net";
 
