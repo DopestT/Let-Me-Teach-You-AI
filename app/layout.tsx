@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Analytics } from "@vercel/analytics/next";
 import { SiteHeader } from "@/components/site-header";
 import { SiteFooter } from "@/components/site-footer";
+import { ExitPopup, RefCapture } from "@/components/growth-widgets";
 import "./globals.css";
 
 const SITE_URL = "https://letmeteachyouai.com";
@@ -91,6 +92,8 @@ export default function RootLayout({
         <SiteHeader />
         <main className="flex-1">{children}</main>
         <SiteFooter />
+        <RefCapture />
+        <ExitPopup />
         <Analytics />
       </body>
     </html>

@@ -1,6 +1,7 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { SignupForm } from "@/components/signup-form";
 import Link from "next/link";
 import {
   Bot,
@@ -59,6 +60,8 @@ const options = [
 export function BuildChooser() {
   const [activeId, setActiveId] = useState("automate");
   const active = options.find((item) => item.id === activeId) ?? options[0];
+  const [unlocked, setUnlocked] = useState(false);
+  useEffect(() => { try { setUnlocked(localStorage.getItem("lmtyai_subscribed") === "1"); } catch {} }, []);
 
   return (
     <div className="space-y-8 sm:space-y-10">
@@ -99,10 +102,19 @@ export function BuildChooser() {
             “Help me turn this into one small project. Ask only for the details you need, show me the plan first, and keep the first version simple enough to test today.”
           </p>
         </div>
-        <Link href="/playground" className="primary-cta inline-flex w-full items-center justify-center rounded-xl px-5 py-3.5 font-bold">
-          {active.cta} →
-        </Link>
-        <p className="mt-3 text-center text-xs text-white/45">No setup. No coding required to start.</p>
+        {unlocked ? (
+          <>
+            <Link href="/playground" className="primary-cta inline-flex w-full items-center justify-center rounded-xl px-5 py-3.5 font-bold">
+              {active.cta} →
+            </Link>
+            <p className="mt-3 text-center text-xs text-white/45">No setup. No coding required to start.</p>
+          </>
+        ) : (
+          <div className="[&_input]:!bg-white [&_input]:!text-[#0f1e3d] [&_p]:!text-[#aebdd5] [&_a]:!text-white">
+            <p className="mb-3 text-sm font-semibold text-white">Enter your email to unlock the full workflow builder — plus the free AI Work Kit.</p>
+            <SignupForm compact stay source={`lab:${active.id}`} buttonLabel="Unlock the AI Lab" onSuccess={() => setUnlocked(true)} />
+          </div>
+        )}
       </div>
     </div>
   );
