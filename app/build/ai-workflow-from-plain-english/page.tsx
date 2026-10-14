@@ -1,3 +1,4 @@
+import { InlineSignup } from "@/components/growth-widgets";
 import type { Metadata } from "next";
 import Link from "next/link";
 import { ArrowLeft, ArrowRight, CheckCircle2, CircleAlert, Workflow } from "lucide-react";
@@ -219,6 +220,9 @@ export default function AIWorkflowBuildPage() {
             </div>
           </section>
         </div>
+      </div>
+      <div className="container-editorial max-w-4xl pb-16">
+        <InlineSignup source="build:ai-workflow-from-plain-english" eyebrow="Free template" title="Get this workflow as a ready-to-use template." body="Enter your email and we'll send the AI Work Kit — including 5 plug-and-play workflows like this one — plus one new build every week." />
       </div>
     </article>
   );

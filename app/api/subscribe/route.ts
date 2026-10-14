@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { subscribeSchema } from "@/lib/validation";
 import { subscribe } from "@/lib/newsletter";
+import { storeSubscriber, isSubscriberStoreConfigured } from "@/lib/subscribers";
 import { rateLimit, clientIp } from "@/lib/rate-limit";
 import { logger } from "@/lib/logger";
 
@@ -59,14 +60,30 @@ export async function POST(req: Request) {
     });
   }
 
-  const { email, firstName, source } = parsed.data;
+  const { email, firstName, source, ref } = parsed.data;
 
-  const result = await subscribe({
-    email,
-    firstName,
-    referringSite: "letmeteachyouai.com",
-    utmSource: source,
-  });
+  // Save to Supabase and send to the newsletter provider in parallel. The
+  // signup succeeds if EITHER one captured the email.
+  const [stored, result] = await Promise.all([
+    storeSubscriber({ email, firstName, source, ref }),
+    subscribe({ email, firstName, referringSite: "letmeteachyouai.com", utmSource: source }),
+  ]);
+  const referral = stored
+    ? { referralCode: stored.referral_code, referrals: stored.referrals }
+    : {};
+  const redirectTo = stored ? `${REDIRECT_TO}?r=${stored.referral_code}` : REDIRECT_TO;
+
+  if (stored && (!result.ok || result.devFallback)) {
+    return NextResponse.json({
+      ok: true,
+      message: stored.already
+        ? "You're already on the list — here's your AI Work Kit again."
+        : "You're in! Download your AI Work Kit on the next page.",
+      redirectTo,
+      downloadUrl: DOWNLOAD_URL,
+      ...referral,
+    });
+  }
 
   // --- Upstream (provider) failure ---
   if (!result.ok) {
@@ -81,7 +98,7 @@ export async function POST(req: Request) {
   }
 
   // --- Local-dev fallback: honestly state no real email/subscription happened.
-  if (result.devFallback) {
+  if (result.devFallback && !isSubscriberStoreConfigured()) {
     return NextResponse.json({
       ok: true,
       devFallback: true,
@@ -98,7 +115,8 @@ export async function POST(req: Request) {
     message: result.alreadySubscribed
       ? "You're already on the list — here's your AI Work Kit again."
       : "You're in! Your AI Work Kit is on its way to your inbox.",
-    redirectTo: REDIRECT_TO,
+    redirectTo,
     downloadUrl: DOWNLOAD_URL,
+    ...referral,
   });
 }

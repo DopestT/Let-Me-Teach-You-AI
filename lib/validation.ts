@@ -12,6 +12,8 @@ export const subscribeSchema = z.object({
   // Honeypot: bots fill this; humans never see it.
   company: z.string().max(0).optional(),
   source: z.string().trim().min(1).max(160).regex(/^[a-zA-Z0-9:_\/-]+$/).optional().default("website"),
+  // Referral code of the subscriber who shared their link (optional).
+  ref: z.string().trim().max(16).regex(/^[a-z0-9]*$/).optional().default(""),
 });
 export type SubscribeInput = z.infer<typeof subscribeSchema>;
 

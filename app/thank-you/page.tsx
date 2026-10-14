@@ -1,6 +1,7 @@
 import Link from "next/link";
 import type { Metadata } from "next";
 import { ArrowLeft, Download } from "lucide-react";
+import { ReferralPanel } from "@/components/referral-panel";
 
 export const metadata: Metadata = {
   title: "Thank You",
@@ -19,7 +20,7 @@ export default function ThankYouPage() {
     <section className="container-editorial py-20 sm:py-28">
       <div className="mx-auto max-w-2xl text-center">
         <h1 className="font-editorial text-4xl font-semibold leading-tight text-[--color-navy] sm:text-5xl">
-          You&apos;re in! 🎉
+          You&apos;re in.
         </h1>
         <p className="mt-5 text-lg leading-relaxed text-[--color-navy-600]">
           Your free <strong className="text-[--color-navy]">AI Work Kit</strong>{" "}
@@ -39,6 +40,8 @@ export default function ThankYouPage() {
         <p className="mt-8 text-sm leading-relaxed text-[--color-slate]">
           Don&apos;t see the email in a few minutes? Check your spam or promotions folder. The download button above works independently of email delivery.
         </p>
+
+        <ReferralPanel />
 
         <div className="mt-10">
           <Link

@@ -16,6 +16,7 @@ export function SiteHeader() {
           <Link href="/guides" className="hidden sm:inline hover:text-[--color-brand]">Guides</Link>
           <Link href="/#lab" className="hidden md:inline hover:text-[--color-brand]">AI Lab</Link>
           <Link href="/playground" className="hidden md:inline hover:text-[--color-brand]">AI helper</Link>
+          <Link href="/workshop" className="hidden md:inline hover:text-[--color-brand]">Free workshop</Link>
           <Link href="/contact" className="hidden lg:inline hover:text-[--color-brand]">Contact</Link>
           <Link href="/#join" className="primary-cta rounded-full px-4 py-2 font-semibold shadow-sm transition-colors">Join free</Link>
         </nav>

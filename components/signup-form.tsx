@@ -5,9 +5,13 @@ import { useRouter } from "next/navigation";
 import { track } from "@vercel/analytics";
 import { ArrowRight, Loader2 } from "lucide-react";
 
+function readRef(): string {
+  try { return localStorage.getItem("lmtyai_ref") ?? ""; } catch { return ""; }
+}
+
 type Status = "idle" | "loading" | "error";
 
-export function SignupForm({ compact = false, source = "website" }: { compact?: boolean; source?: string }) {
+export function SignupForm({ compact = false, source = "website", buttonLabel = "Send Me the AI Work Kit", onSuccess, stay = false }: { compact?: boolean; source?: string; buttonLabel?: string; onSuccess?: () => void; stay?: boolean }) {
   const router = useRouter();
   const [email, setEmail] = useState("");
   const [firstName, setFirstName] = useState("");
@@ -23,7 +27,7 @@ export function SignupForm({ compact = false, source = "website" }: { compact?: 
       const res = await fetch("/api/subscribe", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email, firstName, company, source }),
+        body: JSON.stringify({ email, firstName, company, source, ref: readRef() }),
       });
       const data = (await res.json()) as { ok?: boolean; message?: string; redirectTo?: string };
       if (!res.ok || !data.ok) {
@@ -31,9 +35,11 @@ export function SignupForm({ compact = false, source = "website" }: { compact?: 
         setMessage(data.message ?? "Something went wrong. Please try again in a moment.");
         return;
       }
-      try { sessionStorage.setItem("lmtyai_subscriber_email", email); } catch {}
+      try { sessionStorage.setItem("lmtyai_subscriber_email", email); localStorage.setItem("lmtyai_subscribed", "1"); } catch {}
+      onSuccess?.();
       track("newsletter_signup", { surface: compact ? "compact" : "standard", offer: "ai_work_kit", source });
-      router.push(data.redirectTo ?? "/thank-you");
+      if (!stay) router.push(data.redirectTo ?? "/thank-you");
+      else setStatus("idle");
     } catch {
       setStatus("error");
       setMessage("We couldn't reach the server. Please check your connection and try again.");
@@ -57,7 +63,7 @@ export function SignupForm({ compact = false, source = "website" }: { compact?: 
           <label htmlFor="company">Company<input id="company" type="text" name="company" tabIndex={-1} autoComplete="off" value={company} onChange={(e) => setCompany(e.target.value)} /></label>
         </div>
         <button type="submit" disabled={status === "loading"} className="primary-cta inline-flex items-center justify-center gap-2 rounded-[--radius] px-6 py-3 font-semibold shadow-sm transition-colors disabled:cursor-not-allowed sm:self-end">
-          {status === "loading" ? <><Loader2 className="h-4 w-4 animate-spin" aria-hidden />Joining…</> : <>Send Me the AI Work Kit<ArrowRight className="h-4 w-4" aria-hidden /></>}
+          {status === "loading" ? <><Loader2 className="h-4 w-4 animate-spin" aria-hidden />Joining…</> : <>{buttonLabel}<ArrowRight className="h-4 w-4" aria-hidden /></>}
         </button>
       </div>
       {status === "error" && <p role="alert" className="mt-3 text-sm text-[--color-brand-dark]">{message}</p>}

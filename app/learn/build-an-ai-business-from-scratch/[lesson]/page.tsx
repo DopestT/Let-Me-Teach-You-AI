@@ -1,3 +1,4 @@
+import { InlineSignup } from "@/components/growth-widgets";
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
@@ -87,6 +88,8 @@ export default async function CourseLessonPage({ params }: { params: Promise<{ l
               </section>
             ))}
           </div>
+
+          <InlineSignup source={`lesson:${lesson.slug}`} title="Get the next lesson in your inbox." body="Join the free newsletter for one practical AI build each week, plus the AI Work Kit: 25 prompts, 5 workflows, and a 10-minute quick start." />
 
           {isIdeaLesson && (
             <>
