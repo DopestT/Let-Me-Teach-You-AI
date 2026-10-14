@@ -6,8 +6,9 @@
  */
 import { logger } from "@/lib/logger";
 
-const URL = process.env.SUPABASE_URL ?? process.env.NEXT_PUBLIC_SUPABASE_URL ?? "";
-const KEY = process.env.SUPABASE_PUBLISHABLE_KEY ?? process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY ?? "";
+// Publishable key is safe to ship (designed to be public); env vars override.
+const URL = process.env.SUPABASE_URL ?? "https://zctmntqjvllgfvkauirk.supabase.co";
+const KEY = process.env.SUPABASE_PUBLISHABLE_KEY ?? "sb_publishable_vDxT-IH85fgNFhpLSL8atg_vUAXwh5b";
 
 export const isSubscriberStoreConfigured = () => Boolean(URL && KEY);
 
@@ -16,7 +17,7 @@ async function rpc<T>(fn: string, args: Record<string, unknown>): Promise<T | nu
   try {
     const res = await fetch(`${URL}/rest/v1/rpc/${fn}`, {
       method: "POST",
-      headers: { apikey: KEY, Authorization: `Bearer ${KEY}`, "Content-Type": "application/json" },
+      headers: { apikey: KEY, "Content-Type": "application/json", ...(KEY.startsWith("eyJ") ? { Authorization: `Bearer ${KEY}` } : {}) },
       body: JSON.stringify(args),
       cache: "no-store",
       signal: AbortSignal.timeout(8000),
