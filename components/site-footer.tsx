@@ -1,6 +1,7 @@
 import Link from "next/link";
 
 const SITE_NAME = process.env.NEXT_PUBLIC_SITE_NAME ?? "Let Me Teach You AI";
+const SUBSTACK_URL = process.env.NEXT_PUBLIC_SUBSTACK_URL?.trim();
 
 export function SiteFooter() {
   const year = 2026;
@@ -24,6 +25,16 @@ export function SiteFooter() {
           <Link href="/build/ai-workflow-from-plain-english" className="hover:text-[--color-brand]">Build guide</Link>
           <Link href="/playground" className="hover:text-[--color-brand]">AI helper</Link>
           <Link href="/#join" className="hover:text-[--color-brand]">Join free</Link>
+          {SUBSTACK_URL ? (
+            <a
+              href={SUBSTACK_URL}
+              target="_blank"
+              rel="noreferrer"
+              className="hover:text-[--color-brand]"
+            >
+              AI Ledger on Substack
+            </a>
+          ) : null}
           <Link href="/contact" className="hover:text-[--color-brand]">Contact</Link>
           <Link href="/privacy" className="hover:text-[--color-brand]">Privacy</Link>
           <Link href="/terms" className="hover:text-[--color-brand]">Terms</Link>
