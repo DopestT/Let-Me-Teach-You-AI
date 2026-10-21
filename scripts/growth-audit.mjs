@@ -54,6 +54,12 @@ const signup = read("components/signup-form.tsx");
 if (!signup.includes('track("newsletter_signup"')) errors.push("signup form: conversion event missing");
 if (!signup.includes("source?: string")) errors.push("signup form: source attribution missing");
 
+const envExample = read(".env.example");
+if (!envExample.includes("NEXT_PUBLIC_SUBSTACK_URL=")) errors.push("substack: public distribution URL env missing");
+const footer = read("components/site-footer.tsx");
+if (!footer.includes("NEXT_PUBLIC_SUBSTACK_URL")) errors.push("substack: footer is not wired to the public distribution URL");
+if (!footer.includes("AI Ledger on Substack")) errors.push("substack: footer distribution link missing");
+
 const opportunities = JSON.parse(read("growth/opportunities.json"));
 const opportunityIds = opportunities.opportunities.map((item) => item.id);
 for (const id of duplicate(opportunityIds)) errors.push("duplicate opportunity id: " + id);
