@@ -43,8 +43,9 @@ export function ExitPopup() {
     };
     const onLeave = (e: MouseEvent) => { if (e.clientY <= 0) show(); };
     const timer = window.matchMedia("(pointer: coarse)").matches ? window.setTimeout(show, 35000) : undefined;
-    document.addEventListener("mouseout", onLeave);
-    const cleanup = () => { document.removeEventListener("mouseout", onLeave); if (timer) clearTimeout(timer); };
+    const root = document.documentElement;
+    root.addEventListener("mouseleave", onLeave, { passive: true });
+    const cleanup = () => { root.removeEventListener("mouseleave", onLeave); if (timer) clearTimeout(timer); };
     return cleanup;
   }, [path]);
   if (!open) return null;

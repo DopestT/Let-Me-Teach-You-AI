@@ -5,12 +5,13 @@
   "description": "Let Me Teach You AI — beginner-focused AI education newsletter and digital-product business.",
   "scripts": {
     "dev": "next dev",
-    "build": "npm run growth:audit && npm run generate:pdf && next build",
+    "build": "npm run perf:audit && npm run growth:audit && npm run generate:pdf && next build",
     "start": "next start",
     "lint": "next lint",
     "generate:pdf": "node scripts/generate-lead-magnet.mjs",
     "growth:audit": "node scripts/growth-audit.mjs",
-    "growth:next": "node scripts/growth-next.mjs"
+    "growth:next": "node scripts/growth-next.mjs",
+    "perf:audit": "node scripts/performance-regression.mjs"
   },
   "dependencies": {
     "@vercel/analytics": "^1.6.1",
