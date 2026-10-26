@@ -1,0 +1,62 @@
+name: LMTYAI QA Findings
+
+on:
+  push:
+    branches:
+      - qa/stress-swarm-2026-10-26
+    paths:
+      - .github/workflows/qa-findings.yml
+
+permissions:
+  contents: write
+
+jobs:
+  findings:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+      - run: npm ci
+      - name: Distill QA report and dependency audit
+        run: |
+          node --input-type=module <<'NODE'
+          import fs from 'node:fs';
+          import { execFileSync } from 'node:child_process';
+          const r = JSON.parse(fs.readFileSync('qa-report.json','utf8'));
+          const pages = [...(r.viewports?.desktop||[]), ...(r.viewports?.mobile||[])];
+          const unique = (xs) => [...new Set(xs.filter(Boolean))];
+          const bad = pages.flatMap(p => (p.badResponses||[]).map(x => ({page:p.url,...x})));
+          const navBad = pages.filter(p => !p.nav || p.nav.status !== 200 || p.nav.error).map(p => ({url:p.url,nav:p.nav}));
+          const buttonErrors = pages.flatMap(p => (p.buttons||[]).filter(b=>b.click==='error').map(b=>({page:p.url,...b})));
+          const notRun = pages.flatMap(p => (p.buttons||[]).filter(b=>b.click==='not-run').map(b=>({page:p.url,...b})));
+          const writes = pages.flatMap(p => (p.blockedWrites||[]).map(x=>({page:p.url,...x})));
+          const realConsole = pages.flatMap(p => (p.consoleErrors||[]).map(x=>({page:p.url,message:x}))).filter(x=>!x.message.includes('ERR_BLOCKED_BY_CLIENT'));
+          const slowNav = pages.filter(p=>p.nav?.ms != null).map(p=>({url:p.url,ms:p.nav.ms,status:p.nav.status})).sort((a,b)=>b.ms-a.ms).slice(0,15);
+          let audit = {};
+          try { audit = JSON.parse(execFileSync('npm',['audit','--omit=dev','--json'],{encoding:'utf8'})); } catch(e) { try { audit=JSON.parse(e.stdout||'{}'); } catch {} }
+          const vulns = Object.entries(audit.vulnerabilities||{}).map(([name,v])=>({name,severity:v.severity,isDirect:v.isDirect,via:(v.via||[]).map(x=>typeof x==='string'?x:{title:x.title,url:x.url,severity:x.severity}),range:v.range,fixAvailable:v.fixAvailable}));
+          const out = {
+            summary:r.summary,
+            load:r.load,
+            uniqueBadResponses: bad,
+            nonBlockedConsoleErrors: realConsole,
+            navFailures: navBad,
+            buttonClickErrors: buttonErrors,
+            buttonsNotRun:notRun,
+            blockedMutationRoutes:unique(writes.map(x=>`${x.method} ${new URL(x.url).pathname}`)),
+            slowestNavigations:slowNav,
+            dependencyAudit:{metadata:audit.metadata||{},vulnerabilities:vulns}
+          };
+          fs.writeFileSync('qa-findings.json', JSON.stringify(out,null,2));
+          console.log(JSON.stringify(out,null,2));
+          NODE
+      - name: Commit distilled findings
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add qa-findings.json
+          git commit -m "qa: record distilled findings [skip qa]" || exit 0
+          git push origin HEAD:qa/stress-swarm-2026-10-26
