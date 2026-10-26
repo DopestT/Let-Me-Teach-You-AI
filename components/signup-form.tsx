@@ -9,9 +9,25 @@ function readRef(): string {
   try { return localStorage.getItem("lmtyai_ref") ?? ""; } catch { return ""; }
 }
 
-type Status = "idle" | "loading" | "error";
+type Status = "idle" | "loading" | "error" | "success";
 
-export function SignupForm({ compact = false, source = "website", buttonLabel = "Send Me the AI Work Kit", onSuccess, stay = false }: { compact?: boolean; source?: string; buttonLabel?: string; onSuccess?: () => void; stay?: boolean }) {
+type SignupFormProps = {
+  compact?: boolean;
+  source?: string;
+  buttonLabel?: string;
+  onSuccess?: () => void;
+  stay?: boolean;
+  successMessage?: string;
+};
+
+export function SignupForm({
+  compact = false,
+  source = "website",
+  buttonLabel = "Send Me the AI Work Kit",
+  onSuccess,
+  stay = false,
+  successMessage = "You're in. Check your inbox for the next step.",
+}: SignupFormProps) {
   const router = useRouter();
   const [email, setEmail] = useState("");
   const [firstName, setFirstName] = useState("");
@@ -38,8 +54,14 @@ export function SignupForm({ compact = false, source = "website", buttonLabel = 
       try { sessionStorage.setItem("lmtyai_subscriber_email", email); localStorage.setItem("lmtyai_subscribed", "1"); } catch {}
       onSuccess?.();
       track("newsletter_signup", { surface: compact ? "compact" : "standard", offer: "ai_work_kit", source });
-      if (!stay) router.push(data.redirectTo ?? "/thank-you");
-      else setStatus("idle");
+      if (!stay) {
+        router.push(data.redirectTo ?? "/thank-you");
+        return;
+      }
+      setStatus("success");
+      setMessage(successMessage);
+      setEmail("");
+      setFirstName("");
     } catch {
       setStatus("error");
       setMessage("We couldn't reach the server. Please check your connection and try again.");
@@ -67,6 +89,7 @@ export function SignupForm({ compact = false, source = "website", buttonLabel = 
         </button>
       </div>
       {status === "error" && <p role="alert" className="mt-3 text-sm text-[--color-brand-dark]">{message}</p>}
+      {status === "success" && <p role="status" className="mt-3 text-sm font-semibold text-emerald-700">{message}</p>}
       <p className="mt-3 text-xs text-[--color-slate]">No spam. Unsubscribe anytime. See our <a href="/privacy" className="underline hover:text-[--color-brand]">Privacy Policy</a>.</p>
     </form>
   );

@@ -53,10 +53,38 @@ if (!guidePage.includes("guide:${guide.slug}")) errors.push("guide page: missing
 const signup = read("components/signup-form.tsx");
 if (!signup.includes('track("newsletter_signup"')) errors.push("signup form: conversion event missing");
 if (!signup.includes("source?: string")) errors.push("signup form: source attribution missing");
+if (!signup.includes("successMessage?: string")) errors.push("signup form: inline offer-interest success state missing");
+
+const funnelPages = [
+  "app/start-here/page.tsx",
+  "app/pricing/page.tsx",
+  "app/build-review/page.tsx",
+];
+for (const page of funnelPages) {
+  if (!fs.existsSync(path.join(root, page))) errors.push("conversion funnel: missing page " + page);
+}
+
+const thankYou = read("app/thank-you/page.tsx");
+if (!thankYou.includes('href="/start-here"')) errors.push("thank-you: missing Start Here next step");
+if (!thankYou.includes('href="/build-review"')) errors.push("thank-you: missing Build Review next step");
+if (!thankYou.includes("/api/prompt-pack")) errors.push("thank-you: immediate Work Kit download missing");
+
+const header = read("components/site-header.tsx");
+if (!header.includes('href="/pricing"')) errors.push("header: pricing route missing");
+
+const footer = read("components/site-footer.tsx");
+if (!footer.includes('href="/start-here"')) errors.push("footer: Start Here route missing");
+if (!footer.includes('href="/build-review"')) errors.push("footer: Build Review route missing");
+if (!footer.includes('href="/pricing"')) errors.push("footer: pricing route missing");
+
+const buildReview = read("app/build-review/page.tsx");
+if (!buildReview.includes("NEXT_PUBLIC_BUILD_REVIEW_CHECKOUT_URL")) errors.push("build review: checkout URL hook missing");
+if (!buildReview.includes('source="build-review-interest"')) errors.push("build review: checkout fallback interest capture missing");
+if (!buildReview.includes("$29")) errors.push("build review: $29 founding price missing");
 
 const envExample = read(".env.example");
 if (!envExample.includes("NEXT_PUBLIC_SUBSTACK_URL=")) errors.push("substack: public distribution URL env missing");
-const footer = read("components/site-footer.tsx");
+if (!envExample.includes("NEXT_PUBLIC_BUILD_REVIEW_CHECKOUT_URL=")) errors.push("build review: checkout URL env missing");
 if (!footer.includes("NEXT_PUBLIC_SUBSTACK_URL")) errors.push("substack: footer is not wired to the public distribution URL");
 if (!footer.includes("AI Ledger on Substack")) errors.push("substack: footer distribution link missing");
 
@@ -93,4 +121,4 @@ if (errors.length) {
   for (const error of errors) console.error("- " + error);
   process.exit(1);
 }
-console.log("Growth audit passed: " + slugs.length + " guides, canonical host clean, conversion attribution present.");
+console.log("Growth audit passed: " + slugs.length + " guides, canonical host clean, conversion attribution and paid bridge present.");
