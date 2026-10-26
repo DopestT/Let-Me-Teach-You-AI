@@ -1,0 +1,58 @@
+name: LMTYAI QA Swarm
+
+on:
+  push:
+    branches:
+      - qa/stress-swarm-2026-10-26
+    paths:
+      - scripts/qa-swarm.mjs
+      - .github/workflows/qa-swarm.yml
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  qa-swarm:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    env:
+      QA_BASE_URL: https://letmeteachyouai.com
+      QA_MAX_PAGES: 60
+      QA_NAV_TIMEOUT: 15000
+    steps:
+      - name: Checkout QA branch
+        uses: actions/checkout@v4
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+
+      - name: Install app dependencies
+        run: npm ci
+
+      - name: Install Playwright runner without changing package files
+        run: |
+          npm install --no-save --package-lock=false playwright
+          npx playwright install --with-deps chromium
+
+      - name: Run bounded production QA swarm
+        run: node scripts/qa-swarm.mjs
+
+      - name: Publish QA report to branch
+        if: always()
+        run: |
+          if [ ! -f qa-report.json ]; then
+            echo '{"error":"qa-report.json was not produced"}' > qa-report.json
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add qa-report.json
+          if git diff --cached --quiet; then
+            echo "No report changes to commit"
+          else
+            git commit -m "qa: record production swarm report [skip qa]"
+            git push origin HEAD:qa/stress-swarm-2026-10-26
+          fi
