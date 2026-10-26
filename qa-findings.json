@@ -1,0 +1,517 @@
+{
+  "summary": {
+    "uniquePagesTested": 32,
+    "pageViewportRuns": 64,
+    "buttonsSeen": 68,
+    "buttonsClickedSafely": 62,
+    "buttonClickErrors": 0,
+    "unlabeledButtons": 0,
+    "brokenSameSiteLinks": 0,
+    "consoleErrors": 50,
+    "pageErrors": 0,
+    "badNetworkResponses": 2,
+    "blockedMutationAttempts": 48,
+    "loadRequests": 420,
+    "loadFailures": 0
+  },
+  "load": {
+    "stages": [
+      {
+        "concurrency": 5,
+        "total": 60,
+        "failures": 0,
+        "errorRate": 0,
+        "durationMs": 838,
+        "requestsPerSecond": 71.6,
+        "p50Ms": 62,
+        "p95Ms": 84,
+        "p99Ms": 93,
+        "maxMs": 168,
+        "statuses": {
+          "200": 60
+        }
+      },
+      {
+        "concurrency": 10,
+        "total": 120,
+        "failures": 0,
+        "errorRate": 0,
+        "durationMs": 917,
+        "requestsPerSecond": 130.86,
+        "p50Ms": 64,
+        "p95Ms": 90,
+        "p99Ms": 259,
+        "maxMs": 345,
+        "statuses": {
+          "200": 120
+        }
+      },
+      {
+        "concurrency": 20,
+        "total": 240,
+        "failures": 0,
+        "errorRate": 0,
+        "durationMs": 1126,
+        "requestsPerSecond": 213.14,
+        "p50Ms": 65,
+        "p95Ms": 174,
+        "p99Ms": 247,
+        "maxMs": 504,
+        "statuses": {
+          "200": 240
+        }
+      }
+    ]
+  },
+  "uniqueBadResponses": [
+    {
+      "page": "https://letmeteachyouai.com/start-here",
+      "status": 404,
+      "url": "https://letmeteachyouai.com/lead-magnet/AI_Work_Kit.pdf"
+    },
+    {
+      "page": "https://letmeteachyouai.com/start-here",
+      "status": 404,
+      "url": "https://letmeteachyouai.com/lead-magnet/AI_Work_Kit.pdf"
+    }
+  ],
+  "nonBlockedConsoleErrors": [
+    {
+      "page": "https://letmeteachyouai.com/start-here",
+      "message": "Failed to load resource: the server responded with a status of 404 ()"
+    },
+    {
+      "page": "https://letmeteachyouai.com/start-here",
+      "message": "Failed to load resource: the server responded with a status of 404 ()"
+    }
+  ],
+  "navFailures": [
+    {
+      "url": "https://letmeteachyouai.com/api/prompt-pack",
+      "nav": {
+        "error": "Error: page.goto: Download is starting\nCall log:\n  - navigating to \"https://letmeteachyouai.com/api/prompt-pack\", waiting until \"domcontentloaded\"\n"
+      }
+    },
+    {
+      "url": "https://letmeteachyouai.com/api/prompt-pack",
+      "nav": {
+        "error": "Error: page.goto: Download is starting\nCall log:\n  - navigating to \"https://letmeteachyouai.com/api/prompt-pack\", waiting until \"domcontentloaded\"\n"
+      }
+    }
+  ],
+  "buttonClickErrors": [],
+  "buttonsNotRun": [
+    {
+      "page": "https://letmeteachyouai.com/playground",
+      "index": 0,
+      "label": "Help me",
+      "visible": true,
+      "enabled": false,
+      "click": "not-run",
+      "urlAfter": null
+    },
+    {
+      "page": "https://letmeteachyouai.com/playground",
+      "index": 2,
+      "label": "",
+      "visible": false,
+      "enabled": false,
+      "click": "not-run",
+      "urlAfter": null
+    },
+    {
+      "page": "https://letmeteachyouai.com/playground",
+      "index": 3,
+      "label": "",
+      "visible": false,
+      "enabled": false,
+      "click": "not-run",
+      "urlAfter": null
+    },
+    {
+      "page": "https://letmeteachyouai.com/playground",
+      "index": 0,
+      "label": "Help me",
+      "visible": true,
+      "enabled": false,
+      "click": "not-run",
+      "urlAfter": null
+    },
+    {
+      "page": "https://letmeteachyouai.com/playground",
+      "index": 2,
+      "label": "",
+      "visible": false,
+      "enabled": false,
+      "click": "not-run",
+      "urlAfter": null
+    },
+    {
+      "page": "https://letmeteachyouai.com/playground",
+      "index": 3,
+      "label": "",
+      "visible": false,
+      "enabled": false,
+      "click": "not-run",
+      "urlAfter": null
+    }
+  ],
+  "blockedMutationRoutes": [
+    "POST /api/subscribe",
+    "POST /api/contact"
+  ],
+  "slowestNavigations": [
+    {
+      "url": "https://letmeteachyouai.com/",
+      "ms": 370,
+      "status": 200
+    },
+    {
+      "url": "https://letmeteachyouai.com/workshop",
+      "ms": 360,
+      "status": 200
+    },
+    {
+      "url": "https://letmeteachyouai.com/guides/ai-business-ideas-for-beginners",
+      "ms": 251,
+      "status": 200
+    },
+    {
+      "url": "https://letmeteachyouai.com/build-review",
+      "ms": 225,
+      "status": 200
+    },
+    {
+      "url": "https://letmeteachyouai.com/guides/ai-automation-roadmap-for-beginners",
+      "ms": 220,
+      "status": 200
+    },
+    {
+      "url": "https://letmeteachyouai.com/playground",
+      "ms": 196,
+      "status": 200
+    },
+    {
+      "url": "https://letmeteachyouai.com/guides/ai-agents-for-beginners",
+      "ms": 180,
+      "status": 200
+    },
+    {
+      "url": "https://letmeteachyouai.com/contact",
+      "ms": 179,
+      "status": 200
+    },
+    {
+      "url": "https://letmeteachyouai.com/",
+      "ms": 177,
+      "status": 200
+    },
+    {
+      "url": "https://letmeteachyouai.com/build/ai-workflow-from-plain-english",
+      "ms": 165,
+      "status": 200
+    },
+    {
+      "url": "https://letmeteachyouai.com/guides/ai-agent-vs-ai-workflow",
+      "ms": 164,
+      "status": 200
+    },
+    {
+      "url": "https://letmeteachyouai.com/guides/how-to-use-chatgpt-for-business",
+      "ms": 153,
+      "status": 200
+    },
+    {
+      "url": "https://letmeteachyouai.com/learn",
+      "ms": 151,
+      "status": 200
+    },
+    {
+      "url": "https://letmeteachyouai.com/guides/automate-email-follow-up-with-ai",
+      "ms": 150,
+      "status": 200
+    },
+    {
+      "url": "https://letmeteachyouai.com/workshop",
+      "ms": 149,
+      "status": 200
+    }
+  ],
+  "dependencyAudit": {
+    "metadata": {
+      "vulnerabilities": {
+        "info": 0,
+        "low": 0,
+        "moderate": 1,
+        "high": 6,
+        "critical": 1,
+        "total": 8
+      },
+      "dependencies": {
+        "prod": 59,
+        "dev": 49,
+        "optional": 59,
+        "peer": 0,
+        "peerOptional": 0,
+        "total": 143
+      }
+    },
+    "vulnerabilities": [
+      {
+        "name": "baseline-browser-mapping",
+        "severity": "moderate",
+        "isDirect": false,
+        "via": [
+          {
+            "title": "baseline-browser-mapping process termination on invalid input causes denial of service",
+            "url": "https://github.com/advisories/GHSA-w5vr-8v7q-w6rv",
+            "severity": "moderate"
+          }
+        ],
+        "range": ">=2.0.0 <2.11.0",
+        "fixAvailable": true
+      },
+      {
+        "name": "nanoid",
+        "severity": "high",
+        "isDirect": false,
+        "via": [
+          {
+            "title": "nanoid: non-secure generators can loop indefinitely with negative size",
+            "url": "https://github.com/advisories/GHSA-28wg-ghj8-5hjv",
+            "severity": "high"
+          },
+          {
+            "title": "nanoid: custom generators can loop indefinitely when size is zero",
+            "url": "https://github.com/advisories/GHSA-2v37-7h3g-55p8",
+            "severity": "high"
+          }
+        ],
+        "range": "<=3.3.17",
+        "fixAvailable": true
+      },
+      {
+        "name": "next",
+        "severity": "critical",
+        "isDirect": true,
+        "via": [
+          {
+            "title": "Next.js: Middleware / Proxy bypass in App Router applications using Turbopack and single locale",
+            "url": "https://github.com/advisories/GHSA-6gpp-xcg3-4w24",
+            "severity": "high"
+          },
+          {
+            "title": "Next.js: Denial of Service in App Router using Server Actions",
+            "url": "https://github.com/advisories/GHSA-m99w-x7hq-7vfj",
+            "severity": "high"
+          },
+          {
+            "title": "Next.js: Server-Side Request Forgery in Server Actions on custom servers",
+            "url": "https://github.com/advisories/GHSA-89xv-2m56-2m9x",
+            "severity": "high"
+          },
+          {
+            "title": "Next.js: Cache confusion of response bodies for requests with bodies",
+            "url": "https://github.com/advisories/GHSA-68g3-v927-f742",
+            "severity": "moderate"
+          },
+          {
+            "title": "Next.js: Cache confusion of response bodies for requests with bodies containing invalid UTF-8 byte sequences",
+            "url": "https://github.com/advisories/GHSA-4633-3j49-mh5q",
+            "severity": "moderate"
+          },
+          {
+            "title": "Next.js: Unbounded Server Action payload in Edge runtime",
+            "url": "https://github.com/advisories/GHSA-4c39-4ccg-62r3",
+            "severity": "moderate"
+          },
+          {
+            "title": "Next.js: Server-Side Request Forgery in rewrites via attacker-controlled destination hostname",
+            "url": "https://github.com/advisories/GHSA-p9j2-gv94-2wf4",
+            "severity": "high"
+          },
+          {
+            "title": "Next.js: Denial of Service in the Image Optimization API using SVGs",
+            "url": "https://github.com/advisories/GHSA-q8wf-6r8g-63ch",
+            "severity": "moderate"
+          },
+          {
+            "title": "Next.js: Unauthenticated disclosure of internal Server Function endpoints",
+            "url": "https://github.com/advisories/GHSA-955p-x3mx-jcvp",
+            "severity": "moderate"
+          },
+          {
+            "title": "Next.js: Unauthenticated Remote Code Execution on windows-hosted servers",
+            "url": "https://github.com/advisories/GHSA-p293-qw3h-jr36",
+            "severity": "critical"
+          },
+          {
+            "title": "Next.js: Unauthenticated Remote Code Execution in Image Optimization API when AVIF files are used",
+            "url": "https://github.com/advisories/GHSA-2xp9-vwfh-vxw4",
+            "severity": "critical"
+          },
+          {
+            "title": "Next.js: Remote Code Execution in next/og ImageResponse",
+            "url": "https://github.com/advisories/GHSA-vcvr-r3jv-pc5j",
+            "severity": "critical"
+          },
+          {
+            "title": "Next.js has cache poisoning of SSG and ISR pages in self-hosted applications",
+            "url": "https://github.com/advisories/GHSA-4jqv-mc3x-m676",
+            "severity": "moderate"
+          },
+          {
+            "title": "Next.js has information disclosure in development server's Model Context Protocol endpoint",
+            "url": "https://github.com/advisories/GHSA-39w2-rjm5-chcv",
+            "severity": "low"
+          },
+          {
+            "title": "Next.js has information disclosure in App Router metadata image routes via dynamicParams bypass",
+            "url": "https://github.com/advisories/GHSA-f87g-xv8r-7p7x",
+            "severity": "moderate"
+          },
+          {
+            "title": "Next.js has cache poisoning in SSG/ISR rendering that leads to cross-user content substitution and persistent denial of service",
+            "url": "https://github.com/advisories/GHSA-mcj8-r9mp-w47p",
+            "severity": "moderate"
+          },
+          {
+            "title": "Next.js has Server-Side Request Forgery in Image Optimization",
+            "url": "https://github.com/advisories/GHSA-cjq9-62q9-8jv4",
+            "severity": "high"
+          },
+          {
+            "title": "Next.js: Unauthenticated Remote Code Execution in Image Optimization API when SVG files are used",
+            "url": "https://github.com/advisories/GHSA-2464-fhr4-w9xw",
+            "severity": "critical"
+          },
+          {
+            "title": "Next.js: Denial of Service in App Router using Server Actions",
+            "url": "https://github.com/advisories/GHSA-p3m5-59mp-jv5r",
+            "severity": "high"
+          },
+          {
+            "title": "Next.js: Unauthenticated Remote Code Execution in `use cache` functions returning typed arrays",
+            "url": "https://github.com/advisories/GHSA-673q-mjm6-r5xr",
+            "severity": "critical"
+          },
+          "postcss",
+          "sharp"
+        ],
+        "range": "9.3.4-canary.0 - 16.4.0",
+        "fixAvailable": {
+          "name": "next",
+          "version": "16.4.3",
+          "isSemVerMajor": false
+        }
+      },
+      {
+        "name": "openai",
+        "severity": "high",
+        "isDirect": true,
+        "via": [
+          "zod"
+        ],
+        "range": "4.55.0 - 5.23.2",
+        "fixAvailable": {
+          "name": "openai",
+          "version": "7.43.0",
+          "isSemVerMajor": true
+        }
+      },
+      {
+        "name": "postcss",
+        "severity": "high",
+        "isDirect": false,
+        "via": [
+          {
+            "title": "PostCSS has XSS via Unescaped </style> in its CSS Stringify Output",
+            "url": "https://github.com/advisories/GHSA-qx2v-qp2m-jg93",
+            "severity": "moderate"
+          },
+          {
+            "title": "PostCSS: Arbitrary file read and information disclosure via attacker-controlled sourceMappingURL in CSS comments",
+            "url": "https://github.com/advisories/GHSA-6g55-p6wh-862q",
+            "severity": "high"
+          },
+          {
+            "title": "PostCSS: incomplete fix of GHSA-6g55-p6wh-862q — attacker-controlled sourceMappingURL reads arbitrary .map files when `from` is unset",
+            "url": "https://github.com/advisories/GHSA-fxqj-rqcc-2cmp",
+            "severity": "moderate"
+          },
+          {
+            "title": "PostCSS: Path Traversal in Previous Source Map Auto-Loading (sourceMappingURL) leads to Arbitrary .map File Disclosure",
+            "url": "https://github.com/advisories/GHSA-r28c-9q8g-f849",
+            "severity": "high"
+          }
+        ],
+        "range": "<=8.5.22",
+        "fixAvailable": {
+          "name": "next",
+          "version": "16.4.3",
+          "isSemVerMajor": false
+        }
+      },
+      {
+        "name": "sharp",
+        "severity": "high",
+        "isDirect": false,
+        "via": [
+          {
+            "title": "sharp inherited vulnerabilities in libvips: CVE-2026-33327, CVE-2026-33328, CVE-2026-35590, CVE-2026-35591",
+            "url": "https://github.com/advisories/GHSA-f88m-g3jw-g9cj",
+            "severity": "high"
+          },
+          {
+            "title": "sharp: Vulnerabilities in libheif: GHSA-g89c-p67h-r497 and GHSA-2jg2-4ch7-h545",
+            "url": "https://github.com/advisories/GHSA-rgj7-g3m4-5g8c",
+            "severity": "high"
+          },
+          {
+            "title": "sharp : Vulnerability in librsvg dependency CVE-2026-96889",
+            "url": "https://github.com/advisories/GHSA-wq5f-xc86-pv6w",
+            "severity": "high"
+          }
+        ],
+        "range": "<=0.35.5-rc.1",
+        "fixAvailable": {
+          "name": "next",
+          "version": "16.4.3",
+          "isSemVerMajor": false
+        }
+      },
+      {
+        "name": "source-map-js",
+        "severity": "high",
+        "isDirect": false,
+        "via": [
+          {
+            "title": "source-map-js allows event-loop denial of service through indexed source-map section offsets",
+            "url": "https://github.com/advisories/GHSA-68fv-2mgg-jv7q",
+            "severity": "high"
+          }
+        ],
+        "range": "1.0.0 - 1.2.1",
+        "fixAvailable": true
+      },
+      {
+        "name": "zod",
+        "severity": "high",
+        "isDirect": true,
+        "via": [
+          {
+            "title": "Zod can exhaust memory while validating oversized constrained collections",
+            "url": "https://github.com/advisories/GHSA-mrhx-c7xc-m3w5",
+            "severity": "high"
+          }
+        ],
+        "range": "<4.6.6",
+        "fixAvailable": {
+          "name": "zod",
+          "version": "4.6.7",
+          "isSemVerMajor": true
+        }
+      }
+    ]
+  }
+}
