@@ -10,6 +10,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
 
   return [
     { url: SITE_URL, lastModified: now, changeFrequency: "weekly", priority: 1 },
+    { url: `${SITE_URL}/start-here`, lastModified: now, changeFrequency: "monthly", priority: 0.95 },
     { url: `${SITE_URL}/learn`, lastModified: now, changeFrequency: "weekly", priority: 0.9 },
     { url: `${SITE_URL}/guides`, lastModified: now, changeFrequency: "weekly", priority: 0.95 },
     ...seoGuides.map((guide) => ({
@@ -28,6 +29,8 @@ export default function sitemap(): MetadataRoute.Sitemap {
     { url: `${SITE_URL}/build/ai-workflow-from-plain-english`, lastModified: now, changeFrequency: "monthly", priority: 0.8 },
     { url: `${SITE_URL}/playground`, lastModified: now, changeFrequency: "monthly", priority: 0.7 },
     { url: `${SITE_URL}/workshop`, lastModified: now, changeFrequency: "monthly", priority: 0.8 },
+    { url: `${SITE_URL}/pricing`, lastModified: now, changeFrequency: "monthly", priority: 0.85 },
+    { url: `${SITE_URL}/build-review`, lastModified: now, changeFrequency: "monthly", priority: 0.8 },
     { url: `${SITE_URL}/contact`, lastModified: now, changeFrequency: "yearly", priority: 0.4 },
     { url: `${SITE_URL}/privacy`, lastModified: now, changeFrequency: "yearly", priority: 0.3 },
     { url: `${SITE_URL}/terms`, lastModified: now, changeFrequency: "yearly", priority: 0.3 },
