@@ -8,10 +8,14 @@ export const dynamic = "force-dynamic";
  * upstream model call as the browser helper, but never returns generated text.
  * Remove this route before promoting the fix to production.
  */
-export async function GET(): Promise<Response> {
+export async function GET(req: Request): Promise<Response> {
+  const headers = new Headers({ "Content-Type": "application/json" });
+  const oidcToken = req.headers.get("x-vercel-oidc-token");
+  if (oidcToken) headers.set("x-vercel-oidc-token", oidcToken);
+
   const request = new Request("https://preview.invalid/api/openai", {
     method: "POST",
-    headers: { "Content-Type": "application/json" },
+    headers,
     body: JSON.stringify({
       task: "general",
       prompt: "Reply briefly to confirm the AI helper can generate a response.",
