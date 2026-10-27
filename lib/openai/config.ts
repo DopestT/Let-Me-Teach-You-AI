@@ -2,9 +2,8 @@
  * Single source of truth for AI model configuration.
  *
  * Direct OpenAI remains the first choice when OPENAI_API_KEY is configured.
- * On Vercel, the helper can fall back to AI Gateway using either a persistent
- * AI_GATEWAY_API_KEY or Vercel's short-lived VERCEL_OIDC_TOKEN. This keeps the
- * site functional without putting a provider secret in browser code.
+ * On Vercel, the helper can fall back to AI Gateway using a persistent gateway
+ * key or the short-lived OIDC token Vercel injects into each function request.
  */
 
 export const openaiConfig = {
@@ -19,24 +18,9 @@ export const openaiConfig = {
   projectId: process.env.OPENAI_PROJECT_ID || undefined,
 } as const;
 
-export function usesAiGateway(): boolean {
-  return Boolean(
-    !process.env.OPENAI_API_KEY &&
-      (process.env.AI_GATEWAY_API_KEY || process.env.VERCEL_OIDC_TOKEN)
-  );
-}
-
-export function resolvedOpenAiModel(): string {
-  if (!usesAiGateway()) return openaiConfig.model;
+export function resolvedOpenAiModel(usingGateway: boolean): string {
+  if (!usingGateway) return openaiConfig.model;
   return openaiConfig.model.includes("/")
     ? openaiConfig.model
     : `openai/${openaiConfig.model}`;
-}
-
-export function isOpenAiConfigured(): boolean {
-  return Boolean(
-    process.env.OPENAI_API_KEY ||
-      process.env.AI_GATEWAY_API_KEY ||
-      process.env.VERCEL_OIDC_TOKEN
-  );
 }
