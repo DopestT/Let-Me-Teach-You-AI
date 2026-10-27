@@ -1,49 +1,45 @@
 import "server-only";
 import OpenAI from "openai";
-import {
-  openaiConfig,
-  isOpenAiConfigured,
-  resolvedOpenAiModel,
-  usesAiGateway,
-} from "@/lib/openai/config";
+import { openaiConfig, resolvedOpenAiModel } from "@/lib/openai/config";
 import { logAiUsage } from "@/lib/logger";
 
 /**
  * Secure, server-only AI client.
  *
  * Direct OpenAI is used when OPENAI_API_KEY exists. Otherwise Vercel deployments
- * can use AI Gateway with AI_GATEWAY_API_KEY or VERCEL_OIDC_TOKEN. Secrets stay
- * server-side and never enter the browser bundle.
+ * use AI Gateway with a persistent gateway key or the short-lived OIDC token
+ * injected into the current function request. Credentials stay server-side.
  */
 
-let staticClient: OpenAI | null = null;
+type AiAuth =
+  | { apiKey: string; gateway: false }
+  | { apiKey: string; gateway: true }
+  | null;
 
-function createClient(): OpenAI {
-  const gateway = usesAiGateway();
+function resolveAuth(runtimeOidcToken?: string): AiAuth {
+  if (process.env.OPENAI_API_KEY) {
+    return { apiKey: process.env.OPENAI_API_KEY, gateway: false };
+  }
+
   const gatewayCredential =
-    process.env.AI_GATEWAY_API_KEY || process.env.VERCEL_OIDC_TOKEN;
+    process.env.AI_GATEWAY_API_KEY ||
+    process.env.VERCEL_AI_GATEWAY_API_KEY ||
+    process.env.VERCEL_OIDC_TOKEN ||
+    runtimeOidcToken;
 
+  if (!gatewayCredential) return null;
+  return { apiKey: gatewayCredential, gateway: true };
+}
+
+function createClient(auth: Exclude<AiAuth, null>): OpenAI {
   return new OpenAI({
-    apiKey: gateway ? gatewayCredential : process.env.OPENAI_API_KEY,
-    baseURL: gateway ? "https://ai-gateway.vercel.sh/v1" : undefined,
-    organization: gateway ? undefined : openaiConfig.orgId,
-    project: gateway ? undefined : openaiConfig.projectId,
+    apiKey: auth.apiKey,
+    baseURL: auth.gateway ? "https://ai-gateway.vercel.sh/v1" : undefined,
+    organization: auth.gateway ? undefined : openaiConfig.orgId,
+    project: auth.gateway ? undefined : openaiConfig.projectId,
     timeout: openaiConfig.timeoutMs,
     maxRetries: openaiConfig.maxRetries,
   });
-}
-
-function getClient(): OpenAI {
-  // OIDC credentials are short-lived. Avoid pinning one in a module-level
-  // singleton so a warm function can pick up Vercel's refreshed token.
-  const oidcOnly =
-    usesAiGateway() &&
-    !process.env.AI_GATEWAY_API_KEY &&
-    Boolean(process.env.VERCEL_OIDC_TOKEN);
-
-  if (oidcOnly) return createClient();
-  if (!staticClient) staticClient = createClient();
-  return staticClient;
 }
 
 export type GenerateResult =
@@ -69,12 +65,15 @@ export async function generateText(opts: {
   maxOutputTokens?: number;
   /** Correlates this call with the API request in logs. */
   requestId?: string;
+  /** Vercel runtime OIDC token from the current server request, if present. */
+  vercelOidcToken?: string;
   /** Aborts the upstream call when the client disconnects or a timeout fires. */
   signal?: AbortSignal;
 }): Promise<GenerateResult> {
-  const model = resolvedOpenAiModel();
+  const auth = resolveAuth(opts.vercelOidcToken);
+  const model = resolvedOpenAiModel(Boolean(auth?.gateway));
 
-  if (!isOpenAiConfigured()) {
+  if (!auth) {
     logAiUsage({
       route: opts.route,
       model,
@@ -86,7 +85,7 @@ export async function generateText(opts: {
 
   const startedAt = Date.now();
   try {
-    const response = await getClient().responses.create(
+    const response = await createClient(auth).responses.create(
       {
         model,
         max_output_tokens: opts.maxOutputTokens ?? openaiConfig.maxOutputTokens,
