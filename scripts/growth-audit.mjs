@@ -65,9 +65,9 @@ for (const page of funnelPages) {
 }
 
 const thankYou = read("app/thank-you/page.tsx");
-if (!thankYou.includes('href="/start-here"')) errors.push("thank-you: missing Start Here next step");
-if (!thankYou.includes('href="/build-review"')) errors.push("thank-you: missing Build Review next step");
 if (!thankYou.includes("/api/prompt-pack")) errors.push("thank-you: immediate Work Kit download missing");
+if (!thankYou.includes("/learn/build-an-ai-business-from-scratch")) errors.push("thank-you: Course 1 next step missing");
+if (thankYou.includes('href="/build-review"')) errors.push("thank-you: paid Build Review must not compete with Course 1");
 
 const header = read("components/site-header.tsx");
 if (!header.includes('href="/pricing"')) errors.push("header: pricing route missing");
