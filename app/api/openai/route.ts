@@ -5,10 +5,9 @@ import { enforceTiers, clientIp } from "@/lib/rate-limit";
 /**
  * Secure, server-side OpenAI endpoint.
  *
- * Wired to the /playground AI helper. All secrets stay server-side (the client
- * module enforces `server-only` and reads OPENAI_API_KEY). Prompts are never
- * stored, and we never log or echo raw prompt content beyond the privacy-safe
- * usage logging that `generateText` performs.
+ * Wired to the /playground AI helper. All credentials stay server-side. Prompts
+ * are never stored, and we never log or echo raw prompt content beyond the
+ * privacy-safe usage logging that `generateText` performs.
  *
  * Hardening: requires application/json, caps body size before parsing, strictly
  * validates + allowlists input, rate-limits per IP, aborts the upstream call on
@@ -158,7 +157,10 @@ export async function POST(req: Request): Promise<Response> {
     system,
     input: prompt,
     requestId,
-    // Abort the upstream OpenAI call if the client disconnects.
+    // At runtime Vercel supplies the short-lived OIDC credential on the
+    // function request rather than as a normal environment variable.
+    vercelOidcToken: req.headers.get("x-vercel-oidc-token") || undefined,
+    // Abort the upstream call if the client disconnects.
     signal: req.signal,
   });
 

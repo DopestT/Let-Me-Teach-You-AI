@@ -1,9 +1,9 @@
 /**
- * Single source of truth for OpenAI configuration.
+ * Single source of truth for AI model configuration.
  *
- * The model and all limits are read from environment variables so nothing is
- * hard-coded across the app. Change the model by setting OPENAI_MODEL — no code
- * changes required.
+ * Direct OpenAI remains the first choice when OPENAI_API_KEY is configured.
+ * On Vercel, the helper can fall back to AI Gateway using a persistent gateway
+ * key or the short-lived OIDC token Vercel injects into each function request.
  */
 
 export const openaiConfig = {
@@ -18,6 +18,9 @@ export const openaiConfig = {
   projectId: process.env.OPENAI_PROJECT_ID || undefined,
 } as const;
 
-export function isOpenAiConfigured(): boolean {
-  return Boolean(process.env.OPENAI_API_KEY);
+export function resolvedOpenAiModel(usingGateway: boolean): string {
+  if (!usingGateway) return openaiConfig.model;
+  return openaiConfig.model.includes("/")
+    ? openaiConfig.model
+    : `openai/${openaiConfig.model}`;
 }
