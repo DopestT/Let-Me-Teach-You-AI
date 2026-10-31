@@ -1,10 +1,13 @@
 import { NextResponse } from "next/server";
+import { isValidBrevoListId } from "@/lib/brevo-newsletter";
 
 export const runtime = "nodejs";
 
 export async function GET() {
   const apiKeyConfigured = Boolean(process.env.NEWSLETTER_API_KEY);
-  const listIdConfigured = Boolean(process.env.NEWSLETTER_AUDIENCE_ID);
+  const listIdConfigured = isValidBrevoListId(
+    process.env.NEWSLETTER_AUDIENCE_ID
+  );
 
   if (!apiKeyConfigured || !listIdConfigured) {
     return NextResponse.json(
