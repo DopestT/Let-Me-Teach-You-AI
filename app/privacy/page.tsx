@@ -11,7 +11,7 @@ export default function PrivacyPage() {
   return (
     <article className="container-editorial py-16 max-w-2xl leading-relaxed text-[--color-navy-600]">
       <h1 className="font-editorial text-4xl font-semibold text-[--color-navy]">Privacy Policy</h1>
-      <p className="mt-2 text-sm text-[--color-slate]">Effective date: August 15, 2026</p>
+      <p className="mt-2 text-sm text-[--color-slate]">Effective date: October 31, 2026</p>
 
       <p className="mt-6">
         {SITE_NAME} (&ldquo;LMTYAI,&rdquo; &ldquo;we,&rdquo; &ldquo;us,&rdquo; or &ldquo;our&rdquo;) respects your privacy.
@@ -58,7 +58,7 @@ export default function PrivacyPage() {
 
       <h2 className="mt-10 text-2xl font-semibold text-[--color-navy]">Newsletter provider</h2>
       <p className="mt-3">
-        We use Beehiiv to manage subscriptions and send emails. Your email address and optional profile information may be stored with Beehiiv for this purpose. You can unsubscribe using the link in any newsletter email.
+        We use Brevo to manage email subscriptions and send emails. Your email address and optional profile information may be stored with Brevo for this purpose. We also keep a first-party signup record in our application database for referral and funnel operations. You can unsubscribe using the link in any newsletter email.
       </p>
 
       <h2 className="mt-10 text-2xl font-semibold text-[--color-navy]">Cookies and analytics</h2>
