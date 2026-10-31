@@ -18,6 +18,9 @@ const sourceFiles = [...walk("app"), ...walk("components"), ...walk("lib")].filt
 for (const file of sourceFiles) {
   const body = read(file);
   if (body.includes("https://www.letmeteachyouai.com")) errors.push(file + ": hard-coded www canonical host");
+  if (body.includes("api.beehiiv.com") || body.includes("Provider: Beehiiv")) {
+    errors.push(file + ": Beehiiv remains in runtime source");
+  }
 }
 
 const hasStaticLlms = fs.existsSync(path.join(root, "public/llms.txt"));
@@ -87,6 +90,14 @@ if (!envExample.includes("NEXT_PUBLIC_SUBSTACK_URL=")) errors.push("substack: pu
 if (!envExample.includes("NEXT_PUBLIC_BUILD_REVIEW_CHECKOUT_URL=")) errors.push("build review: checkout URL env missing");
 if (!footer.includes("NEXT_PUBLIC_SUBSTACK_URL")) errors.push("substack: footer is not wired to the public distribution URL");
 if (!footer.includes("AI Ledger on Substack")) errors.push("substack: footer distribution link missing");
+
+const newsletterAdapter = read("lib/newsletter.ts");
+if (newsletterAdapter.includes("beehiiv.com") || newsletterAdapter.includes("Provider: Beehiiv")) {
+  errors.push("newsletter provider: Beehiiv remains in the live adapter");
+}
+if (!newsletterAdapter.includes("https://api.brevo.com/v3/contacts")) {
+  errors.push("newsletter provider: Brevo Contacts API wiring missing");
+}
 
 const opportunities = JSON.parse(read("growth/opportunities.json"));
 const opportunityIds = opportunities.opportunities.map((item) => item.id);

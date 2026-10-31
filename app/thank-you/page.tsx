@@ -71,7 +71,7 @@ export default function ThankYouPage() {
           </div>
 
           <div className="mx-auto mt-8 max-w-2xl rounded-2xl border border-[#dfe6f0] bg-[#f4f7fc] px-5 py-4 text-center text-sm leading-6 text-[#59677c]">
-            Your kit is also being sent to your inbox. If the email is delayed, the download above works immediately.
+            The download above works immediately, so you never have to wait on email delivery to start.
           </div>
         </div>
       </section>
