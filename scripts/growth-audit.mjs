@@ -18,6 +18,9 @@ const sourceFiles = [...walk("app"), ...walk("components"), ...walk("lib")].filt
 for (const file of sourceFiles) {
   const body = read(file);
   if (body.includes("https://www.letmeteachyouai.com")) errors.push(file + ": hard-coded www canonical host");
+  if (body.includes("api.beehiiv.com") || body.includes("Provider: Beehiiv")) {
+    errors.push(file + ": Beehiiv remains in runtime source");
+  }
 }
 
 const hasStaticLlms = fs.existsSync(path.join(root, "public/llms.txt"));
