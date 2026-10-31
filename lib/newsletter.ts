@@ -1,25 +1,17 @@
 /**
- * Newsletter integration (server-side only). Provider: Beehiiv.
+ * Newsletter integration (server-side only). Provider: Brevo.
  *
- * Beehiiv owns the subscriber list, the welcome sequence, and lead-magnet
- * delivery. We send only the minimum personal data required to subscribe:
- * email + optional first name.
+ * Supabase remains the durable first-party record of signup source/referral
+ * metadata. Brevo receives only what it needs for email delivery: the email,
+ * optional first name, and the dedicated LMTYAI list ID.
  *
- * Provider-agnostic env names so the provider can be swapped without touching
- * callers:
- *   NEWSLETTER_API_KEY                  -> Beehiiv API key
- *   NEWSLETTER_AUDIENCE_ID              -> Beehiiv Publication ID
- *   NEWSLETTER_WELCOME_AUTOMATION_ID    -> optional Beehiiv Automation ID
- *
- * Docs: https://developers.beehiiv.com
+ * Provider-agnostic env names are retained to avoid changing callers:
+ *   NEWSLETTER_API_KEY     -> Brevo API key
+ *   NEWSLETTER_AUDIENCE_ID -> Brevo list ID
  */
 
 import { logger } from "@/lib/logger";
-
-const API_BASE = "https://api.beehiiv.com/v2";
-const SIGNUP_TAG = process.env.NEWSLETTER_SIGNUP_TAG ?? "beginner-prompt-pack";
-const WELCOME_AUTOMATION_ID =
-  process.env.NEWSLETTER_WELCOME_AUTOMATION_ID?.trim();
+import { subscribeToBrevo } from "@/lib/brevo-newsletter";
 
 type SubscribeArgs = {
   email: string;
@@ -42,8 +34,6 @@ export function isNewsletterConfigured(): boolean {
 export async function subscribe(
   args: SubscribeArgs
 ): Promise<SubscribeOutcome> {
-  // Local-dev fallback: clearly labeled, never pretends to be a real
-  // production subscription.
   if (!isNewsletterConfigured()) {
     logger.warn("newsletter.dev_fallback", {
       note: "NEWSLETTER_API_KEY / NEWSLETTER_AUDIENCE_ID not set",
@@ -51,60 +41,32 @@ export async function subscribe(
     return { ok: true, alreadySubscribed: false, devFallback: true };
   }
 
-  const audienceId = process.env.NEWSLETTER_AUDIENCE_ID!;
   const controller = new AbortController();
   const timeout = setTimeout(() => controller.abort(), 10_000);
 
   try {
-    const res = await fetch(
-      `${API_BASE}/publications/${audienceId}/subscriptions`,
-      {
-        method: "POST",
-        headers: {
-          Authorization: `Bearer ${process.env.NEWSLETTER_API_KEY}`,
-          "Content-Type": "application/json",
-        },
-        signal: controller.signal,
-        body: JSON.stringify({
-          email: args.email,
-          reactivate_existing: true,
-          // If the multi-email Beehiiv automation is configured, enroll the
-          // subscriber directly and suppress the separate one-off welcome
-          // email to avoid sending two welcome messages.
-          send_welcome_email: !WELCOME_AUTOMATION_ID,
-          ...(WELCOME_AUTOMATION_ID
-            ? { automation_ids: [WELCOME_AUTOMATION_ID] }
-            : {}),
-          utm_source: args.utmSource ?? "website",
-          referring_site: args.referringSite ?? "letmeteachyouai.com",
-          // Keep funnel attribution in a Beehiiv custom field. The create
-          // subscription API does not currently document `tags` as a writable
-          // request field.
-          custom_fields: [
-            { name: "Signup Source", value: SIGNUP_TAG },
-            ...(args.firstName
-              ? [{ name: "First Name", value: args.firstName }]
-              : []),
-          ],
-        }),
-      }
-    );
+    const result = await subscribeToBrevo({
+      apiKey: process.env.NEWSLETTER_API_KEY!,
+      listId: process.env.NEWSLETTER_AUDIENCE_ID!,
+      email: args.email,
+      firstName: args.firstName,
+      signal: controller.signal,
+    });
 
-    if (!res.ok) {
-      logger.error("newsletter.upstream_error", { status: res.status });
-      return { ok: false, reason: "upstream_error" };
+    if (!result.ok) {
+      logger.error("newsletter.upstream_error", { provider: "brevo" });
+      return result;
     }
 
-    const data = (await res.json()) as { data?: { status?: string } };
-    const alreadySubscribed = data?.data?.status === "active";
     logger.info("newsletter.subscribed", {
-      alreadySubscribed,
-      signupSource: SIGNUP_TAG,
-      welcomeMode: WELCOME_AUTOMATION_ID ? "automation" : "welcome_email",
+      provider: "brevo",
+      alreadySubscribed: result.alreadySubscribed,
+      signupSource: args.utmSource ?? "website",
     });
-    return { ok: true, alreadySubscribed };
+    return result;
   } catch (err) {
     logger.error("newsletter.request_failed", {
+      provider: "brevo",
       aborted: (err as Error)?.name === "AbortError",
     });
     return { ok: false, reason: "upstream_error" };
