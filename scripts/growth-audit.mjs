@@ -88,6 +88,14 @@ if (!envExample.includes("NEXT_PUBLIC_BUILD_REVIEW_CHECKOUT_URL=")) errors.push(
 if (!footer.includes("NEXT_PUBLIC_SUBSTACK_URL")) errors.push("substack: footer is not wired to the public distribution URL");
 if (!footer.includes("AI Ledger on Substack")) errors.push("substack: footer distribution link missing");
 
+const newsletterAdapter = read("lib/newsletter.ts");
+if (newsletterAdapter.includes("beehiiv.com") || newsletterAdapter.includes("Provider: Beehiiv")) {
+  errors.push("newsletter provider: Beehiiv remains in the live adapter");
+}
+if (!newsletterAdapter.includes("https://api.brevo.com/v3/contacts")) {
+  errors.push("newsletter provider: Brevo Contacts API wiring missing");
+}
+
 const opportunities = JSON.parse(read("growth/opportunities.json"));
 const opportunityIds = opportunities.opportunities.map((item) => item.id);
 for (const id of duplicate(opportunityIds)) errors.push("duplicate opportunity id: " + id);
