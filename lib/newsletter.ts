@@ -31,11 +31,17 @@ export type SubscribeOutcome =
   | { ok: true; alreadySubscribed: false; devFallback: true }
   | { ok: false; reason: "upstream_error" };
 
+export function isValidBrevoListId(raw: string | undefined): boolean {
+  const normalized = raw?.trim();
+  if (!normalized || !/^[1-9]\d*$/.test(normalized)) return false;
+  const id = Number(normalized);
+  return Number.isSafeInteger(id) && id > 0;
+}
+
 function configuredListId(): number | null {
   const raw = process.env.NEWSLETTER_AUDIENCE_ID?.trim();
-  if (!raw || !/^\d+$/.test(raw)) return null;
-  const id = Number(raw);
-  return Number.isSafeInteger(id) && id > 0 ? id : null;
+  if (!isValidBrevoListId(raw)) return null;
+  return Number(raw);
 }
 
 export function isNewsletterConfigured(): boolean {
