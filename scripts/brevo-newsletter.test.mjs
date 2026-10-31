@@ -1,5 +1,12 @@
 import assert from "node:assert/strict";
-import { subscribeToBrevo } from "../lib/brevo-newsletter.ts";
+import { isValidBrevoListId, subscribeToBrevo } from "../lib/brevo-newsletter.ts";
+
+assert.equal(isValidBrevoListId("42"), true);
+assert.equal(isValidBrevoListId(" 42 "), true);
+assert.equal(isValidBrevoListId("pub_old_beehiiv_id"), false);
+assert.equal(isValidBrevoListId("0"), false);
+assert.equal(isValidBrevoListId("-1"), false);
+assert.equal(isValidBrevoListId("42x"), false);
 
 {
   const calls = [];
