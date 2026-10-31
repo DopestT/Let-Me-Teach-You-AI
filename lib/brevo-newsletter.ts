@@ -13,6 +13,14 @@ type BrevoSubscribeArgs = {
 
 const BREVO_CONTACTS_URL = "https://api.brevo.com/v3/contacts";
 
+export function isValidBrevoListId(listId: string | undefined): boolean {
+  if (!listId) return false;
+  const normalized = listId.trim();
+  if (!/^[1-9]\d*$/.test(normalized)) return false;
+  const numericListId = Number(normalized);
+  return Number.isSafeInteger(numericListId) && numericListId > 0;
+}
+
 export async function subscribeToBrevo({
   apiKey,
   listId,
@@ -21,11 +29,11 @@ export async function subscribeToBrevo({
   signal,
   fetchImpl = fetch,
 }: BrevoSubscribeArgs): Promise<BrevoSubscribeOutcome> {
-  const numericListId = Number.parseInt(listId, 10);
-  if (!Number.isInteger(numericListId) || numericListId <= 0) {
+  if (!isValidBrevoListId(listId)) {
     return { ok: false, reason: "upstream_error" };
   }
 
+  const numericListId = Number(listId.trim());
   const response = await fetchImpl(BREVO_CONTACTS_URL, {
     method: "POST",
     headers: {
