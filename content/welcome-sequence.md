@@ -1,21 +1,16 @@
 # Welcome Sequence — 5 Emails
 
-These five emails go into a **Beehiiv Automation** triggered on **new subscription**.
+These five emails go into a **Brevo automation** triggered when a contact joins the dedicated **LMTYAI** list.
 Add each one as an email step and set the send delays to match the cadence below
-(immediately, then Day 1, Day 2, Day 4, Day 7 after the previous send / signup).
+(immediately, then Day 1, Day 2, Day 4, Day 7 after signup).
 
 Before you turn the automation on, replace the placeholders:
 
-- `{{first_name}}` — use Beehiiv's real first-name merge tag (Beehiiv writes this
-  as `{{ subscriber.first_name }}` in most cases; the `default:` fallback keeps
-  the greeting warm when no name was collected).
-- `[DOWNLOAD_LINK]` — the public URL to the PDF
-  (`/lead-magnet/Start_Using_AI_Today_25_Beginner_Prompts.pdf`, or a Beehiiv-hosted
-  file link).
+- `{{ contact.FIRSTNAME|default:"there" }}` — Brevo's first-name contact attribute with a fallback when no name was collected.
+- `[DOWNLOAD_LINK]` — the public URL to the PDF (`https://letmeteachyouai.com/lead-magnet/AI_Work_Kit.pdf`).
 - `— [Your name]` — sign with the founder's real name.
 
-Tone: warm, plain-spoken, practical, honest. No hype. No jargon. No get-rich-quick
-promises.
+Tone: warm, plain-spoken, practical, honest. No hype. No jargon. No get-rich-quick promises.
 
 ---
 
@@ -24,7 +19,7 @@ promises.
 **Subject:** Your free AI prompt set is here
 **Preview:** 25 beginner prompts, plus what to expect from me.
 
-Hey {{first_name | default: "there"}},
+Hey {{ contact.FIRSTNAME|default:"there" }},
 
 Welcome, and thank you for trusting me with your inbox.
 
@@ -54,7 +49,7 @@ Talk soon,
 **Subject:** Why most AI prompts give weak answers
 **Preview:** The fix takes about ten seconds.
 
-Hey {{first_name | default: "there"}},
+Hey {{ contact.FIRSTNAME|default:"there" }},
 
 Quick lesson today, because it changes everything.
 
@@ -91,7 +86,7 @@ Give it a shot today with any prompt from your set.
 **Subject:** Use AI to clear one task off your plate today
 **Preview:** A 15-minute exercise you can do right now.
 
-Hey {{first_name | default: "there"}},
+Hey {{ contact.FIRSTNAME|default:"there" }},
 
 Reading about AI is fine. Using it is where it clicks. So let's actually clear
 something off your plate today — no coding, about 15 minutes.
@@ -121,7 +116,7 @@ they tell me what to teach next.
 **Subject:** Why I decided to learn AI
 **Preview:** A little honesty about where this started.
 
-Hey {{first_name | default: "there"}},
+Hey {{ contact.FIRSTNAME|default:"there" }},
 
 I want to be honest with you about why this newsletter exists.
 
@@ -151,7 +146,7 @@ Glad you're here.
 **Subject:** What would you like AI to help you do?
 **Preview:** A quick question that shapes what comes next.
 
-Hey {{first_name | default: "there"}},
+Hey {{ contact.FIRSTNAME|default:"there" }},
 
 You've had a week with this now. You've got your prompt set, you know how to be
 specific and push for better answers, and hopefully you've cleared at least one
