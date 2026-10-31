@@ -5,9 +5,10 @@
   "description": "Let Me Teach You AI — beginner-focused AI education newsletter and digital-product business.",
   "scripts": {
     "dev": "next dev",
-    "build": "npm run perf:audit && npm run growth:audit && npm run generate:pdf && next build",
+    "build": "npm run newsletter:test && npm run perf:audit && npm run growth:audit && npm run generate:pdf && next build",
     "start": "next start",
     "lint": "next lint",
+    "newsletter:test": "node --experimental-strip-types scripts/brevo-newsletter.test.mjs",
     "generate:pdf": "node scripts/generate-lead-magnet.mjs",
     "growth:audit": "node scripts/growth-audit.mjs",
     "growth:next": "node scripts/growth-next.mjs",
