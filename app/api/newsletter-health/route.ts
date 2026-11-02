@@ -12,6 +12,8 @@ export async function GET() {
 
   let upstreamStatus: number | null = null;
   let upstreamReachable = false;
+  let upstreamErrorCode: string | null = null;
+  let upstreamErrorMessage: string | null = null;
 
   if (apiKeyConfigured && listIdConfigured) {
     try {
@@ -25,8 +27,20 @@ export async function GET() {
       });
       upstreamStatus = res.status;
       upstreamReachable = res.ok;
+
+      if (!res.ok) {
+        try {
+          const body = (await res.json()) as { code?: unknown; message?: unknown };
+          upstreamErrorCode = typeof body.code === "string" ? body.code.slice(0, 80) : null;
+          upstreamErrorMessage =
+            typeof body.message === "string" ? body.message.slice(0, 240) : null;
+        } catch {
+          upstreamErrorMessage = "Brevo returned a non-JSON error response.";
+        }
+      }
     } catch {
       upstreamStatus = 0;
+      upstreamErrorMessage = "Brevo request failed before a response was received.";
     }
   }
 
@@ -40,6 +54,8 @@ export async function GET() {
         listIdConfigured,
         upstreamReachable,
         upstreamStatus,
+        upstreamErrorCode,
+        upstreamErrorMessage,
         signupTagConfigured: Boolean(process.env.NEWSLETTER_SIGNUP_TAG),
       },
     },
