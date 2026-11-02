@@ -16,6 +16,11 @@ const checks = [
   [newsletter.includes('"api-key"'), "Brevo API key must be sent with the api-key header"],
   [newsletter.includes("listIds"), "Brevo contact creation must enroll the subscriber in the configured list"],
   [newsletter.includes("updateEnabled"), "Brevo contact creation must safely handle existing contacts"],
+  [newsletter.includes("/smtp/email"), "successful signup must send the AI Work Kit through Brevo transactional email"],
+  [newsletter.includes("hello@letmeteachyouai.com"), "welcome email must use the authenticated LMTYAI sender"],
+  [newsletter.includes("AI Work Kit"), "welcome email must identify the AI Work Kit"],
+  [newsletter.includes("/api/prompt-pack"), "welcome email must include the direct Work Kit download"],
+  [newsletter.includes("/learn/build-an-ai-business-from-scratch"), "welcome email must include Course 1"],
   [envExample.includes("Newsletter provider (Brevo)"), ".env.example must document Brevo as the permanent provider"],
   [envExample.includes("Brevo List ID"), "NEWSLETTER_AUDIENCE_ID must be documented as the Brevo List ID"],
   [!envExample.includes("Beehiiv Publication ID"), ".env.example must not describe NEWSLETTER_AUDIENCE_ID as a Beehiiv publication"],
@@ -32,4 +37,4 @@ if (failures.length) {
   process.exit(1);
 }
 
-console.log("Newsletter provider audit passed: Brevo contract is locked.");
+console.log("Newsletter provider audit passed: Brevo signup and welcome delivery contracts are locked.");
