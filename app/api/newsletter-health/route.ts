@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 
 export const runtime = "nodejs";
 
+// Safe production health probe for the Brevo signup path. Never returns secrets.
 export async function GET() {
   const rawListId = process.env.NEWSLETTER_AUDIENCE_ID?.trim();
   const parsedListId = rawListId ? Number(rawListId) : NaN;
