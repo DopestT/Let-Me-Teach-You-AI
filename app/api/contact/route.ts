@@ -42,7 +42,7 @@ export async function POST(req: Request) {
   }
 
   // Log receipt without persisting message content to third parties.
-  // Wire up your inbox / Beehiiv reply-to / email provider here as needed.
+  // Wire a dedicated support inbox or transactional mail provider here if needed.
   logger.info("contact.received", {
     to: process.env.CONTACT_TO_EMAIL ?? "unset",
   });

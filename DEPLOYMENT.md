@@ -50,31 +50,14 @@ Use both — belt and suspenders.
 
 ## DNS records (do at your registrar)
 
-**These are not done yet** — we do not have access to the domain registrar. Whoever
-manages DNS for the domains must add the records below. Vercel shows the exact,
-current values under **Settings → Domains** for each domain; use those if they
-differ from the generic values here.
-
-**For `letmeteachyouai.com`:**
-
-| Type | Name / Host | Value |
-| --- | --- | --- |
-| `A` (or `ALIAS`/`ANAME` at the apex) | `@` | `76.76.21.21` (or the IP Vercel provides) |
-| `CNAME` | `www` | `cname.vercel-dns.com` |
-
-**For `letmeteachyouai.net`:**
-
-| Type | Name / Host | Value |
-| --- | --- | --- |
-| `A` (or `ALIAS`/`ANAME` at the apex) | `@` | `76.76.21.21` (or the IP Vercel provides) |
-| `CNAME` | `www` | `cname.vercel-dns.com` |
+Vercel shows the exact, current records required under **Settings → Domains** for each
+domain. Use those values if they differ from generic examples in older setup notes.
 
 Notes:
 - Apex domains (`@`) need an `A` record, or an `ALIAS`/`ANAME` record if your
   registrar supports it. `www` subdomains use a `CNAME`.
 - After adding records, Vercel verifies ownership and issues TLS certificates
-  automatically. This can take anywhere from a few minutes to a few hours to
-  propagate.
+  automatically.
 
 ## Environment variables (Vercel → Settings → Environment Variables)
 
@@ -87,9 +70,9 @@ Set these for **Production and Preview**. Server-only secrets must **never** use
 | --- | --- |
 | `OPENAI_API_KEY` | OpenAI secret key. **Server only — never exposed to the browser.** |
 | `OPENAI_MODEL` | Current OpenAI model (e.g. `gpt-5-mini`). Configurable, not hard-coded. |
-| `NEWSLETTER_API_KEY` | Beehiiv API key. **Server only — never exposed to the browser.** |
-| `NEWSLETTER_AUDIENCE_ID` | Beehiiv Publication ID (`pub_xxxxxxxx`). |
-| `NEWSLETTER_SIGNUP_TAG` | Tag applied to signups for segmentation / automations. |
+| `NEWSLETTER_API_KEY` | Brevo API key. **Server only — never exposed to the browser.** |
+| `NEWSLETTER_AUDIENCE_ID` | Positive numeric Brevo List ID for the dedicated LMTYAI signup list. |
+| `NEWSLETTER_SIGNUP_TAG` | Optional internal signup-source label; the code has a safe default. |
 | `NEXT_PUBLIC_SITE_URL` | `https://letmeteachyouai.com` — drives metadata, canonical URLs, and the redirects in `proxy.ts`. Safe to expose. |
 
 **Optional (safe defaults exist in code):**
@@ -104,6 +87,22 @@ Set these for **Production and Preview**. Server-only secrets must **never** use
 > must stay server-side only. Do not add a `NEXT_PUBLIC_` prefix to them and do not
 > import them into client components.
 
+## Brevo production contract
+
+The production signup path uses Brevo in two server-side steps:
+
+1. Add or update the subscriber in `NEWSLETTER_AUDIENCE_ID`.
+2. Send the immediate AI Work Kit welcome email through Brevo transactional email
+   from `hello@letmeteachyouai.com`.
+
+Supabase remains the independent durable signup/referral ledger. The follow-up
+five-email nurture sequence is separate from the immediate Work Kit delivery and
+must not duplicate that first transactional message.
+
+Use `/api/newsletter-health` as the safe readiness probe. A healthy production
+configuration reports `provider: "brevo"` and `ready: true` without exposing the API
+key or contact data.
+
 ## Local development
 
 ```bash
@@ -111,16 +110,16 @@ npm run dev      # local dev server at http://localhost:3000
 npm run build    # production build (run before shipping to catch build errors)
 ```
 
-## Remaining manual steps (checklist)
+## Deployment verification checklist
 
-- [ ] Add all four domains to the Vercel project.
-- [ ] Set `letmeteachyouai.com` as the Production domain.
-- [ ] Configure `www.letmeteachyouai.com`, `letmeteachyouai.net`, and
-      `www.letmeteachyouai.net` as 301 redirects to `letmeteachyouai.com`.
-- [ ] Add DNS records at the registrar for **both** `.com` and `.net` (apex `A`/`ALIAS`
-      + `www` `CNAME`).
-- [ ] Set all required environment variables in Vercel (Production + Preview).
-- [ ] Confirm `NEXT_PUBLIC_SITE_URL=https://letmeteachyouai.com`.
-- [ ] Verify: visiting the `.net` domains and `www.letmeteachyouai.com` lands on
-      `https://letmeteachyouai.com` with a 301.
-- [ ] Verify TLS certificates are issued for all four domains.
+- [ ] Production deployment is `READY` and aliases include `letmeteachyouai.com`.
+- [ ] `NEXT_PUBLIC_SITE_URL=https://letmeteachyouai.com`.
+- [ ] `NEWSLETTER_API_KEY` is present server-side.
+- [ ] `NEWSLETTER_AUDIENCE_ID` is a positive numeric Brevo list ID dedicated to LMTYAI.
+- [ ] Brevo has an authenticated `letmeteachyouai.com` domain and active
+      `hello@letmeteachyouai.com` sender.
+- [ ] `/api/newsletter-health` returns `ready: true`.
+- [ ] One real signup is confirmed in the LMTYAI Brevo list and in the Supabase
+      signup ledger.
+- [ ] The subscriber receives the immediate AI Work Kit email and can reach Course 1.
+- [ ] `.net` and `www` redirects land on `https://letmeteachyouai.com`.
