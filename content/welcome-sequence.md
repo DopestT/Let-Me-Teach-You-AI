@@ -1,25 +1,24 @@
-# Welcome Sequence — 5 Emails
+# Welcome Sequence — 5 Touches
 
-These five emails go into a **Beehiiv Automation** triggered on **new subscription**.
-Add each one as an email step and set the send delays to match the cadence below
-(immediately, then Day 1, Day 2, Day 4, Day 7 after the previous send / signup).
+Brevo is the permanent email provider for LMTYAI.
 
-Before you turn the automation on, replace the placeholders:
+The **immediate first touch is already sent by the application** after a successful signup: the site adds/updates the contact in the configured Brevo list, then sends the AI Work Kit link and Course 1 link through Brevo transactional email.
 
-- `{{first_name}}` — use Beehiiv's real first-name merge tag (Beehiiv writes this
-  as `{{ subscriber.first_name }}` in most cases; the `default:` fallback keeps
-  the greeting warm when no name was collected).
-- `[DOWNLOAD_LINK]` — the public URL to the PDF
-  (`/lead-magnet/Start_Using_AI_Today_25_Beginner_Prompts.pdf`, or a Beehiiv-hosted
-  file link).
-- `— [Your name]` — sign with the founder's real name.
+Use the copy below as the approved nurture sequence. When building a Brevo automation, **do not duplicate the immediate Work Kit message**. Start the automated nurture with Email 2 on Day 1, followed by Email 3 on Day 2, Email 4 on Day 4, and Email 5 on Day 7. Email 1 below remains the source copy for the immediate welcome and can be used if the transactional implementation is ever moved into a Brevo template.
 
-Tone: warm, plain-spoken, practical, honest. No hype. No jargon. No get-rich-quick
-promises.
+Before activating any Brevo automation:
+
+- Map `{{first_name}}` to Brevo's `FIRSTNAME` contact attribute using the personalization syntax shown by the Brevo editor/preview. Keep a fallback such as “there” when no first name was collected.
+- `[DOWNLOAD_LINK]` should point to the live AI Work Kit endpoint: `https://letmeteachyouai.com/api/prompt-pack`.
+- `— [Your name]` should be replaced with the founder's real signature before an automation is enabled.
+- Trigger the nurture only for the dedicated LMTYAI signup list. Do not use Vice City Forums or another brand's list.
+- Preview and test each message in Brevo before activation.
+
+Tone: warm, plain-spoken, practical, honest. No hype. No jargon. No get-rich-quick promises.
 
 ---
 
-## Email 1 — Send: immediately
+## Email 1 — Immediate transactional welcome
 
 **Subject:** Your free AI prompt set is here
 **Preview:** 25 beginner prompts, plus what to expect from me.
