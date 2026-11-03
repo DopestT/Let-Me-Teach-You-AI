@@ -1,6 +1,6 @@
 /**
- * Supabase subscriber store (server-side). Every signup is saved here so no
- * email is ever lost, even if the newsletter sender (Beehiiv) is down or not
+ * Supabase subscriber store (server-side). Every signup is saved here as an
+ * independent durable ledger even if Brevo is temporarily unavailable or not
  * configured. Uses only the publishable key + locked-down RPC functions
  * (see supabase/migrations/20261005_subscribers.sql).
  */
