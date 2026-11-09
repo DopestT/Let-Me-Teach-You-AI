@@ -11,7 +11,7 @@ export default function PrivacyPage() {
   return (
     <article className="container-editorial py-16 max-w-2xl leading-relaxed text-[--color-navy-600]">
       <h1 className="font-editorial text-4xl font-semibold text-[--color-navy]">Privacy Policy</h1>
-      <p className="mt-2 text-sm text-[--color-slate]">Effective date: November 3, 2026</p>
+      <p className="mt-2 text-sm text-[--color-slate]">Effective date: November 9, 2026</p>
 
       <p className="mt-6">
         {SITE_NAME} (&ldquo;LMTYAI,&rdquo; &ldquo;we,&rdquo; &ldquo;us,&rdquo; or &ldquo;our&rdquo;) respects your privacy.
@@ -64,6 +64,9 @@ export default function PrivacyPage() {
       <h2 className="mt-10 text-2xl font-semibold text-[--color-navy]">Cookies and analytics</h2>
       <p className="mt-3">
         Our website may use cookies and similar technologies to operate the service, remember preferences, understand usage, measure performance, and improve the user experience. Browser settings may allow you to restrict or delete cookies.
+      </p>
+      <p className="mt-3">
+        When you arrive through a campaign link, we may read its source, medium, campaign, content, and term parameters and keep those values in session storage for the current browser session. If you submit a form, those campaign tags may be associated with your signup record so we can measure which content leads to signups. We do not store the full referring URL as part of this campaign attribution.
       </p>
 
       <h2 className="mt-10 text-2xl font-semibold text-[--color-navy]">Third-party services</h2>
