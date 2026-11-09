@@ -37,38 +37,41 @@ const projects = [
 export default function HomePage() {
   return (
     <>
-      <section className="relative overflow-hidden border-b border-[#dbe3ef] bg-[linear-gradient(180deg,#f7f9ff_0%,#fbfaf7_76%)]">
+      <section className="relative overflow-hidden border-b border-[#eadfc9] bg-[radial-gradient(ellipse_at_85%_8%,rgba(198,151,73,.18),transparent_34%),linear-gradient(180deg,#fffaf0_0%,#fbfaf7_78%)]">
         <div className="pointer-events-none absolute inset-0 opacity-60 [background-image:linear-gradient(rgba(29,78,216,.05)_1px,transparent_1px),linear-gradient(90deg,rgba(29,78,216,.05)_1px,transparent_1px)] [background-size:34px_34px]" />
         <div className="container-editorial relative grid gap-12 py-16 sm:py-24 lg:grid-cols-[1.05fr_.95fr] lg:items-center">
           <div>
             <span className="inline-flex items-center gap-2 rounded-full border border-[#d4def8] bg-white/80 px-3 py-1.5 text-xs font-bold uppercase tracking-[.13em] text-[#3158b5] shadow-sm">
-              <BookOpen className="h-3.5 w-3.5" aria-hidden />
-              Learn AI by building real things
+              <Sparkles className="h-3.5 w-3.5" aria-hidden />
+              A little something for the holiday season
             </span>
             <h1 className="mt-6 max-w-3xl font-editorial text-5xl font-semibold leading-[.98] tracking-[-.035em] text-[#0a1937] sm:text-6xl lg:text-7xl">
-              What do you want AI to help you <span className="text-[#2457ff]">build?</span>
+              A useful little <span className="text-[#b47b2b]">surprise</span> for your AI life.
             </h1>
             <p className="mt-6 max-w-2xl text-lg leading-8 text-[#4f5f79] sm:text-xl">
-              Skip the jargon. Pick a real outcome, learn the workflow, and build something useful with AI today.
+              A gift to help you get more out of AI—25 practical prompts, 5 ready-to-use workflows, and a simple way to get started. No jargon. No experience required.
             </p>
             <div className="mt-8 flex flex-wrap gap-3">
-              <Link href="#work-kit-signup" className="primary-cta inline-flex items-center gap-2 rounded-xl px-6 py-3.5 font-bold shadow-[0_12px_30px_rgba(29,78,216,.22)]">
-                Get the free AI Work Kit <ArrowRight className="h-4 w-4" />
+              <Link href="#work-kit-signup" className="inline-flex items-center gap-2 rounded-xl border border-[#c69749] bg-[#c69749] px-6 py-3.5 font-bold text-[#14213d] shadow-[0_12px_30px_rgba(109,77,28,.18)] transition-colors hover:bg-[#b8873e]">
+                Open Your Free AI Work Kit <ArrowRight className="h-4 w-4" />
               </Link>
               <Link href="#lab" className="inline-flex items-center gap-2 rounded-xl border border-[#ccd7ea] bg-white/80 px-6 py-3.5 font-bold text-[#10213f] transition-colors hover:bg-white">
                 Explore the AI Lab
               </Link>
             </div>
-            <div id="work-kit-signup" className="mt-8 max-w-xl rounded-2xl border border-[#d4def8] bg-white/90 p-4 shadow-sm">
-              <p className="mb-2 text-sm font-bold text-[#0f1e3d]">Get 25 free AI prompts + 5 workflows. Enter your email:</p>
-              <SignupForm compact source="homepage-hero" buttonLabel="Get the free kit" />
+            <div id="work-kit-signup" className="mt-8 max-w-xl rounded-2xl border border-[#e7d5b2] bg-white/95 p-4 shadow-[0_16px_42px_rgba(109,77,28,.10)]">
+              <p className="mb-2 text-sm font-bold text-[#0f1e3d]">Your free gift is ready. Where should we send it?</p>
+              <SignupForm compact source="homepage-hero" buttonLabel="Send me the gift" />
               <SubscriberCount className="mt-2 text-[#3158b5]" />
             </div>
           </div>
 
           <div className="relative mx-auto w-full max-w-xl">
-            <div className="absolute -inset-6 rounded-[2.5rem] bg-[radial-gradient(circle_at_top_right,rgba(78,112,255,.22),transparent_55%)] blur-2xl" />
-            <div className="relative overflow-hidden rounded-[2rem] border border-[#20345f] bg-[#07152f] p-5 shadow-[0_32px_90px_rgba(7,21,47,.28)] sm:p-7">
+            <div className="absolute -inset-6 rounded-[2.5rem] bg-[radial-gradient(circle_at_top_right,rgba(198,151,73,.28),transparent_55%)] blur-2xl" />
+            <div className="relative overflow-hidden rounded-[2rem] border border-[#d7bd8c] bg-[#fffdf8] p-3 shadow-[0_32px_90px_rgba(109,77,28,.16)] sm:p-4">
+              <div className="relative overflow-hidden rounded-[1.45rem] border border-[#20345f] bg-[#07152f] p-5 sm:p-7">
+                <div className="pointer-events-none absolute -right-8 top-0 h-full w-10 rotate-[18deg] bg-[#c69749]/20" />
+                <div className="mb-5 inline-flex items-center gap-2 rounded-full border border-[#d8bf91]/40 bg-[#c69749]/15 px-3 py-1.5 text-[11px] font-bold uppercase tracking-[.15em] text-[#f4d9a5]"><Sparkles className="h-3 w-3" /> A gift from LMTYAI</div>
               <div className="mb-6 flex items-center justify-between border-b border-white/10 pb-4">
                 <div className="flex items-center gap-2 text-sm font-bold text-white"><Sparkles className="h-4 w-4 text-[#7da2ff]" /> LMTYAI Lab</div>
                 <div className="flex gap-1.5"><span className="h-2.5 w-2.5 rounded-full bg-[#ff6b6b]"/><span className="h-2.5 w-2.5 rounded-full bg-[#ffd166]"/><span className="h-2.5 w-2.5 rounded-full bg-[#50d890]"/></div>
@@ -91,7 +94,8 @@ export default function HomePage() {
                   </div>
                 </div>
               </div>
-              <div className="mt-5 rounded-xl border border-white/10 bg-black/20 px-4 py-3 text-xs text-white/55">Plain English → clear workflow → safe first test</div>
+              <div className="mt-5 rounded-xl border border-white/10 bg-black/20 px-4 py-3 text-xs text-white/65">Inside: 25 prompts · 5 workflows · your first useful AI win</div>
+              </div>
             </div>
           </div>
         </div>
@@ -139,9 +143,9 @@ export default function HomePage() {
       <section id="join" className="border-y border-[#20345f] bg-[#07152f] py-12 text-white sm:py-14">
         <div className="container-editorial grid max-w-5xl gap-8 lg:grid-cols-[.95fr_1.05fr] lg:items-center">
           <div>
-            <p className="text-sm font-bold uppercase tracking-[.14em] text-[#8fb0ff]">Free AI Work Kit</p>
-            <h2 className="mt-3 font-editorial text-3xl font-semibold leading-tight sm:text-4xl">Stop collecting prompts. Start using AI like a coworker.</h2>
-            <p className="mt-4 max-w-xl leading-7 text-[#c8d5ea]">Get 25 practical prompts, 5 plug-and-play workflows, a one-page AI tool cheat sheet, and a 10-minute quick-start guide.</p>
+            <p className="text-sm font-bold uppercase tracking-[.14em] text-[#e8c98f]">A gift that keeps being useful</p>
+            <h2 className="mt-3 font-editorial text-3xl font-semibold leading-tight sm:text-4xl">A better way to get started with AI.</h2>
+            <p className="mt-4 max-w-xl leading-7 text-[#c8d5ea]">Open your free kit: 25 practical prompts, 5 plug-and-play workflows, a one-page AI tool cheat sheet, and a 10-minute quick-start guide.</p>
             <ul className="mt-5 space-y-2.5 text-sm text-[#dce5f5] sm:text-base">
               {packBullets.map((bullet) => <li key={bullet} className="flex items-center gap-3"><CheckCircle2 className="h-5 w-5 text-[#7fa5ff]"/>{bullet}</li>)}
             </ul>
