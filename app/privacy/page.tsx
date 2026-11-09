@@ -11,7 +11,7 @@ export default function PrivacyPage() {
   return (
     <article className="container-editorial py-16 max-w-2xl leading-relaxed text-[--color-navy-600]">
       <h1 className="font-editorial text-4xl font-semibold text-[--color-navy]">Privacy Policy</h1>
-      <p className="mt-2 text-sm text-[--color-slate]">Effective date: November 9, 2026</p>
+      <p className="mt-2 text-sm text-[--color-slate]">Effective date: November 8, 2026</p>
 
       <p className="mt-6">
         {SITE_NAME} (&ldquo;LMTYAI,&rdquo; &ldquo;we,&rdquo; &ldquo;us,&rdquo; or &ldquo;our&rdquo;) respects your privacy.
