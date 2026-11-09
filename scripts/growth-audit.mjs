@@ -54,6 +54,25 @@ const signup = read("components/signup-form.tsx");
 if (!signup.includes('track("newsletter_signup"')) errors.push("signup form: conversion event missing");
 if (!signup.includes("source?: string")) errors.push("signup form: source attribution missing");
 if (!signup.includes("successMessage?: string")) errors.push("signup form: inline offer-interest success state missing");
+if (!signup.includes('sessionStorage.setItem("lmtyai_utm"')) errors.push("signup form: session-scoped UTM capture missing");
+for (const key of ["utm_source", "utm_medium", "utm_campaign", "utm_content", "utm_term"]) {
+  if (!signup.includes(key)) errors.push("signup form: missing " + key + " capture");
+}
+const validation = read("lib/validation.ts");
+for (const field of ["utmSource", "utmMedium", "utmCampaign", "utmContent", "utmTerm"]) {
+  if (!validation.includes(field)) errors.push("signup validation: missing " + field);
+}
+const subscriberStore = read("lib/subscribers.ts");
+if (!subscriberStore.includes("lmtyai_subscribe_with_utm")) errors.push("signup ledger: UTM RPC forwarding missing");
+const subscribeRoute = read("app/api/subscribe/route.ts");
+if (!subscribeRoute.includes("utmCampaign")) errors.push("subscribe route: UTM fields not forwarded");
+const privacy = read("app/privacy/page.tsx");
+if (!privacy.includes("campaign tags may be associated with your signup record")) errors.push("privacy: campaign attribution disclosure missing");
+const migrations = walk("supabase/migrations").filter((p) => p.endsWith(".sql"));
+if (!migrations.some((p) => {
+  const body = read(p);
+  return body.includes("lmtyai_subscribe_with_utm") && body.includes("utm_campaign") && body.includes("utm_content");
+})) errors.push("signup ledger: UTM attribution migration missing");
 
 const funnelPages = [
   "app/start-here/page.tsx",
