@@ -29,7 +29,7 @@ declare
   v_ref text;
 begin
   p_email := lower(trim(p_email));
-  if p_email !~ '^[^@\\s]+@[^@\\s]+\\.[^@\\s]+$' or length(p_email) > 254 then
+  if p_email !~ '^[^@\s]+@[^@\s]+\.[^@\s]+$' or length(p_email) > 254 then
     raise exception 'invalid email';
   end if;
 
