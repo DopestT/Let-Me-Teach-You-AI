@@ -60,13 +60,14 @@ export async function POST(req: Request) {
     });
   }
 
-  const { email, firstName, source, ref } = parsed.data;
+  const { email, firstName, source, ref, utmSource, utmMedium, utmCampaign, utmContent, utmTerm } = parsed.data;
+  const attribution = { utmSource, utmMedium, utmCampaign, utmContent, utmTerm };
 
   // Save to Supabase and send to the newsletter provider in parallel. The
   // signup succeeds if EITHER one captured the email.
   const [stored, result] = await Promise.all([
-    storeSubscriber({ email, firstName, source, ref }),
-    subscribe({ email, firstName, referringSite: "letmeteachyouai.com", utmSource: source }),
+    storeSubscriber({ email, firstName, source, ref, ...attribution }),
+    subscribe({ email, firstName, referringSite: "letmeteachyouai.com", ...attribution }),
   ]);
   const referral = stored
     ? { referralCode: stored.referral_code, referrals: stored.referrals }
