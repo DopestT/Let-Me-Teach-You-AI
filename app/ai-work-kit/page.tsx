@@ -3,7 +3,7 @@ import { CheckCircle2, Clock3, Workflow, Wrench, Zap } from "lucide-react";
 import { SignupForm } from "@/components/signup-form";
 
 export const metadata: Metadata = {
-  title: "Free AI Work Kit",
+  title: "Your AI Starter Surprise — Your AI Starter Surprise",
   description:
     "Get 25 practical AI prompts, 5 plug-and-play workflows, an AI tool cheat sheet, and a 10-minute quick start.",
   alternates: { canonical: "/ai-work-kit" },
@@ -37,10 +37,10 @@ export default function AIWorkKitPage() {
               Free AI Work Kit
             </span>
             <h1 className="mt-6 max-w-3xl font-editorial text-5xl font-semibold leading-[.98] tracking-[-.035em] text-[#0a1937] sm:text-6xl lg:text-7xl">
-              Stop collecting AI prompts. <span className="text-[#2457ff]">Start using AI like a coworker.</span>
+              A useful little package for your next big idea.
             </h1>
             <p className="mt-6 max-w-2xl text-lg leading-8 text-[#4f5f79] sm:text-xl">
-              Get 25 practical prompts + 5 plug-and-play workflows designed to help you save time and get real work done with AI.
+              Inside: 25 practical prompts, 5 plug-and-play workflows, a tool cheat sheet, and a quick start to help you put AI to work.
             </p>
 
             <div className="mt-8 rounded-2xl border border-[#d7e0ef] bg-white p-5 shadow-[0_16px_50px_rgba(20,42,90,.10)] sm:p-6">
@@ -48,7 +48,7 @@ export default function AIWorkKitPage() {
             </div>
 
             <p className="mt-4 text-sm text-[#6d7a91]">
-              Free. Practical. No giant prompt library you&apos;ll never use.
+              A genuinely useful head start. Free, practical, and ready when you are.
             </p>
           </div>
 
