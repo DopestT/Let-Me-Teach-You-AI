@@ -52,11 +52,14 @@ export default function HomePage() {
               Skip the jargon. Pick a real outcome, learn the workflow, and build something useful with AI today.
             </p>
             <div className="mt-8 flex flex-wrap gap-3">
-              <Link href="#lab" className="primary-cta inline-flex items-center gap-2 rounded-xl px-6 py-3.5 font-bold shadow-[0_12px_30px_rgba(29,78,216,.22)]">
-                Open the AI Lab <ArrowRight className="h-4 w-4" />
+              <Link href="#work-kit-signup" className="primary-cta inline-flex items-center gap-2 rounded-xl px-6 py-3.5 font-bold shadow-[0_12px_30px_rgba(29,78,216,.22)]">
+                Get the free AI Work Kit <ArrowRight className="h-4 w-4" />
+              </Link>
+              <Link href="#lab" className="inline-flex items-center gap-2 rounded-xl border border-[#ccd7ea] bg-white/80 px-6 py-3.5 font-bold text-[#10213f] transition-colors hover:bg-white">
+                Explore the AI Lab
               </Link>
             </div>
-            <div className="mt-8 max-w-xl rounded-2xl border border-[#d4def8] bg-white/90 p-4 shadow-sm">
+            <div id="work-kit-signup" className="mt-8 max-w-xl rounded-2xl border border-[#d4def8] bg-white/90 p-4 shadow-sm">
               <p className="mb-2 text-sm font-bold text-[#0f1e3d]">Get 25 free AI prompts + 5 workflows. Enter your email:</p>
               <SignupForm compact source="homepage-hero" buttonLabel="Get the free kit" />
               <SubscriberCount className="mt-2 text-[#3158b5]" />
