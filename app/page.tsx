@@ -43,7 +43,7 @@ export default function HomePage() {
           <div>
             <span className="inline-flex items-center gap-2 rounded-full border border-[#d4def8] bg-white/80 px-3 py-1.5 text-xs font-bold uppercase tracking-[.13em] text-[#3158b5] shadow-sm">
               <Sparkles className="h-3.5 w-3.5" aria-hidden />
-              A little something for the holiday season
+              Your AI Starter Surprise
             </span>
             <h1 className="mt-6 max-w-3xl font-editorial text-5xl font-semibold leading-[.98] tracking-[-.035em] text-[#0a1937] sm:text-6xl lg:text-7xl">
               A useful little <span className="text-[#b47b2b]">surprise</span> for your AI life.
