@@ -43,24 +43,24 @@ export default function HomePage() {
           <div>
             <span className="inline-flex items-center gap-2 rounded-full border border-[#d4def8] bg-white/80 px-3 py-1.5 text-xs font-bold uppercase tracking-[.13em] text-[#3158b5] shadow-sm">
               <BookOpen className="h-3.5 w-3.5" aria-hidden />
-              Your AI Starter Surprise
+              THE AI WORK KIT
             </span>
-            <h1 className="mt-6 max-w-3xl font-editorial text-5xl font-semibold leading-[.98] tracking-[-.035em] text-[#0a1937] sm:text-6xl lg:text-7xl">
-              What do you want AI to help you <span className="text-[#2457ff]">build?</span>
+            <h1 className="mt-6 max-w-3xl font-editorial text-4xl font-semibold leading-[1.04] tracking-[-.035em] text-[#0a1937] sm:text-5xl lg:text-6xl">
+              25 AI Prompts That Will Help You Work Smarter, Build Faster, and Turn Your Ideas Into <span className="text-[#2457ff]">Income.</span>
             </h1>
             <p className="mt-6 max-w-2xl text-lg leading-8 text-[#4f5f79] sm:text-xl">
-              Skip the jargon. Pick a real outcome, learn the workflow, and build something useful with AI today.
+              Discover how to use AI as your business partner, marketing team, content creator, research assistant, and personal productivity coach. No technical expertise required. Just copy, paste, and put AI to work.
             </p>
             <div className="mt-8 flex flex-wrap gap-3">
               <Link href="#work-kit-signup" className="primary-cta inline-flex items-center gap-2 rounded-xl px-6 py-3.5 font-bold shadow-[0_12px_30px_rgba(29,78,216,.22)]">
-                Open Your Free AI Work Kit <ArrowRight className="h-4 w-4" />
+                Get Your Free AI Work Kit <ArrowRight className="h-4 w-4" />
               </Link>
               <Link href="#lab" className="inline-flex items-center gap-2 rounded-xl border border-[#ccd7ea] bg-white/80 px-6 py-3.5 font-bold text-[#10213f] transition-colors hover:bg-white">
                 Explore the AI Lab
               </Link>
             </div>
             <div id="work-kit-signup" className="mt-8 max-w-xl rounded-2xl border border-[#d4def8] bg-white/90 p-4 shadow-sm">
-              <p className="mb-2 text-sm font-bold text-[#0f1e3d]">Your free starter surprise: 25 prompts + 5 practical workflows.</p>
+              <p className="mb-2 text-sm font-bold text-[#0f1e3d]">Get 25 practical prompts, 5 workflows, and a quick-start guide — free.</p>
               <SignupForm compact source="homepage-hero" buttonLabel="Send me the free kit" />
               <SubscriberCount className="mt-2 text-[#3158b5]" />
             </div>
