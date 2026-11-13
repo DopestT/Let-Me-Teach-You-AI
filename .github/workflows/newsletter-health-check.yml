@@ -8,10 +8,11 @@ jobs:
   check:
     runs-on: ubuntu-latest
     steps:
-      - name: Check live newsletter configuration
+      - name: Verify live newsletter readiness
         run: |
           set -euo pipefail
-          echo 'LIVE_NEWSLETTER_HEALTH_BEGIN'
-          curl --fail --silent --show-error --max-time 20 https://letmeteachyouai.com/api/newsletter-health
-          echo
-          echo 'LIVE_NEWSLETTER_HEALTH_END'
+          response="$(curl --fail --silent --show-error --max-time 20 https://letmeteachyouai.com/api/newsletter-health)"
+          # HTTP 200 alone is insufficient: the health endpoint can return
+          # {"ok":true,"newsletter":{"ready":false}} when Brevo is unavailable.
+          # Print only a status, never the JSON response or account details.
+          printf '%s\n' "$response" | python3 -c 'import json,sys; data=json.load(sys.stdin); details=data.get("newsletter",{}) if isinstance(data,dict) else {}; ready=isinstance(details,dict) and details.get("provider")=="brevo" and details.get("ready") is True; print("Brevo readiness:", "PASS" if ready else "FAIL"); sys.exit(0 if ready else 1)'
