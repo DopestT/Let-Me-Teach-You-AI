@@ -1,5 +1,9 @@
 import { z } from "zod";
 
+// Preserve decoded spaces in campaign tags and discard invalid optional metadata.
+const optionalUtm = z.string().trim().max(160).regex(/^[a-zA-Z0-9._~%:+ -]*$/)
+  .optional().default("").catch("");
+
 /** Newsletter signup — the only personal data we collect is email + optional name. */
 export const subscribeSchema = z.object({
   email: z
@@ -14,6 +18,12 @@ export const subscribeSchema = z.object({
   source: z.string().trim().min(1).max(160).regex(/^[a-zA-Z0-9:_\/-]+$/).optional().default("website"),
   // Referral code of the subscriber who shared their link (optional).
   ref: z.string().trim().max(16).regex(/^[a-z0-9]*$/).optional().default(""),
+  // Campaign tags are allowlisted, length-limited, and kept separate from the form surface.
+  utmSource: optionalUtm,
+  utmMedium: optionalUtm,
+  utmCampaign: optionalUtm,
+  utmContent: optionalUtm,
+  utmTerm: optionalUtm,
 });
 export type SubscribeInput = z.infer<typeof subscribeSchema>;
 

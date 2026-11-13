@@ -30,6 +30,10 @@ type SubscribeArgs = {
   firstName?: string;
   referringSite?: string;
   utmSource?: string;
+  utmMedium?: string;
+  utmCampaign?: string;
+  utmContent?: string;
+  utmTerm?: string;
 };
 
 export type SubscribeOutcome =
@@ -155,7 +159,11 @@ export async function subscribe(
       provider: "brevo",
       alreadySubscribed,
       signupSource: SIGNUP_TAG,
-      utmSource: args.utmSource ?? "website",
+      utmSource: args.utmSource ?? null,
+      utmMedium: args.utmMedium ?? null,
+      utmCampaign: args.utmCampaign ?? null,
+      utmContent: args.utmContent ?? null,
+      utmTerm: args.utmTerm ?? null,
       referringSite: args.referringSite ?? "letmeteachyouai.com",
     });
 
