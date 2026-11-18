@@ -67,7 +67,7 @@ export async function notifyOwnerOfNewSignup(args: {
     logger.info("newsletter.owner_notification_not_configured");
     return;
   }
-  if (!/^[^\s@]+@[^\s@]+\.[^\\s@]+$/.test(recipient)) {
+  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(recipient)) {
     logger.error("newsletter.owner_notification_invalid_recipient");
     return;
   }
