@@ -67,7 +67,7 @@ export async function notifyOwnerOfNewSignup(args: {
     logger.info("newsletter.owner_notification_not_configured");
     return;
   }
-  if (!/^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$/.test(recipient)) {
+  if (!/^[^\s@]+@[^\s@]+\.[^\\s@]+$/.test(recipient)) {
     logger.error("newsletter.owner_notification_invalid_recipient");
     return;
   }
@@ -94,7 +94,7 @@ export async function notifyOwnerOfNewSignup(args: {
           `Subscriber: ${args.email}`,
           `Source: ${args.source || "website"}`,
           `Recorded: ${new Date().toISOString()}`,
-        ].join("\\n"),
+        ].join("\n"),
       }),
     });
     if (!res.ok) {
