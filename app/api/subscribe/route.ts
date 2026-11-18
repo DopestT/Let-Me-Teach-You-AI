@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { subscribeSchema } from "@/lib/validation";
-import { subscribe } from "@/lib/newsletter";
+import { subscribe, notifyOwnerOfNewSignup } from "@/lib/newsletter";
 import { storeSubscriber, isSubscriberStoreConfigured } from "@/lib/subscribers";
 import { rateLimit, clientIp } from "@/lib/rate-limit";
 import { logger } from "@/lib/logger";
@@ -69,6 +69,15 @@ export async function POST(req: Request) {
     storeSubscriber({ email, firstName, source, ref, ...attribution }),
     subscribe({ email, firstName, referringSite: "letmeteachyouai.com", ...attribution }),
   ]);
+  // Inform the owner about genuinely new captures, including ledger-only
+  // successes when welcome email delivery fails. Never notify for repeats.
+  const isNewCapture =
+    (stored !== null && !stored.already) ||
+    (stored === null && result.ok && !result.devFallback && !result.alreadySubscribed);
+  if (isNewCapture) {
+    await notifyOwnerOfNewSignup({ email, source });
+  }
+
   const referral = stored
     ? { referralCode: stored.referral_code, referrals: stored.referrals }
     : {};

@@ -53,6 +53,66 @@ export function isNewsletterConfigured(): boolean {
   return Boolean(process.env.NEWSLETTER_API_KEY && getBrevoListId());
 }
 
+/**
+ * Notify the LMTYAI owner only after a real new signup was captured.
+ * This is best-effort: an owner-email problem must never undo a subscriber's
+ * successful signup or trigger a duplicate welcome message.
+ */
+export async function notifyOwnerOfNewSignup(args: {
+  email: string;
+  source?: string;
+}): Promise<void> {
+  const recipient = process.env.SIGNUP_NOTIFICATION_EMAIL?.trim();
+  if (!recipient) {
+    logger.info("newsletter.owner_notification_not_configured");
+    return;
+  }
+  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(recipient)) {
+    logger.error("newsletter.owner_notification_invalid_recipient");
+    return;
+  }
+  if (!process.env.NEWSLETTER_API_KEY) {
+    logger.error("newsletter.owner_notification_provider_not_configured");
+    return;
+  }
+
+  try {
+    const res = await fetch(`${API_BASE}/smtp/email`, {
+      method: "POST",
+      headers: {
+        "api-key": process.env.NEWSLETTER_API_KEY,
+        Accept: "application/json",
+        "Content-Type": "application/json",
+      },
+      signal: AbortSignal.timeout(8_000),
+      body: JSON.stringify({
+        sender: WELCOME_SENDER,
+        to: [{ email: recipient }],
+        subject: "New Let Me Teach You AI signup",
+        textContent: [
+          "A new subscriber signed up for the LMTYAI Free AI Work Kit.",
+          `Subscriber: ${args.email}`,
+          `Source: ${args.source || "website"}`,
+          `Recorded: ${new Date().toISOString()}`,
+        ].join("\n"),
+      }),
+    });
+    if (!res.ok) {
+      logger.error("newsletter.owner_notification_failed", {
+        provider: "brevo",
+        status: res.status,
+      });
+      return;
+    }
+    logger.info("newsletter.owner_notification_accepted", { provider: "brevo" });
+  } catch (err) {
+    logger.error("newsletter.owner_notification_request_failed", {
+      provider: "brevo",
+      aborted: (err as Error)?.name === "TimeoutError",
+    });
+  }
+}
+
 async function sendWelcomeEmail(
   email: string,
   signal: AbortSignal
