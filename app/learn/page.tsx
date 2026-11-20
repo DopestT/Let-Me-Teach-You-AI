@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { ArrowRight, BookOpen, CheckCircle2, Workflow } from "lucide-react";
 import { aiBusinessCourse } from "@/lib/courses";
+import { additionalCourses } from "@/lib/additional-courses";
 
 export const metadata: Metadata = {
   title: "Learn AI by Building Real Projects",
@@ -69,6 +70,26 @@ export default function LearnPage() {
               <p className="mt-4 leading-7 text-[#59677c]">Every course should leave you with something visible: a page, a workflow, a content system, a working offer, or a test you can run with real people.</p>
             </article>
           </div>
+        </div>
+      </section>
+
+      <section className="container-editorial pb-14 sm:pb-20">
+        <div className="mb-8">
+          <p className="text-xs font-bold uppercase tracking-[.14em] text-[#2457ff]">More ways to learn</p>
+          <h2 className="mt-2 font-editorial text-4xl font-semibold text-[#0f1e3d]">Choose your next useful skill.</h2>
+          <p className="mt-4 max-w-2xl leading-7 text-[#59677c]">Short lessons, hands-on exercises, clear checks, and editable workbooks. No experience required for the starter path.</p>
+        </div>
+        <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+          {additionalCourses.map((course) => (
+            <article key={course.slug} className="flex flex-col rounded-3xl border border-[#dfe6f0] bg-white p-6 shadow-sm">
+              <p className="text-xs font-bold uppercase tracking-[.12em] text-[#6a7da3]">{course.level} · {course.lessons.length} lessons</p>
+              <h3 className="mt-4 font-editorial text-3xl font-semibold text-[#0f1e3d]">{course.title}</h3>
+              <p className="mt-4 flex-1 leading-7 text-[#59677c]">{course.description}</p>
+              <Link href={`/learn/\${course.slug}`} className="mt-7 inline-flex items-center gap-2 font-bold text-[#2457ff]">
+                Explore course <ArrowRight className="h-4 w-4" />
+              </Link>
+            </article>
+          ))}
         </div>
       </section>
 
