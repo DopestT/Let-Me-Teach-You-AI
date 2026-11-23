@@ -61,6 +61,10 @@ export default function CourseOverviewPage() {
             </Link>
           </section>
 
+          <a href="/course-resources/build-an-ai-business-from-scratch-workbook.pdf" download className="mt-9 inline-flex rounded-xl border border-[#b7c8ed] bg-white px-5 py-3 font-bold text-[#2457ff]">
+            Download the companion workbook
+          </a>
+
           <div className="mt-10 grid gap-3 sm:grid-cols-2">
             <Link href="/playground" className="rounded-2xl border border-[#dfe6f0] bg-white p-5 font-bold text-[#2457ff] shadow-sm">Use the AI Helper while you build →</Link>
             <Link href="/#join" className="rounded-2xl border border-[#dfe6f0] bg-white p-5 font-bold text-[#2457ff] shadow-sm">Get the 25-Prompt Starter Pack →</Link>

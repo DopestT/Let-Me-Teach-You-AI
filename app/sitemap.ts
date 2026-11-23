@@ -1,5 +1,6 @@
 import type { MetadataRoute } from "next";
 import { aiBusinessCourse } from "@/lib/courses";
+import { additionalCourses } from "@/lib/additional-courses";
 import { seoGuides } from "@/lib/seo-guides";
 
 const SITE_URL = "https://letmeteachyouai.com";
@@ -26,6 +27,15 @@ export default function sitemap(): MetadataRoute.Sitemap {
       changeFrequency: "monthly" as const,
       priority: 0.85,
     })),
+    ...additionalCourses.flatMap((course) => [
+      { url: `${SITE_URL}/learn/${course.slug}`, lastModified: now, changeFrequency: "monthly" as const, priority: 0.8 },
+      ...course.lessons.map((lesson) => ({
+        url: `${SITE_URL}/learn/${course.slug}/${lesson.slug}`,
+        lastModified: now,
+        changeFrequency: "monthly" as const,
+        priority: 0.75,
+      })),
+    ]),
     { url: `${SITE_URL}/build/ai-workflow-from-plain-english`, lastModified: now, changeFrequency: "monthly", priority: 0.8 },
     { url: `${SITE_URL}/playground`, lastModified: now, changeFrequency: "monthly", priority: 0.7 },
     { url: `${SITE_URL}/workshop`, lastModified: now, changeFrequency: "monthly", priority: 0.8 },
