@@ -85,7 +85,7 @@ export default function LearnPage() {
               <p className="text-xs font-bold uppercase tracking-[.12em] text-[#6a7da3]">{course.level} · {course.lessons.length} lessons</p>
               <h3 className="mt-4 font-editorial text-3xl font-semibold text-[#0f1e3d]">{course.title}</h3>
               <p className="mt-4 flex-1 leading-7 text-[#59677c]">{course.description}</p>
-              <Link href={`/learn/\${course.slug}`} className="mt-7 inline-flex items-center gap-2 font-bold text-[#2457ff]">
+              <Link href={`/learn/${course.slug}`} className="mt-7 inline-flex items-center gap-2 font-bold text-[#2457ff]">
                 Explore course <ArrowRight className="h-4 w-4" />
               </Link>
             </article>
